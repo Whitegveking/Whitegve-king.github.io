@@ -1,25 +1,29 @@
 
+
+
+
+
 # 0、下载JDK
 
-![image-20260724153035774](C:\Users\72982\Desktop\JAVA学习日记\7.24学习日记.assets\image-20260724153035774.png)
+<img width="1730" height="924" alt="Image" src="https://github.com/user-attachments/assets/431dda7f-4b8c-413b-9268-9e32d5500615" />
 
 JDK已安装并编辑环境变量
 
-![image-20260724153122139](C:\Users\72982\Desktop\JAVA学习日记\7.24学习日记.assets\image-20260724153122139.png)
+<img width="858" height="30" alt="Image" src="https://github.com/user-attachments/assets/c6e8ef32-fe1d-4100-97d4-2a4339f74d1e" />
 
-![image-20260724153137838](C:\Users\72982\Desktop\JAVA学习日记\7.24学习日记.assets\image-20260724153137838.png)
+<img width="615" height="33" alt="Image" src="https://github.com/user-attachments/assets/cdba82d5-e6ae-42d9-8f4f-0c183eb35337" />
 
 # 1、下载IDEA
 
-![image-20260724153208252](C:\Users\72982\Desktop\JAVA学习日记\7.24学习日记.assets\image-20260724153208252.png)
+<img width="2081" height="1311" alt="Image" src="https://github.com/user-attachments/assets/16853f9e-fa2a-42a1-b093-4d21142629aa" />
 
 # 2、简单编写了代码 HelloWorld
 
 没想到时隔快四年了又开始写起来了“HelloWorld”.
 
-![image-20260724154809675](C:\Users\72982\Desktop\JAVA学习日记\7.24学习日记.assets\image-20260724154809675.png)
+<img width="2081" height="1310" alt="Image" src="https://github.com/user-attachments/assets/c19b4910-b1f4-4f3d-8d4b-425abcc17804" />
+<img width="2082" height="1310" alt="Image" src="https://github.com/user-attachments/assets/f859d342-3bc0-494b-aff8-6511ad189b12" />
 
-![image-20260724160507797](C:\Users\72982\Desktop\JAVA学习日记\7.24学习日记.assets\image-20260724160507797.png)
 
 输入注释，跟C++大差不差感觉，代码行末也得加“；”。
 
