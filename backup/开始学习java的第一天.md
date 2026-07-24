@@ -26,3 +26,16 @@ JDK已安装并编辑环境变量
 
 "ctrl+/"快捷注释选中内容。
 
+# 3、了解关键字
+
+<img width="1197" height="1020" alt="Image" src="https://github.com/user-attachments/assets/c822d692-5670-487e-bbb4-543a2fab6968" />
+
+**`package`**表示当前 的类定义在哪个包下。
+
+**`class`**用于定义一个类。类是JAVA项目中最基本的组成单元。
+
+**`main`**表示Java程序的主入口，程序将会从主入口开始逐行向下执行。
+
+**`println(System.out.println)`**输出/打印语句，将其中的内容输出到控制台。
+
+
