@@ -1,8 +1,5 @@
 
 
-
-
-
 # 0、下载JDK
 
 <img width="1730" height="924" alt="Image" src="https://github.com/user-attachments/assets/431dda7f-4b8c-413b-9268-9e32d5500615" />
@@ -19,7 +16,7 @@ JDK已安装并编辑环境变量
 
 # 2、简单编写了代码 HelloWorld
 
-没想到时隔快四年了又开始写起来了“HelloWorld”.
+没想到时隔快四年了又开始写起来了“HelloWorld”。不过感觉JAVA也还挺好上手？
 
 <img width="2081" height="1310" alt="Image" src="https://github.com/user-attachments/assets/c19b4910-b1f4-4f3d-8d4b-425abcc17804" />
 <img width="2082" height="1310" alt="Image" src="https://github.com/user-attachments/assets/f859d342-3bc0-494b-aff8-6511ad189b12" />
