@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script src='https://blog.meekdai.com/Gmeek/plugins/GmeekBSZ.js'></script>
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/165184260?v=4&size=64"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# 0、字面量
+
+表示数据在程序中怎么写。">
+<meta property="og:title" content="JAVA从字面量到运算符（基础语法篇）">
+<meta property="og:description" content="# 0、字面量
+
+表示数据在程序中怎么写。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://Whitegveking.github.io/Whitegve-king.github.io/post/JAVA-cong-zi-mian-liang-dao-yun-suan-fu-%EF%BC%88-ji-chu-yu-fa-pian-%EF%BC%89.html">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/165184260?v=4&size=64">
+<title>JAVA从字面量到运算符（基础语法篇）</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">JAVA从字面量到运算符（基础语法篇）</h1>
+<div class="title-right">
+    <a href="https://Whitegveking.github.io/Whitegve-king.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/Whitegveking/Whitegve-king.github.io/issues/2" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>0、字面量</h1>
+<p>表示数据在程序中怎么写。</p>
+<p><strong>字面量</strong>：程序中的数据。</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="center">字面量类型</th>
+<th align="center">说明</th>
+<th align="center">举例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">整数类型</td>
+<td align="center">直接写</td>
+<td align="center">18，-88</td>
+</tr>
+<tr>
+<td align="center">小数类型</td>
+<td align="center">直接写，加上小数点</td>
+<td align="center">26.7</td>
+</tr>
+<tr>
+<td align="center">字符串类型</td>
+<td align="center">""</td>
+<td align="center">"上班"</td>
+</tr>
+<tr>
+<td align="center">字符类型</td>
+<td align="center">''</td>
+<td align="center">'男'</td>
+</tr>
+<tr>
+<td align="center">布尔类型</td>
+<td align="center">布尔值，表示真假</td>
+<td align="center">true,false</td>
+</tr>
+<tr>
+<td align="center">空类型</td>
+<td align="center">一个特殊的空值</td>
+<td align="center">null</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/e06bf28e-3b11-47d8-bd45-04515d10ea69"><img width="411" height="288" alt="Image" src="https://github.com/user-attachments/assets/e06bf28e-3b11-47d8-bd45-04515d10ea69" style="max-width: 100%; height: auto; max-height: 288px;; aspect-ratio: 411 / 288; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<h1>1、变量</h1>
+<p>变量是存储数据的小空间，而不是里面的数据，是将数据放入变量中进行处理。</p>
+<p>经常发生改变的数据。</p>
+<h2>变量的定义格式</h2>
+<p><strong>数据类型 变量名 = 数据值</strong></p>
+<p><strong>例：int a = 10</strong></p>
+<p>数据类型：为空间中存储的数据加入类型<em><strong>限制</strong></em></p>
+<h2>变量的注意事项</h2>
+<p>一个变量只能存一个值</p>
+<p>变量名不允许重复定义</p>
+<p>变量在使用之前一定要进行赋值</p>
+<p>一条语句可以定义多个变量，也可以连续赋值（尽量不使用）</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/1c57be8c-fb3a-4057-90e4-3dcaa51ec318"><img width="1284" height="609" alt="Image" src="https://github.com/user-attachments/assets/1c57be8c-fb3a-4057-90e4-3dcaa51ec318" style="max-width: 100%; height: auto; max-height: 609px;; aspect-ratio: 1284 / 609; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<h1>2、计算机的存储规则</h1>
+<p>在计算机中，任意数据都是以二进制的方式存储的</p>
+<h2>计算机的存储单元</h2>
+<p>1Byte = 8bit</p>
+<p>1字节 = 8比特</p>
+<p>（比较基础直接跳过）</p>
+<h1>3、JAVA中的基本数据类型</h1>
+<h2>整数</h2>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/cd9fe271-72ed-4135-be17-06309bbc14ad"><img width="1137" height="360" alt="Image" src="https://github.com/user-attachments/assets/cd9fe271-72ed-4135-be17-06309bbc14ad" style="max-width: 100%; height: auto; max-height: 360px;; aspect-ratio: 1137 / 360; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<p>根据数据的取值范围选择不同的数据类型</p>
+<h2>小数</h2>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/30335fba-24da-43db-90f5-073450750125"><img width="1065" height="318" alt="Image" src="https://github.com/user-attachments/assets/30335fba-24da-43db-90f5-073450750125" style="max-width: 100%; height: auto; max-height: 318px;; aspect-ratio: 1065 / 318; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">literal</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">LiteralDemo2</span>
+{
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>(<span class="pl-smi">String</span>[] <span class="pl-s1">args</span>)
+    {
+        <span class="pl-c">// 定义8种数据类型的变量:</span>
+        <span class="pl-c">// 整数类型:byte、short、int、long浮点数类型:float、double字符类型:char</span>
+        <span class="pl-c">// 布尔类型:boolean</span>
+        <span class="pl-c">// 变量的定义格式:</span>
+        <span class="pl-c">// 数据类型变量名=数据值;</span>
+        <span class="pl-smi">byte</span> <span class="pl-s1">b</span> = <span class="pl-c1">1</span>;
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">b</span>);
+
+        <span class="pl-smi">short</span> <span class="pl-s1">s</span> = <span class="pl-c1">2</span>;
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">s</span>);
+
+        <span class="pl-smi">int</span> <span class="pl-s1">i</span> = <span class="pl-c1">3</span>;
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">i</span>);
+
+        <span class="pl-smi">long</span> <span class="pl-s1">l</span> = <span class="pl-c1">4L</span>; <span class="pl-c">// long类型的变量值后面要加L</span>
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">l</span>);
+
+        <span class="pl-smi">float</span> <span class="pl-s1">f</span> = <span class="pl-c1">5.0f</span>; <span class="pl-c">// float类型的变量值后面要加f</span>
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">f</span>);
+
+        <span class="pl-smi">double</span> <span class="pl-s1">d</span> = <span class="pl-c1">6.0</span>;
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">d</span>);
+
+        <span class="pl-smi">char</span> <span class="pl-s1">c</span> = <span class="pl-s">'A'</span>;
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">c</span>);
+        
+        <span class="pl-smi">boolean</span> <span class="pl-s1">bool</span> = <span class="pl-c1">true</span>;
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">bool</span>);
+
+
+    }
+}</pre></div>
+<h1>4、标识符</h1>
+<h2>标识符的命名规则</h2>
+<p>标识符：代码中所有我们自己起的名字</p>
+<p><strong>要求：</strong></p>
+<ol>
+<li>由数字、字母、下划线_、美元符$组成</li>
+<li>不能以数字开头</li>
+<li>不能是关键字</li>
+<li>区分大小写</li>
+<li>见名知意</li>
+<li>驼峰命名法</li>
+</ol>
+<h3>驼峰命名法</h3>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/3db30c9e-49e7-4143-a806-12aa6792f559"><img width="1218" height="507" alt="Image" src="https://github.com/user-attachments/assets/3db30c9e-49e7-4143-a806-12aa6792f559" style="max-width: 100%; height: auto; max-height: 507px;; aspect-ratio: 1218 / 507; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<h1>5、键盘录入</h1>
+<p><strong>重点是<code class="notranslate">Scanner</code>类</strong></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">literal</span>;
+
+<span class="pl-k">import</span> <span class="pl-s1">java</span>.<span class="pl-s1">util</span>.<span class="pl-s1">Scanner</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">LiteralDemo4</span>
+{
+    <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>()
+    {
+        <span class="pl-c">// 创建Scanner对象,用于接收键盘输入</span>
+        <span class="pl-smi">Scanner</span> <span class="pl-s1">sc</span> = <span class="pl-k">new</span> <span class="pl-smi">Scanner</span>(<span class="pl-smi">System</span>.<span class="pl-s1">in</span>);
+        <span class="pl-c">// Scanner可以用于接收各种类型的数据,包括整数、浮点数、字符串等</span>
+        <span class="pl-c">// 1.接收整数</span>
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"请输入一个整数:"</span>);
+        <span class="pl-smi">int</span> <span class="pl-s1">i</span> = <span class="pl-s1">sc</span>.<span class="pl-en">nextInt</span>();
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"您输入的整数是:"</span> + <span class="pl-s1">i</span>);
+
+        <span class="pl-c">// 2.接收浮点数</span>
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"请输入一个浮点数:"</span>);
+        <span class="pl-smi">double</span> <span class="pl-s1">d</span> = <span class="pl-s1">sc</span>.<span class="pl-en">nextDouble</span>();
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"您输入的浮点数是:"</span> + <span class="pl-s1">d</span>);
+        
+        <span class="pl-c">// 3.接收字符串</span>
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"请输入一个字符串:"</span>);
+        <span class="pl-smi">String</span> <span class="pl-s1">str</span> = <span class="pl-s1">sc</span>.<span class="pl-en">next</span>();
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"您输入的字符串是:"</span> + <span class="pl-s1">str</span>);
+    }
+}</pre></div>
+<h1>运算符</h1>
+<h2>1、算术运算符</h2>
+<ol>
+<li>自增自减运算符</li>
+<li>赋值运算符</li>
+<li>关系运算符</li>
+<li>逻辑运算符</li>
+<li>三元运算符</li>
+</ol>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">literal</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">LiteralDemo5</span>
+{
+    <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>()
+    {
+        <span class="pl-c">// 1、整数计算</span>
+        <span class="pl-c">// 整数相除时,结果只保留整数部分,小数部分会被舍弃</span>
+        <span class="pl-smi">int</span> <span class="pl-s1">a</span> = <span class="pl-c1">10</span>;
+        <span class="pl-smi">int</span> <span class="pl-s1">b</span> = <span class="pl-c1">3</span>;
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">a</span> + <span class="pl-s1">b</span>); <span class="pl-c">// 13</span>
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">a</span> - <span class="pl-s1">b</span>); <span class="pl-c">// 7</span>
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">a</span> * <span class="pl-s1">b</span>); <span class="pl-c">// 30</span>
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">a</span> / <span class="pl-s1">b</span>); <span class="pl-c">// 3</span>
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">a</span> % <span class="pl-s1">b</span>); <span class="pl-c">// 1</span>
+
+        <span class="pl-c">// 2、浮点数计算</span>
+        <span class="pl-c">// 浮点数计算时,结果可能会有精度损失</span>
+        <span class="pl-smi">double</span> <span class="pl-s1">c</span> = <span class="pl-c1">10.0</span>;
+        <span class="pl-smi">double</span> <span class="pl-s1">d</span> = <span class="pl-c1">3.0</span>;
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">c</span> + <span class="pl-s1">d</span>); <span class="pl-c">// 13.0</span>
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">c</span> - <span class="pl-s1">d</span>); <span class="pl-c">// 7.0</span>
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">c</span> * <span class="pl-s1">d</span>); <span class="pl-c">// 30.0</span>
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">c</span> / <span class="pl-s1">d</span>); <span class="pl-c">// 3.3333333333333335</span>
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">c</span> % <span class="pl-s1">d</span>); <span class="pl-c">// 1.0</span>
+    }
+}</pre></div>
+<h2>2、类型转换</h2>
+<p>数字运算：类型不一样不能运算，需要转换成相同类型才能计算。</p>
+<p>1、<strong>把取值范围小的转换为取值范围大的（隐式转换）</strong></p>
+<p>不同类型的数据进行计算，默认采取隐式转换，Java自动转换，无需我们写代码</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/86597ab2-eb28-4542-9639-99344dac25e9"><img width="969" height="180" alt="Image" src="https://github.com/user-attachments/assets/86597ab2-eb28-4542-9639-99344dac25e9" style="max-width: 100%; height: auto; max-height: 180px;; aspect-ratio: 969 / 180; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<p>2、<strong>强制转换，把取值范围大的转换为取值范围小的</strong></p>
+<p>去掉不要的，有可能导致精度丢失</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/5a7daab5-6f63-4c18-8740-889c308495f9"><img width="1014" height="203" alt="Image" src="https://github.com/user-attachments/assets/5a7daab5-6f63-4c18-8740-889c308495f9" style="max-width: 100%; height: auto; max-height: 203px;; aspect-ratio: 1014 / 203; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<p>强制转换与C语言类似</p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">literal</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">LiteralDemo6</span>
+{
+    <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>()
+    {
+        <span class="pl-c">// 强制类型转换</span>
+        <span class="pl-smi">byte</span> <span class="pl-s1">a</span> = <span class="pl-c1">10</span>;
+        <span class="pl-smi">byte</span> <span class="pl-s1">b</span> = <span class="pl-c1">20</span>;
+        <span class="pl-c">// byte、short、char类型的变量在进行运算时,</span>
+        <span class="pl-c">// 会先转换为int类型,再进行计算,所以需要强制类型转换</span>
+        <span class="pl-smi">byte</span> <span class="pl-s1">c</span> = (<span class="pl-smi">byte</span>) (<span class="pl-s1">a</span> + <span class="pl-s1">b</span>);
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">c</span>);
+        <span class="pl-c">// 2、强制类型转换可能会导致精度损失</span>
+        <span class="pl-smi">short</span> <span class="pl-s1">s1</span> = <span class="pl-c1">100</span>;
+        <span class="pl-smi">short</span> <span class="pl-s1">s2</span> = <span class="pl-c1">200</span>;
+        <span class="pl-smi">byte</span> <span class="pl-s1">d</span> = (<span class="pl-smi">byte</span>) (<span class="pl-s1">s1</span> + <span class="pl-s1">s2</span>);
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">d</span>); <span class="pl-c">// 44</span>
+    }
+}</pre></div>
+<h2>3、字符运算</h2>
+<p>例如字母的大小写转换，通过<code class="notranslate">ASCII</code>码表进行</p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">Operator</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">OperatorDemo1</span>
+{
+    <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>()
+    {
+        <span class="pl-smi">char</span> <span class="pl-s1">A</span> = <span class="pl-s">'A'</span>;
+        <span class="pl-smi">char</span> <span class="pl-s1">a</span> = (<span class="pl-smi">char</span>) (<span class="pl-s1">A</span> + <span class="pl-c1">32</span>);
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">a</span>);
+    }
+}</pre></div>
+<h2>4、字符串运算</h2>
+<p>字符串只有**<code class="notranslate">+</code>**操作，没有其他操作</p>
+<p><strong>任意数据<code class="notranslate">+</code>字符串</strong>都是拼接操作，并产生一个新的字符串</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/1f514ba4-4292-4f2c-bd0a-3c68f5431d3a"><img width="375" height="156" alt="Image" src="https://github.com/user-attachments/assets/1f514ba4-4292-4f2c-bd0a-3c68f5431d3a" style="max-width: 100%; height: auto; max-height: 156px;; aspect-ratio: 375 / 156; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<p>记住计算的顺序是从左到右，10和8先进行相加运算再与"岁"进行字符串运算</p>
+<p>运算期间的数据类型会发生改变</p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">Operator</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">OperatorDemo2</span>
+{
+    <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>()
+    {
+        <span class="pl-c">// 我要知道7242秒是几时几分几秒</span>
+        <span class="pl-smi">int</span> <span class="pl-s1">time</span> = <span class="pl-c1">7242</span>;
+        <span class="pl-smi">int</span> <span class="pl-s1">hour</span> = <span class="pl-s1">time</span> / <span class="pl-c1">3600</span>;
+        <span class="pl-smi">int</span> <span class="pl-s1">minute</span> = (<span class="pl-s1">time</span> % <span class="pl-c1">3600</span>) / <span class="pl-c1">60</span>;
+        <span class="pl-smi">int</span> <span class="pl-s1">second</span> = <span class="pl-s1">time</span> % <span class="pl-c1">60</span>;
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">hour</span> + <span class="pl-s">"时"</span> + <span class="pl-s1">minute</span> + <span class="pl-s">"分"</span> + <span class="pl-s1">second</span> + <span class="pl-s">"秒"</span>);
+    }
+}</pre></div>
+<h2>5、自增自减运算符</h2>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/2f4c522e-0f07-42fd-8fec-30f4a696b7aa"><img width="390" height="95" alt="Image" src="https://github.com/user-attachments/assets/2f4c522e-0f07-42fd-8fec-30f4a696b7aa" style="max-width: 100%; height: auto; max-height: 95px;; aspect-ratio: 390 / 95; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<p>与C++类似，跳过。</p>
+<h2>6、赋值运算符</h2>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/d5aea534-1385-49b3-95ca-f088ed7f127a"><img width="993" height="405" alt="Image" src="https://github.com/user-attachments/assets/d5aea534-1385-49b3-95ca-f088ed7f127a" style="max-width: 100%; height: auto; max-height: 405px;; aspect-ratio: 993 / 405; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<p>也与C++类似，跳过。</p>
+<h2>7、关系运算符</h2>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/d644ee89-b464-46a6-9c1b-171567fe4a43"><img width="1086" height="429" alt="Image" src="https://github.com/user-attachments/assets/d644ee89-b464-46a6-9c1b-171567fe4a43" style="max-width: 100%; height: auto; max-height: 429px;; aspect-ratio: 1086 / 429; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<h2>8、逻辑运算符</h2>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/f7aec5a6-ff99-48f1-ad8b-5bf0f5f2e242"><img width="1092" height="294" alt="Image" src="https://github.com/user-attachments/assets/f7aec5a6-ff99-48f1-ad8b-5bf0f5f2e242" style="max-width: 100%; height: auto; max-height: 294px;; aspect-ratio: 1092 / 294; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<p>和C++的写法不太一样，需要注意一下</p>
+<h2>9、短路逻辑运算符</h2>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/338dc814-fdb9-4922-bac1-867e1404a4ff"><img width="1095" height="222" alt="Image" src="https://github.com/user-attachments/assets/338dc814-fdb9-4922-bac1-867e1404a4ff" style="max-width: 100%; height: auto; max-height: 222px;; aspect-ratio: 1095 / 222; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<p>这样写效率高一些，就这样用了，还更符合习惯一点</p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">Operator</span>;
+
+<span class="pl-k">import</span> <span class="pl-s1">java</span>.<span class="pl-s1">util</span>.<span class="pl-s1">Scanner</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">OperatorDemo4</span>
+{
+    <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>()
+    {
+        <span class="pl-c">// 寻找7的有缘数，定义一个两位整数，只要该数字包含7或者是7的倍数，就是7的有缘数</span>
+        <span class="pl-smi">int</span> <span class="pl-s1">num</span> = <span class="pl-c1">0</span>;
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"输入一个两位整数:"</span>);
+        <span class="pl-smi">Scanner</span> <span class="pl-s1">sc</span> = <span class="pl-k">new</span> <span class="pl-smi">Scanner</span>(<span class="pl-smi">System</span>.<span class="pl-s1">in</span>);
+        <span class="pl-s1">num</span> = <span class="pl-s1">sc</span>.<span class="pl-en">nextInt</span>();
+        <span class="pl-k">if</span> (<span class="pl-s1">num</span> % <span class="pl-c1">7</span> == <span class="pl-c1">0</span> || <span class="pl-s1">num</span> / <span class="pl-c1">10</span> == <span class="pl-c1">7</span> || <span class="pl-s1">num</span> % <span class="pl-c1">10</span> == <span class="pl-c1">7</span>)
+        {
+            <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">num</span> + <span class="pl-s">"是7的有缘数"</span>);
+        } <span class="pl-k">else</span>
+        {
+            <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">num</span> + <span class="pl-s">"不是7的有缘数"</span>);
+        }
+        <span class="pl-s1">sc</span>.<span class="pl-en">close</span>();
+    }
+}</pre></div>
+<h2>10、三元运算符</h2>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/a16f1788-0c35-4594-b1fa-cfa21667f3df"><img width="528" height="225" alt="Image" src="https://github.com/user-attachments/assets/a16f1788-0c35-4594-b1fa-cfa21667f3df" style="max-width: 100%; height: auto; max-height: 225px;; aspect-ratio: 528 / 225; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">Operator</span>;
+
+<span class="pl-k">import</span> <span class="pl-s1">java</span>.<span class="pl-s1">util</span>.<span class="pl-s1">Scanner</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">OperatorDemo5</span>
+{
+    <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>()
+    {
+        <span class="pl-c">// 输入两个整数，输出其中较大数</span>
+        <span class="pl-smi">int</span> <span class="pl-s1">a</span> = <span class="pl-c1">0</span>;
+        <span class="pl-smi">int</span> <span class="pl-s1">b</span> = <span class="pl-c1">0</span>;
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"请输入两个整数:"</span>);
+        <span class="pl-smi">Scanner</span> <span class="pl-s1">sc</span> = <span class="pl-k">new</span> <span class="pl-smi">Scanner</span>(<span class="pl-smi">System</span>.<span class="pl-s1">in</span>);
+        <span class="pl-s1">a</span> = <span class="pl-s1">sc</span>.<span class="pl-en">nextInt</span>();
+        <span class="pl-s1">b</span> = <span class="pl-s1">sc</span>.<span class="pl-en">nextInt</span>();
+        <span class="pl-smi">int</span> <span class="pl-s1">max</span> = (<span class="pl-s1">a</span> &gt; <span class="pl-s1">b</span>) ? <span class="pl-s1">a</span> : <span class="pl-s1">b</span>;
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"较大数是:"</span> + <span class="pl-s1">max</span>);
+        <span class="pl-s1">sc</span>.<span class="pl-en">close</span>();
+    }
+}</pre></div>
+<h2>11、运算符的优先级</h2>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/62b7195a-1e63-4f94-a667-cfc4c1eae281"><img width="705" height="972" alt="Image" src="https://github.com/user-attachments/assets/62b7195a-1e63-4f94-a667-cfc4c1eae281" style="max-width: 100%; height: auto; max-height: 972px;; aspect-ratio: 705 / 972; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<p><strong>小括号()优先于所有</strong></p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://Whitegveking.github.io/Whitegve-king.github.io">Cyy的JAVA学习日记</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","Whitegveking/Whitegve-king.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>
+
+</html>
