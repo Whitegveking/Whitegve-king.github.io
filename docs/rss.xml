@@ -1,5 +1,80 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Tue, 28 Jul 2026 09:18:39 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>if、选择、循环语句和数组（感觉语法和C++还真差不多，就是有一些细节方面的问题需要注意）</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/if%E3%80%81-xuan-ze-%E3%80%81-xun-huan-yu-ju-he-shu-zu-%EF%BC%88-gan-jue-yu-fa-he-C%2B%2B-huan-zhen-cha-bu-duo-%EF%BC%8C-jiu-shi-you-yi-xie-xi-jie-fang-mian-de-wen-ti-xu-yao-zhu-yi-%EF%BC%89.html</link><description># 1、判断语句（if）
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Wed, 29 Jul 2026 07:04:58 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>方法、JAVA原理（后续面向对象会单开一篇）</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/fang-fa-%E3%80%81JAVA-yuan-li-%EF%BC%88-hou-xu-mian-xiang-dui-xiang-hui-dan-kai-yi-pian-%EF%BC%89.html</link><description># 1、方法
+
+## 什么是方法?应用场景?好处?
+
+**方法：**程序中的独立功能，也是最小的执行单元
+
+**应用场景：**经常使用的代码打包，放在方法当中
+
+**好处：**提高了程序的**复用性**和**可维护性**
+
+## 方法的格式和执行流程
+
+**方法的格式**
+
+```java
+public static 返回值类型方法名(参数1，参数2...){
+    方法体;
+    return 返回值;
+}
+```
+
+**注意点：**
+
+1. 方法与方法之间是平级关系，不能互相嵌套
+2. 方法不会主动运行，需要被调用
+3. 小括号中的参数需要（形参和实参）一一对应（个数，类型）
+
+**方法的执行流程**
+
+实参传给形参
+
+`return`:结束方法，将结果返回给调用处
+
+## 定义方法的小诀窍
+
+1. 观察在大段的代码当中，反复使用的独立功能是什么?反复使用+独立功能
+2. 这个独立功能，需要什么才能完成?
+3. 方法的调用处，是否需要这个独立功能的结果继续做其他事情?
+
+## 方法的重载
+
+1. 同一个类中，定义了多个同名的方法，这些方法具有类似的功能
+2. 每个方法具有不同的参数类型和参数个数，这些同名的方法，就构成了**重载关系**
+3. 简单理解:同一个类，方法名相同，参数不同的方法，无需看返回值
+4. 方法重载一般不会写成形参不同的形式
+
+## 方法的注意事项
+
+1. 方法不调用就不执行
+2. 方法与方法之间是平级关系，不能嵌套定义
+3. 调用方法会优先调用形参和实参一一对应的，如果没有才会进行隐式转换
+4. return:1.结束方法2.将结果返回给调用者
+5. void:没有返回值，可以省略return不写，如果不省略，return后面不能写具体数据，仅表示结束方法
+
+# 2、JAVA原理
+
+## JAVA的运行机制
+
+`.java`文件编译成`class`文件后运行在JVM（java虚拟机）中
+
+1. **Java程序运行的过程是怎么样的?** Java文件--&gt;class字节码文件--&gt;结果
+2. **Java是直接运行在操作系统里面的吗?** 不是，是运行在虚拟机里面的
+3. **虚拟机的好处是什么?** 利用虚拟机可以实现跨平台
+4. **为什么要跨平台? 写一套代码，**可以在任意的操作系统中运行
+
+## JAVA的内存管理
+
+**内存：**软件在运行时，用来临时存储数据的
+
+**内存地址：**一个编号，用来快速查找内存中的数据，从而快速地管理内存空间
+
+## JAVA中的内存分配
+
+1. 栈内存：方法	
+2. 堆内存：new关键字
+3. 方法区：字节码信息（class）;JDK7永久代实现，JDK8+元空间实现，从虚拟机内部移到本地内存。</description><guid isPermaLink="true">https://Whitegveking.github.io/Whitegve-king.github.io/post/fang-fa-%E3%80%81JAVA-yuan-li-%EF%BC%88-hou-xu-mian-xiang-dui-xiang-hui-dan-kai-yi-pian-%EF%BC%89.html</guid><pubDate>Wed, 29 Jul 2026 07:04:24 +0000</pubDate></item><item><title>if、选择、循环语句和数组（感觉语法和C++还真差不多，就是有一些细节方面的问题需要注意）</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/if%E3%80%81-xuan-ze-%E3%80%81-xun-huan-yu-ju-he-shu-zu-%EF%BC%88-gan-jue-yu-fa-he-C%2B%2B-huan-zhen-cha-bu-duo-%EF%BC%8C-jiu-shi-you-yi-xie-xi-jie-fang-mian-de-wen-ti-xu-yao-zhu-yi-%EF%BC%89.html</link><description># 1、判断语句（if）
 
 ## 判断语句的细节
 
