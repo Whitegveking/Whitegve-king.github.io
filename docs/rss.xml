@@ -1,5 +1,299 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Thu, 30 Jul 2026 09:45:51 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>面向对象</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/mian-xiang-dui-xiang.html</link><description># 面向对象基础
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Thu, 30 Jul 2026 09:47:21 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>面向对象原理、static、final、枚举</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/mian-xiang-dui-xiang-yuan-li-%E3%80%81static%E3%80%81final%E3%80%81-mei-ju.html</link><description># 面向对象原理
+
+## JAVA中对象的内存分配
+
+1. 加载`.class`文件
+2. 声明局部变量
+3. 堆中开辟空间（对象）
+4. 默认初始化
+5. 显式初始化
+6. 构造方法初始化
+7. 赋值地址值
+
+内存模型
+
+&lt;img width='855' height='750' alt='Image' src='https://github.com/user-attachments/assets/87ff2406-4337-4388-a542-3f252929cfd5' /&gt;
+
+- 方法出栈之后，方法里面的变量全部消失
+- 如果没有任何地方使用堆中的对象，那么对象也会从堆里面消失
+- 方法区里面的字节码信息一般不会消失，除非关闭虚拟机（idea）
+
+
+
+## 对象在方法中进行传递
+
+1. 把一个对象传递给方法，实际传递的是对象的内存地址
+2. 当多个变量指向同一个对象的时候，只要有一个变量修改了对象中的属性，其他变量再次访问就是修改之后的结果了
+
+```java
+package PrincipleDemo1;
+
+public class Memory
+{
+    static void main()
+    {
+        Student stu = new Student();
+        stu.getInfo();
+        Student stu1 = stu;
+        stu1.setAge(199);
+        stu1.getInfo();
+    }
+}
+```
+
+```cmd
+'C:\JAVA tools\bin\java.exe' '-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=55963' -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopPrinciple\out\production\oopPrinciple PrincipleDemo1.Memory
+无参构造方法被调用
+姓名：null，年龄：0，性别：null，身高：0.0
+姓名：null，年龄：199，性别：null，身高：0.0
+```
+
+## JAVA中`this`关键字详解
+
+&lt;img width='885' height='765' alt='Image' src='https://github.com/user-attachments/assets/d668eb0f-52de-4876-8ac1-aca9905b1f3d' /&gt;
+
+**`this`的本质**：代表所在方法***调用者***的内存地址
+
+## `static`关键字
+
+### `static`关键字修饰成员变量
+
+**`static`**:表示**静态**，是JAVA的修饰符，用来修饰（成员变量/成员方法）
+
+**特点**：叫做静态变量，被该类所有对象共享
+
+**调用方式**
+
+1. 类名调用（推荐）
+2. 对象名调用
+
+```java
+package AdvancedDemo1;
+
+public class Student
+{
+    String name;
+    int age;
+    static String teacher ;
+
+    public Student()
+    {
+    }
+
+    public Student(String name, int age)
+    {
+        this.name = name;
+        this.age = age;
+    }
+}
+```
+
+```java
+package AdvancedDemo1;
+
+public class Test
+{
+    static void main()
+    {
+        /*
+        学生有如下属性:姓名，年龄，老师
+        一个班级中，所有学生都是共享同一个老师
+        第一名学生:小诗诗，19岁
+        第二名学生:小丹丹，20岁
+        最初都是小雯老师上课，有一天小丹丹申请换老师，换成了阿玮老师
+        利用static模拟上述效果
+        */
+        Student student1 = new Student('小诗诗', 19);
+        Student student2 = new Student('小丹丹', 20);
+        // 初始化老师
+        Student.teacher = '小雯老师';
+        System.out.println(student1.name + '的老师是' + Student.teacher);
+        System.out.println(student2.name + '的老师是' + Student.teacher);
+
+        // 小丹丹申请换老师
+        Student.teacher = '阿玮老师';
+        System.out.println(student1.name + '的老师是' + Student.teacher);
+        System.out.println(student2.name + '的老师是' + Student.teacher);
+    }
+
+}
+```
+
+```cmd
+'C:\JAVA tools\bin\java.exe' '-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=60344' -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopAdvanced\out\production\oopAdvanced AdvancedDemo1.Test
+小诗诗的老师是小雯老师
+小丹丹的老师是小雯老师
+小诗诗的老师是阿玮老师
+小丹丹的老师是阿玮老师
+```
+
+#### `static`关键字的内存解析
+
+**静态变量随着类的加载而加载，优先于对象出现**
+
+&lt;img width='1689' height='882' alt='Image' src='https://github.com/user-attachments/assets/9419b178-61a5-45e0-8303-e7af5eb35cfc' /&gt;
+
+#### `static`静态变量小结
+
+**特点**：
+
+- 被`static`关键字修饰的变量叫做静态变量，被这个类所有对象共享
+- 不属于某一个对象，属于整个类
+- 随着类的加载而加载，优先于对象而存在
+
+**调用方式**：
+
+- 方式一：类名调用（推荐）
+- 方式二：对象名调用（不推荐）
+
+### `static`关键字修饰成员方法
+
+**特点**:
+
+- static修饰的方法叫做静态方法
+- 该方法多用在**测试类**和**工具类**中
+- Javabean类中很少会用
+
+**调用方式**:
+
+- 方式一:类名调用
+- 方式二:对象名调用
+
+#### 工具类
+
+不是用来描述一类事物的，也没有`main`方法，而是帮我们做一些事情的类
+
+- 类名见名知意
+- 私有化构造方法
+- 所有方法定义为静态，通过类名调用
+
+```java
+package AdvancedDemo2;
+
+public class ArrayUtil
+{
+    /*
+    * 1.定义一个方法,实现数组的反转
+    * 2.定义一个方法,实现数组的复制
+    * 3.定义一个方法,实现数组的查找(查找指定元素第一次出现的索引)
+    * 4.定义一个方法,实现数组的排序(从小到大)
+    * 5.定义一个方法,实现数组的输出
+    * */
+
+    private ArrayUtil()
+    {
+    }
+
+    public static void swap(int[] arr, int i, int j)
+    {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+    public static void reverse(int[] arr)
+    {
+        for (int i = 0; i &lt; arr.length / 2; i++)
+        {
+            swap(arr, i, arr.length - 1 - i);
+        }
+    }
+    public static int[] copy(int[] arr)
+    {
+        int[] newArr = new int[arr.length];
+        for (int i = 0; i &lt; arr.length; i++)
+        {
+            newArr[i] = arr[i];
+        }
+        return newArr;
+    }
+    public static int indexOf(int[] arr, int value)
+    {
+        for (int i = 0; i &lt; arr.length; i++) {
+            if (arr[i] == value) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    // 冒泡排序
+    public static void sort(int[] arr)
+    {
+        for (int i = 0; i &lt; arr.length - 1; i++)
+        {
+            for (int j = 0; j &lt; arr.length - 1 - i; j++)
+            {
+                if (arr[j] &gt; arr[j + 1])
+                {
+                    swap(arr, j, j + 1);
+                }
+            }
+        }
+    }
+    public static void printArray(int[] arr)
+    {
+        System.out.print('[');
+        for (int i = 0; i &lt; arr.length; i++)
+        {
+            System.out.print(arr[i]);
+            if (i &lt; arr.length - 1)
+            {
+                System.out.print(', ');
+            }
+        }
+        System.out.println(']');
+    }
+}
+```
+
+```java
+package AdvancedDemo2;
+
+public class Test
+{
+    static void main()
+    {
+        int[] arr = {1, 2, 6, 4, 5};
+        System.out.println('原数组:');
+        ArrayUtil.printArray(arr);
+
+        ArrayUtil.reverse(arr);
+        System.out.println('反转后的数组:');
+        ArrayUtil.printArray(arr);
+        
+        ArrayUtil.sort(arr);
+        System.out.println('排序后的数组:');
+        ArrayUtil.printArray(arr);
+        
+        int[] newArr = ArrayUtil.copy(arr);
+        System.out.println('复制的数组:');
+        ArrayUtil.printArray(newArr);
+        
+        int index = ArrayUtil.indexOf(arr, 4);
+        System.out.println('4在数组中的索引是:' + index);
+    }
+}
+```
+
+### 静态的注意事项
+
+- 静态方法只能访问**静态变量**和其他的**静态方法**
+- 非静态方法可以访问**静态变量**或者静态方法，也可以访问**非静态的成员变量**和非静态的成员方法
+- 静态方法中没有`this`关键字
+- **总结**：静态只能调用静态，非静态可以调用所有，静态方法无this
+
+#### `main`方法解析
+
+- `public`:被JVM调用，访问权限最大
+- `static`:被JVM调用，类名访问，测试类中其他方法也是静态的
+- `void`:不需要给」VM返回值
+- `main`:固定的名字，被VM识别
+- `String[] args`:用于接收运行的参数，目前不用
+
+## `final`关键字
+
+`final`：**表示最终，不可变。</description><guid isPermaLink="true">https://Whitegveking.github.io/Whitegve-king.github.io/post/mian-xiang-dui-xiang-yuan-li-%E3%80%81static%E3%80%81final%E3%80%81-mei-ju.html</guid><pubDate>Thu, 30 Jul 2026 09:41:40 +0000</pubDate></item><item><title>面向对象</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/mian-xiang-dui-xiang.html</link><description># 面向对象基础
 
 ## 什么是面向对象？
 

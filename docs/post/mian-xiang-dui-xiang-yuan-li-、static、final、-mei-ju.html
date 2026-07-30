@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script src='https://blog.meekdai.com/Gmeek/plugins/GmeekBSZ.js'></script>
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/165184260?v=4&size=64"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# 面向对象原理
+
+## JAVA中对象的内存分配
+
+1. 加载`.class`文件
+2. 声明局部变量
+3. 堆中开辟空间（对象）
+4. 默认初始化
+5. 显式初始化
+6. 构造方法初始化
+7. 赋值地址值
+
+内存模型
+
+<img width='855' height='750' alt='Image' src='https://github.com/user-attachments/assets/87ff2406-4337-4388-a542-3f252929cfd5' />
+
+- 方法出栈之后，方法里面的变量全部消失
+- 如果没有任何地方使用堆中的对象，那么对象也会从堆里面消失
+- 方法区里面的字节码信息一般不会消失，除非关闭虚拟机（idea）
+
+
+
+## 对象在方法中进行传递
+
+1. 把一个对象传递给方法，实际传递的是对象的内存地址
+2. 当多个变量指向同一个对象的时候，只要有一个变量修改了对象中的属性，其他变量再次访问就是修改之后的结果了
+
+```java
+package PrincipleDemo1;
+
+public class Memory
+{
+    static void main()
+    {
+        Student stu = new Student();
+        stu.getInfo();
+        Student stu1 = stu;
+        stu1.setAge(199);
+        stu1.getInfo();
+    }
+}
+```
+
+```cmd
+'C:\JAVA tools\bin\java.exe' '-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=55963' -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopPrinciple\out\production\oopPrinciple PrincipleDemo1.Memory
+无参构造方法被调用
+姓名：null，年龄：0，性别：null，身高：0.0
+姓名：null，年龄：199，性别：null，身高：0.0
+```
+
+## JAVA中`this`关键字详解
+
+<img width='885' height='765' alt='Image' src='https://github.com/user-attachments/assets/d668eb0f-52de-4876-8ac1-aca9905b1f3d' />
+
+**`this`的本质**：代表所在方法***调用者***的内存地址
+
+## `static`关键字
+
+### `static`关键字修饰成员变量
+
+**`static`**:表示**静态**，是JAVA的修饰符，用来修饰（成员变量/成员方法）
+
+**特点**：叫做静态变量，被该类所有对象共享
+
+**调用方式**
+
+1. 类名调用（推荐）
+2. 对象名调用
+
+```java
+package AdvancedDemo1;
+
+public class Student
+{
+    String name;
+    int age;
+    static String teacher ;
+
+    public Student()
+    {
+    }
+
+    public Student(String name, int age)
+    {
+        this.name = name;
+        this.age = age;
+    }
+}
+```
+
+```java
+package AdvancedDemo1;
+
+public class Test
+{
+    static void main()
+    {
+        /*
+        学生有如下属性:姓名，年龄，老师
+        一个班级中，所有学生都是共享同一个老师
+        第一名学生:小诗诗，19岁
+        第二名学生:小丹丹，20岁
+        最初都是小雯老师上课，有一天小丹丹申请换老师，换成了阿玮老师
+        利用static模拟上述效果
+        */
+        Student student1 = new Student('小诗诗', 19);
+        Student student2 = new Student('小丹丹', 20);
+        // 初始化老师
+        Student.teacher = '小雯老师';
+        System.out.println(student1.name + '的老师是' + Student.teacher);
+        System.out.println(student2.name + '的老师是' + Student.teacher);
+
+        // 小丹丹申请换老师
+        Student.teacher = '阿玮老师';
+        System.out.println(student1.name + '的老师是' + Student.teacher);
+        System.out.println(student2.name + '的老师是' + Student.teacher);
+    }
+
+}
+```
+
+```cmd
+'C:\JAVA tools\bin\java.exe' '-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=60344' -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopAdvanced\out\production\oopAdvanced AdvancedDemo1.Test
+小诗诗的老师是小雯老师
+小丹丹的老师是小雯老师
+小诗诗的老师是阿玮老师
+小丹丹的老师是阿玮老师
+```
+
+#### `static`关键字的内存解析
+
+**静态变量随着类的加载而加载，优先于对象出现**
+
+<img width='1689' height='882' alt='Image' src='https://github.com/user-attachments/assets/9419b178-61a5-45e0-8303-e7af5eb35cfc' />
+
+#### `static`静态变量小结
+
+**特点**：
+
+- 被`static`关键字修饰的变量叫做静态变量，被这个类所有对象共享
+- 不属于某一个对象，属于整个类
+- 随着类的加载而加载，优先于对象而存在
+
+**调用方式**：
+
+- 方式一：类名调用（推荐）
+- 方式二：对象名调用（不推荐）
+
+### `static`关键字修饰成员方法
+
+**特点**:
+
+- static修饰的方法叫做静态方法
+- 该方法多用在**测试类**和**工具类**中
+- Javabean类中很少会用
+
+**调用方式**:
+
+- 方式一:类名调用
+- 方式二:对象名调用
+
+#### 工具类
+
+不是用来描述一类事物的，也没有`main`方法，而是帮我们做一些事情的类
+
+- 类名见名知意
+- 私有化构造方法
+- 所有方法定义为静态，通过类名调用
+
+```java
+package AdvancedDemo2;
+
+public class ArrayUtil
+{
+    /*
+    * 1.定义一个方法,实现数组的反转
+    * 2.定义一个方法,实现数组的复制
+    * 3.定义一个方法,实现数组的查找(查找指定元素第一次出现的索引)
+    * 4.定义一个方法,实现数组的排序(从小到大)
+    * 5.定义一个方法,实现数组的输出
+    * */
+
+    private ArrayUtil()
+    {
+    }
+
+    public static void swap(int[] arr, int i, int j)
+    {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+    public static void reverse(int[] arr)
+    {
+        for (int i = 0; i < arr.length / 2; i++)
+        {
+            swap(arr, i, arr.length - 1 - i);
+        }
+    }
+    public static int[] copy(int[] arr)
+    {
+        int[] newArr = new int[arr.length];
+        for (int i = 0; i < arr.length; i++)
+        {
+            newArr[i] = arr[i];
+        }
+        return newArr;
+    }
+    public static int indexOf(int[] arr, int value)
+    {
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == value) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    // 冒泡排序
+    public static void sort(int[] arr)
+    {
+        for (int i = 0; i < arr.length - 1; i++)
+        {
+            for (int j = 0; j < arr.length - 1 - i; j++)
+            {
+                if (arr[j] > arr[j + 1])
+                {
+                    swap(arr, j, j + 1);
+                }
+            }
+        }
+    }
+    public static void printArray(int[] arr)
+    {
+        System.out.print('[');
+        for (int i = 0; i < arr.length; i++)
+        {
+            System.out.print(arr[i]);
+            if (i < arr.length - 1)
+            {
+                System.out.print(', ');
+            }
+        }
+        System.out.println(']');
+    }
+}
+```
+
+```java
+package AdvancedDemo2;
+
+public class Test
+{
+    static void main()
+    {
+        int[] arr = {1, 2, 6, 4, 5};
+        System.out.println('原数组:');
+        ArrayUtil.printArray(arr);
+
+        ArrayUtil.reverse(arr);
+        System.out.println('反转后的数组:');
+        ArrayUtil.printArray(arr);
+        
+        ArrayUtil.sort(arr);
+        System.out.println('排序后的数组:');
+        ArrayUtil.printArray(arr);
+        
+        int[] newArr = ArrayUtil.copy(arr);
+        System.out.println('复制的数组:');
+        ArrayUtil.printArray(newArr);
+        
+        int index = ArrayUtil.indexOf(arr, 4);
+        System.out.println('4在数组中的索引是:' + index);
+    }
+}
+```
+
+### 静态的注意事项
+
+- 静态方法只能访问**静态变量**和其他的**静态方法**
+- 非静态方法可以访问**静态变量**或者静态方法，也可以访问**非静态的成员变量**和非静态的成员方法
+- 静态方法中没有`this`关键字
+- **总结**：静态只能调用静态，非静态可以调用所有，静态方法无this
+
+#### `main`方法解析
+
+- `public`:被JVM调用，访问权限最大
+- `static`:被JVM调用，类名访问，测试类中其他方法也是静态的
+- `void`:不需要给」VM返回值
+- `main`:固定的名字，被VM识别
+- `String[] args`:用于接收运行的参数，目前不用
+
+## `final`关键字
+
+`final`：**表示最终，不可变。">
+<meta property="og:title" content="面向对象原理、static、final、枚举">
+<meta property="og:description" content="# 面向对象原理
+
+## JAVA中对象的内存分配
+
+1. 加载`.class`文件
+2. 声明局部变量
+3. 堆中开辟空间（对象）
+4. 默认初始化
+5. 显式初始化
+6. 构造方法初始化
+7. 赋值地址值
+
+内存模型
+
+<img width='855' height='750' alt='Image' src='https://github.com/user-attachments/assets/87ff2406-4337-4388-a542-3f252929cfd5' />
+
+- 方法出栈之后，方法里面的变量全部消失
+- 如果没有任何地方使用堆中的对象，那么对象也会从堆里面消失
+- 方法区里面的字节码信息一般不会消失，除非关闭虚拟机（idea）
+
+
+
+## 对象在方法中进行传递
+
+1. 把一个对象传递给方法，实际传递的是对象的内存地址
+2. 当多个变量指向同一个对象的时候，只要有一个变量修改了对象中的属性，其他变量再次访问就是修改之后的结果了
+
+```java
+package PrincipleDemo1;
+
+public class Memory
+{
+    static void main()
+    {
+        Student stu = new Student();
+        stu.getInfo();
+        Student stu1 = stu;
+        stu1.setAge(199);
+        stu1.getInfo();
+    }
+}
+```
+
+```cmd
+'C:\JAVA tools\bin\java.exe' '-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=55963' -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopPrinciple\out\production\oopPrinciple PrincipleDemo1.Memory
+无参构造方法被调用
+姓名：null，年龄：0，性别：null，身高：0.0
+姓名：null，年龄：199，性别：null，身高：0.0
+```
+
+## JAVA中`this`关键字详解
+
+<img width='885' height='765' alt='Image' src='https://github.com/user-attachments/assets/d668eb0f-52de-4876-8ac1-aca9905b1f3d' />
+
+**`this`的本质**：代表所在方法***调用者***的内存地址
+
+## `static`关键字
+
+### `static`关键字修饰成员变量
+
+**`static`**:表示**静态**，是JAVA的修饰符，用来修饰（成员变量/成员方法）
+
+**特点**：叫做静态变量，被该类所有对象共享
+
+**调用方式**
+
+1. 类名调用（推荐）
+2. 对象名调用
+
+```java
+package AdvancedDemo1;
+
+public class Student
+{
+    String name;
+    int age;
+    static String teacher ;
+
+    public Student()
+    {
+    }
+
+    public Student(String name, int age)
+    {
+        this.name = name;
+        this.age = age;
+    }
+}
+```
+
+```java
+package AdvancedDemo1;
+
+public class Test
+{
+    static void main()
+    {
+        /*
+        学生有如下属性:姓名，年龄，老师
+        一个班级中，所有学生都是共享同一个老师
+        第一名学生:小诗诗，19岁
+        第二名学生:小丹丹，20岁
+        最初都是小雯老师上课，有一天小丹丹申请换老师，换成了阿玮老师
+        利用static模拟上述效果
+        */
+        Student student1 = new Student('小诗诗', 19);
+        Student student2 = new Student('小丹丹', 20);
+        // 初始化老师
+        Student.teacher = '小雯老师';
+        System.out.println(student1.name + '的老师是' + Student.teacher);
+        System.out.println(student2.name + '的老师是' + Student.teacher);
+
+        // 小丹丹申请换老师
+        Student.teacher = '阿玮老师';
+        System.out.println(student1.name + '的老师是' + Student.teacher);
+        System.out.println(student2.name + '的老师是' + Student.teacher);
+    }
+
+}
+```
+
+```cmd
+'C:\JAVA tools\bin\java.exe' '-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=60344' -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopAdvanced\out\production\oopAdvanced AdvancedDemo1.Test
+小诗诗的老师是小雯老师
+小丹丹的老师是小雯老师
+小诗诗的老师是阿玮老师
+小丹丹的老师是阿玮老师
+```
+
+#### `static`关键字的内存解析
+
+**静态变量随着类的加载而加载，优先于对象出现**
+
+<img width='1689' height='882' alt='Image' src='https://github.com/user-attachments/assets/9419b178-61a5-45e0-8303-e7af5eb35cfc' />
+
+#### `static`静态变量小结
+
+**特点**：
+
+- 被`static`关键字修饰的变量叫做静态变量，被这个类所有对象共享
+- 不属于某一个对象，属于整个类
+- 随着类的加载而加载，优先于对象而存在
+
+**调用方式**：
+
+- 方式一：类名调用（推荐）
+- 方式二：对象名调用（不推荐）
+
+### `static`关键字修饰成员方法
+
+**特点**:
+
+- static修饰的方法叫做静态方法
+- 该方法多用在**测试类**和**工具类**中
+- Javabean类中很少会用
+
+**调用方式**:
+
+- 方式一:类名调用
+- 方式二:对象名调用
+
+#### 工具类
+
+不是用来描述一类事物的，也没有`main`方法，而是帮我们做一些事情的类
+
+- 类名见名知意
+- 私有化构造方法
+- 所有方法定义为静态，通过类名调用
+
+```java
+package AdvancedDemo2;
+
+public class ArrayUtil
+{
+    /*
+    * 1.定义一个方法,实现数组的反转
+    * 2.定义一个方法,实现数组的复制
+    * 3.定义一个方法,实现数组的查找(查找指定元素第一次出现的索引)
+    * 4.定义一个方法,实现数组的排序(从小到大)
+    * 5.定义一个方法,实现数组的输出
+    * */
+
+    private ArrayUtil()
+    {
+    }
+
+    public static void swap(int[] arr, int i, int j)
+    {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+    public static void reverse(int[] arr)
+    {
+        for (int i = 0; i < arr.length / 2; i++)
+        {
+            swap(arr, i, arr.length - 1 - i);
+        }
+    }
+    public static int[] copy(int[] arr)
+    {
+        int[] newArr = new int[arr.length];
+        for (int i = 0; i < arr.length; i++)
+        {
+            newArr[i] = arr[i];
+        }
+        return newArr;
+    }
+    public static int indexOf(int[] arr, int value)
+    {
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == value) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    // 冒泡排序
+    public static void sort(int[] arr)
+    {
+        for (int i = 0; i < arr.length - 1; i++)
+        {
+            for (int j = 0; j < arr.length - 1 - i; j++)
+            {
+                if (arr[j] > arr[j + 1])
+                {
+                    swap(arr, j, j + 1);
+                }
+            }
+        }
+    }
+    public static void printArray(int[] arr)
+    {
+        System.out.print('[');
+        for (int i = 0; i < arr.length; i++)
+        {
+            System.out.print(arr[i]);
+            if (i < arr.length - 1)
+            {
+                System.out.print(', ');
+            }
+        }
+        System.out.println(']');
+    }
+}
+```
+
+```java
+package AdvancedDemo2;
+
+public class Test
+{
+    static void main()
+    {
+        int[] arr = {1, 2, 6, 4, 5};
+        System.out.println('原数组:');
+        ArrayUtil.printArray(arr);
+
+        ArrayUtil.reverse(arr);
+        System.out.println('反转后的数组:');
+        ArrayUtil.printArray(arr);
+        
+        ArrayUtil.sort(arr);
+        System.out.println('排序后的数组:');
+        ArrayUtil.printArray(arr);
+        
+        int[] newArr = ArrayUtil.copy(arr);
+        System.out.println('复制的数组:');
+        ArrayUtil.printArray(newArr);
+        
+        int index = ArrayUtil.indexOf(arr, 4);
+        System.out.println('4在数组中的索引是:' + index);
+    }
+}
+```
+
+### 静态的注意事项
+
+- 静态方法只能访问**静态变量**和其他的**静态方法**
+- 非静态方法可以访问**静态变量**或者静态方法，也可以访问**非静态的成员变量**和非静态的成员方法
+- 静态方法中没有`this`关键字
+- **总结**：静态只能调用静态，非静态可以调用所有，静态方法无this
+
+#### `main`方法解析
+
+- `public`:被JVM调用，访问权限最大
+- `static`:被JVM调用，类名访问，测试类中其他方法也是静态的
+- `void`:不需要给」VM返回值
+- `main`:固定的名字，被VM识别
+- `String[] args`:用于接收运行的参数，目前不用
+
+## `final`关键字
+
+`final`：**表示最终，不可变。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://Whitegveking.github.io/Whitegve-king.github.io/post/mian-xiang-dui-xiang-yuan-li-%E3%80%81static%E3%80%81final%E3%80%81-mei-ju.html">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/165184260?v=4&size=64">
+<title>面向对象原理、static、final、枚举</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">面向对象原理、static、final、枚举</h1>
+<div class="title-right">
+    <a href="https://Whitegveking.github.io/Whitegve-king.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/Whitegveking/Whitegve-king.github.io/issues/6" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>面向对象原理</h1>
+<h2>JAVA中对象的内存分配</h2>
+<ol>
+<li>加载<code class="notranslate">.class</code>文件</li>
+<li>声明局部变量</li>
+<li>堆中开辟空间（对象）</li>
+<li>默认初始化</li>
+<li>显式初始化</li>
+<li>构造方法初始化</li>
+<li>赋值地址值</li>
+</ol>
+<p>内存模型</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/87ff2406-4337-4388-a542-3f252929cfd5"><img width="855" height="750" alt="Image" src="https://github.com/user-attachments/assets/87ff2406-4337-4388-a542-3f252929cfd5" style="max-width: 100%; height: auto; max-height: 750px;; aspect-ratio: 855 / 750; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<ul>
+<li>方法出栈之后，方法里面的变量全部消失</li>
+<li>如果没有任何地方使用堆中的对象，那么对象也会从堆里面消失</li>
+<li>方法区里面的字节码信息一般不会消失，除非关闭虚拟机（idea）</li>
+</ul>
+<h2>对象在方法中进行传递</h2>
+<ol>
+<li>把一个对象传递给方法，实际传递的是对象的内存地址</li>
+<li>当多个变量指向同一个对象的时候，只要有一个变量修改了对象中的属性，其他变量再次访问就是修改之后的结果了</li>
+</ol>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">PrincipleDemo1</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Memory</span>
+{
+    <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>()
+    {
+        <span class="pl-smi">Student</span> <span class="pl-s1">stu</span> = <span class="pl-k">new</span> <span class="pl-smi">Student</span>();
+        <span class="pl-s1">stu</span>.<span class="pl-en">getInfo</span>();
+        <span class="pl-smi">Student</span> <span class="pl-s1">stu1</span> = <span class="pl-s1">stu</span>;
+        <span class="pl-s1">stu1</span>.<span class="pl-en">setAge</span>(<span class="pl-c1">199</span>);
+        <span class="pl-s1">stu1</span>.<span class="pl-en">getInfo</span>();
+    }
+}</pre></div>
+<div class="highlight highlight-source-batchfile"><pre class="notranslate"><span class="pl-s"><span class="pl-pds">"</span>C:\JAVA tools\bin\java.exe<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=55963<span class="pl-pds">"</span></span> -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopPrinciple\out\production\oopPrinciple PrincipleDemo1.Memory
+无参构造方法被调用
+姓名：null，年龄：0，性别：null，身高：0.0
+姓名：null，年龄：199，性别：null，身高：0.0</pre></div>
+<h2>JAVA中<code class="notranslate">this</code>关键字详解</h2>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/d668eb0f-52de-4876-8ac1-aca9905b1f3d"><img width="885" height="765" alt="Image" src="https://github.com/user-attachments/assets/d668eb0f-52de-4876-8ac1-aca9905b1f3d" style="max-width: 100%; height: auto; max-height: 765px;; aspect-ratio: 885 / 765; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<p><strong><code class="notranslate">this</code>的本质</strong>：代表所在方法<em><strong>调用者</strong></em>的内存地址</p>
+<h2><code class="notranslate">static</code>关键字</h2>
+<h3><code class="notranslate">static</code>关键字修饰成员变量</h3>
+<p><strong><code class="notranslate">static</code></strong>:表示<strong>静态</strong>，是JAVA的修饰符，用来修饰（成员变量/成员方法）</p>
+<p><strong>特点</strong>：叫做静态变量，被该类所有对象共享</p>
+<p><strong>调用方式</strong></p>
+<ol>
+<li>类名调用（推荐）</li>
+<li>对象名调用</li>
+</ol>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">AdvancedDemo1</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Student</span>
+{
+    <span class="pl-smi">String</span> <span class="pl-s1">name</span>;
+    <span class="pl-smi">int</span> <span class="pl-s1">age</span>;
+    <span class="pl-k">static</span> <span class="pl-smi">String</span> <span class="pl-s1">teacher</span> ;
+
+    <span class="pl-k">public</span> <span class="pl-smi">Student</span>()
+    {
+    }
+
+    <span class="pl-k">public</span> <span class="pl-smi">Student</span>(<span class="pl-smi">String</span> <span class="pl-s1">name</span>, <span class="pl-smi">int</span> <span class="pl-s1">age</span>)
+    {
+        <span class="pl-smi">this</span>.<span class="pl-s1">name</span> = <span class="pl-s1">name</span>;
+        <span class="pl-smi">this</span>.<span class="pl-s1">age</span> = <span class="pl-s1">age</span>;
+    }
+}</pre></div>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">AdvancedDemo1</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Test</span>
+{
+    <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>()
+    {
+        <span class="pl-c">/*</span>
+<span class="pl-c">        学生有如下属性:姓名，年龄，老师</span>
+<span class="pl-c">        一个班级中，所有学生都是共享同一个老师</span>
+<span class="pl-c">        第一名学生:小诗诗，19岁</span>
+<span class="pl-c">        第二名学生:小丹丹，20岁</span>
+<span class="pl-c">        最初都是小雯老师上课，有一天小丹丹申请换老师，换成了阿玮老师</span>
+<span class="pl-c">        利用static模拟上述效果</span>
+<span class="pl-c">        */</span>
+        <span class="pl-smi">Student</span> <span class="pl-s1">student1</span> = <span class="pl-k">new</span> <span class="pl-smi">Student</span>(<span class="pl-s">"小诗诗"</span>, <span class="pl-c1">19</span>);
+        <span class="pl-smi">Student</span> <span class="pl-s1">student2</span> = <span class="pl-k">new</span> <span class="pl-smi">Student</span>(<span class="pl-s">"小丹丹"</span>, <span class="pl-c1">20</span>);
+        <span class="pl-c">// 初始化老师</span>
+        <span class="pl-smi">Student</span>.<span class="pl-s1">teacher</span> = <span class="pl-s">"小雯老师"</span>;
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">student1</span>.<span class="pl-s1">name</span> + <span class="pl-s">"的老师是"</span> + <span class="pl-smi">Student</span>.<span class="pl-s1">teacher</span>);
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">student2</span>.<span class="pl-s1">name</span> + <span class="pl-s">"的老师是"</span> + <span class="pl-smi">Student</span>.<span class="pl-s1">teacher</span>);
+
+        <span class="pl-c">// 小丹丹申请换老师</span>
+        <span class="pl-smi">Student</span>.<span class="pl-s1">teacher</span> = <span class="pl-s">"阿玮老师"</span>;
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">student1</span>.<span class="pl-s1">name</span> + <span class="pl-s">"的老师是"</span> + <span class="pl-smi">Student</span>.<span class="pl-s1">teacher</span>);
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">student2</span>.<span class="pl-s1">name</span> + <span class="pl-s">"的老师是"</span> + <span class="pl-smi">Student</span>.<span class="pl-s1">teacher</span>);
+    }
+
+}</pre></div>
+<div class="highlight highlight-source-batchfile"><pre class="notranslate"><span class="pl-s"><span class="pl-pds">"</span>C:\JAVA tools\bin\java.exe<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=60344<span class="pl-pds">"</span></span> -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopAdvanced\out\production\oopAdvanced AdvancedDemo1.Test
+小诗诗的老师是小雯老师
+小丹丹的老师是小雯老师
+小诗诗的老师是阿玮老师
+小丹丹的老师是阿玮老师</pre></div>
+<h4><code class="notranslate">static</code>关键字的内存解析</h4>
+<p><strong>静态变量随着类的加载而加载，优先于对象出现</strong></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/9419b178-61a5-45e0-8303-e7af5eb35cfc"><img width="1689" height="882" alt="Image" src="https://github.com/user-attachments/assets/9419b178-61a5-45e0-8303-e7af5eb35cfc" style="max-width: 100%; height: auto; max-height: 882px;; aspect-ratio: 1689 / 882; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<h4><code class="notranslate">static</code>静态变量小结</h4>
+<p><strong>特点</strong>：</p>
+<ul>
+<li>被<code class="notranslate">static</code>关键字修饰的变量叫做静态变量，被这个类所有对象共享</li>
+<li>不属于某一个对象，属于整个类</li>
+<li>随着类的加载而加载，优先于对象而存在</li>
+</ul>
+<p><strong>调用方式</strong>：</p>
+<ul>
+<li>方式一：类名调用（推荐）</li>
+<li>方式二：对象名调用（不推荐）</li>
+</ul>
+<h3><code class="notranslate">static</code>关键字修饰成员方法</h3>
+<p><strong>特点</strong>:</p>
+<ul>
+<li>static修饰的方法叫做静态方法</li>
+<li>该方法多用在<strong>测试类</strong>和<strong>工具类</strong>中</li>
+<li>Javabean类中很少会用</li>
+</ul>
+<p><strong>调用方式</strong>:</p>
+<ul>
+<li>方式一:类名调用</li>
+<li>方式二:对象名调用</li>
+</ul>
+<h4>工具类</h4>
+<p>不是用来描述一类事物的，也没有<code class="notranslate">main</code>方法，而是帮我们做一些事情的类</p>
+<ul>
+<li>类名见名知意</li>
+<li>私有化构造方法</li>
+<li>所有方法定义为静态，通过类名调用</li>
+</ul>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">AdvancedDemo2</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">ArrayUtil</span>
+{
+    <span class="pl-c">/*</span>
+<span class="pl-c">    * 1.定义一个方法,实现数组的反转</span>
+<span class="pl-c">    * 2.定义一个方法,实现数组的复制</span>
+<span class="pl-c">    * 3.定义一个方法,实现数组的查找(查找指定元素第一次出现的索引)</span>
+<span class="pl-c">    * 4.定义一个方法,实现数组的排序(从小到大)</span>
+<span class="pl-c">    * 5.定义一个方法,实现数组的输出</span>
+<span class="pl-c">    * */</span>
+
+    <span class="pl-k">private</span> <span class="pl-smi">ArrayUtil</span>()
+    {
+    }
+
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">swap</span>(<span class="pl-smi">int</span>[] <span class="pl-s1">arr</span>, <span class="pl-smi">int</span> <span class="pl-s1">i</span>, <span class="pl-smi">int</span> <span class="pl-s1">j</span>)
+    {
+        <span class="pl-smi">int</span> <span class="pl-s1">temp</span> = <span class="pl-s1">arr</span>[<span class="pl-s1">i</span>];
+        <span class="pl-s1">arr</span>[<span class="pl-s1">i</span>] = <span class="pl-s1">arr</span>[<span class="pl-s1">j</span>];
+        <span class="pl-s1">arr</span>[<span class="pl-s1">j</span>] = <span class="pl-s1">temp</span>;
+    }
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">reverse</span>(<span class="pl-smi">int</span>[] <span class="pl-s1">arr</span>)
+    {
+        <span class="pl-k">for</span> (<span class="pl-smi">int</span> <span class="pl-s1">i</span> = <span class="pl-c1">0</span>; <span class="pl-s1">i</span> &lt; <span class="pl-s1">arr</span>.<span class="pl-s1">length</span> / <span class="pl-c1">2</span>; <span class="pl-s1">i</span>++)
+        {
+            <span class="pl-en">swap</span>(<span class="pl-s1">arr</span>, <span class="pl-s1">i</span>, <span class="pl-s1">arr</span>.<span class="pl-s1">length</span> - <span class="pl-c1">1</span> - <span class="pl-s1">i</span>);
+        }
+    }
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-smi">int</span>[] <span class="pl-en">copy</span>(<span class="pl-smi">int</span>[] <span class="pl-s1">arr</span>)
+    {
+        <span class="pl-smi">int</span>[] <span class="pl-s1">newArr</span> = <span class="pl-k">new</span> <span class="pl-smi">int</span>[<span class="pl-s1">arr</span>.<span class="pl-s1">length</span>];
+        <span class="pl-k">for</span> (<span class="pl-smi">int</span> <span class="pl-s1">i</span> = <span class="pl-c1">0</span>; <span class="pl-s1">i</span> &lt; <span class="pl-s1">arr</span>.<span class="pl-s1">length</span>; <span class="pl-s1">i</span>++)
+        {
+            <span class="pl-s1">newArr</span>[<span class="pl-s1">i</span>] = <span class="pl-s1">arr</span>[<span class="pl-s1">i</span>];
+        }
+        <span class="pl-k">return</span> <span class="pl-s1">newArr</span>;
+    }
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-smi">int</span> <span class="pl-en">indexOf</span>(<span class="pl-smi">int</span>[] <span class="pl-s1">arr</span>, <span class="pl-smi">int</span> <span class="pl-s1">value</span>)
+    {
+        <span class="pl-k">for</span> (<span class="pl-smi">int</span> <span class="pl-s1">i</span> = <span class="pl-c1">0</span>; <span class="pl-s1">i</span> &lt; <span class="pl-s1">arr</span>.<span class="pl-s1">length</span>; <span class="pl-s1">i</span>++) {
+            <span class="pl-k">if</span> (<span class="pl-s1">arr</span>[<span class="pl-s1">i</span>] == <span class="pl-s1">value</span>) {
+                <span class="pl-k">return</span> <span class="pl-s1">i</span>;
+            }
+        }
+        <span class="pl-k">return</span> -<span class="pl-c1">1</span>;
+    }
+
+    <span class="pl-c">// 冒泡排序</span>
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">sort</span>(<span class="pl-smi">int</span>[] <span class="pl-s1">arr</span>)
+    {
+        <span class="pl-k">for</span> (<span class="pl-smi">int</span> <span class="pl-s1">i</span> = <span class="pl-c1">0</span>; <span class="pl-s1">i</span> &lt; <span class="pl-s1">arr</span>.<span class="pl-s1">length</span> - <span class="pl-c1">1</span>; <span class="pl-s1">i</span>++)
+        {
+            <span class="pl-k">for</span> (<span class="pl-smi">int</span> <span class="pl-s1">j</span> = <span class="pl-c1">0</span>; <span class="pl-s1">j</span> &lt; <span class="pl-s1">arr</span>.<span class="pl-s1">length</span> - <span class="pl-c1">1</span> - <span class="pl-s1">i</span>; <span class="pl-s1">j</span>++)
+            {
+                <span class="pl-k">if</span> (<span class="pl-s1">arr</span>[<span class="pl-s1">j</span>] &gt; <span class="pl-s1">arr</span>[<span class="pl-s1">j</span> + <span class="pl-c1">1</span>])
+                {
+                    <span class="pl-en">swap</span>(<span class="pl-s1">arr</span>, <span class="pl-s1">j</span>, <span class="pl-s1">j</span> + <span class="pl-c1">1</span>);
+                }
+            }
+        }
+    }
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">printArray</span>(<span class="pl-smi">int</span>[] <span class="pl-s1">arr</span>)
+    {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">print</span>(<span class="pl-s">"["</span>);
+        <span class="pl-k">for</span> (<span class="pl-smi">int</span> <span class="pl-s1">i</span> = <span class="pl-c1">0</span>; <span class="pl-s1">i</span> &lt; <span class="pl-s1">arr</span>.<span class="pl-s1">length</span>; <span class="pl-s1">i</span>++)
+        {
+            <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">print</span>(<span class="pl-s1">arr</span>[<span class="pl-s1">i</span>]);
+            <span class="pl-k">if</span> (<span class="pl-s1">i</span> &lt; <span class="pl-s1">arr</span>.<span class="pl-s1">length</span> - <span class="pl-c1">1</span>)
+            {
+                <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">print</span>(<span class="pl-s">", "</span>);
+            }
+        }
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"]"</span>);
+    }
+}</pre></div>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">AdvancedDemo2</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Test</span>
+{
+    <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>()
+    {
+        <span class="pl-smi">int</span>[] <span class="pl-s1">arr</span> = {<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">6</span>, <span class="pl-c1">4</span>, <span class="pl-c1">5</span>};
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"原数组:"</span>);
+        <span class="pl-smi">ArrayUtil</span>.<span class="pl-en">printArray</span>(<span class="pl-s1">arr</span>);
+
+        <span class="pl-smi">ArrayUtil</span>.<span class="pl-en">reverse</span>(<span class="pl-s1">arr</span>);
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"反转后的数组:"</span>);
+        <span class="pl-smi">ArrayUtil</span>.<span class="pl-en">printArray</span>(<span class="pl-s1">arr</span>);
+        
+        <span class="pl-smi">ArrayUtil</span>.<span class="pl-en">sort</span>(<span class="pl-s1">arr</span>);
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"排序后的数组:"</span>);
+        <span class="pl-smi">ArrayUtil</span>.<span class="pl-en">printArray</span>(<span class="pl-s1">arr</span>);
+        
+        <span class="pl-smi">int</span>[] <span class="pl-s1">newArr</span> = <span class="pl-smi">ArrayUtil</span>.<span class="pl-en">copy</span>(<span class="pl-s1">arr</span>);
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"复制的数组:"</span>);
+        <span class="pl-smi">ArrayUtil</span>.<span class="pl-en">printArray</span>(<span class="pl-s1">newArr</span>);
+        
+        <span class="pl-smi">int</span> <span class="pl-s1">index</span> = <span class="pl-smi">ArrayUtil</span>.<span class="pl-en">indexOf</span>(<span class="pl-s1">arr</span>, <span class="pl-c1">4</span>);
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"4在数组中的索引是:"</span> + <span class="pl-s1">index</span>);
+    }
+}</pre></div>
+<h3>静态的注意事项</h3>
+<ul>
+<li>静态方法只能访问<strong>静态变量</strong>和其他的<strong>静态方法</strong></li>
+<li>非静态方法可以访问<strong>静态变量</strong>或者静态方法，也可以访问<strong>非静态的成员变量</strong>和非静态的成员方法</li>
+<li>静态方法中没有<code class="notranslate">this</code>关键字</li>
+<li><strong>总结</strong>：静态只能调用静态，非静态可以调用所有，静态方法无this</li>
+</ul>
+<h4><code class="notranslate">main</code>方法解析</h4>
+<ul>
+<li><code class="notranslate">public</code>:被JVM调用，访问权限最大</li>
+<li><code class="notranslate">static</code>:被JVM调用，类名访问，测试类中其他方法也是静态的</li>
+<li><code class="notranslate">void</code>:不需要给」VM返回值</li>
+<li><code class="notranslate">main</code>:固定的名字，被VM识别</li>
+<li><code class="notranslate">String[] args</code>:用于接收运行的参数，目前不用</li>
+</ul>
+<h2><code class="notranslate">final</code>关键字</h2>
+<p><code class="notranslate">final</code>：**表示最终，不可变。**可以修饰变量、类、方法</p>
+<p><code class="notranslate">final</code>修饰变量，此时叫做常量</p>
+<ul>
+<li>特点1:只能被赋值一次，一旦赋值，无法再次修改。</li>
+<li>特点2:常量名大写，多个单词之间用下划线隔</li>
+</ul>
+<p>细节:</p>
+<ul>
+<li>
+<p><strong>基本数据类型</strong>:</p>
+<p><code class="notranslate">byte short int long float double char boolean</code></p>
+</li>
+</ul>
+<p>​	变量里面记录的是真实的数据</p>
+<p>​	<code class="notranslate">fianl int a = 10;</code></p>
+<ul>
+<li><strong>引用数据类型</strong>:</li>
+</ul>
+<p>​	除了上面四类八种，其他所有的数据类型都是引用类型<br>
+​		<code class="notranslate">int[]Student Teacher...</code></p>
+<p>​	<code class="notranslate">stu</code>中记录对象的内存地址，不可改变的是<code class="notranslate">stu</code>记录的内存地址</p>
+<p>​	而对象里面的属性值，是可以发生改变的</p>
+<p>​	<code class="notranslate">final Student stu = new Student();</code></p>
+<ul>
+<li><strong>综上所述</strong>：</li>
+</ul>
+<p>​	<code class="notranslate">final</code>修饰那个变量，这个变量里面记录的内容就无法再次发生改变（属性值/地址）</p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">FinalTest</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Student</span>
+{
+    <span class="pl-k">final</span> <span class="pl-smi">String</span> <span class="pl-s1">name</span>;
+    <span class="pl-k">final</span> <span class="pl-smi">int</span> <span class="pl-s1">age</span>;
+
+    <span class="pl-k">public</span> <span class="pl-smi">Student</span>(<span class="pl-smi">String</span> <span class="pl-s1">name</span>, <span class="pl-smi">int</span> <span class="pl-s1">age</span>)
+    {
+        <span class="pl-smi">this</span>.<span class="pl-s1">name</span> = <span class="pl-s1">name</span>;
+        <span class="pl-smi">this</span>.<span class="pl-s1">age</span> = <span class="pl-s1">age</span>;
+    }
+
+    <span class="pl-k">public</span> <span class="pl-smi">String</span> <span class="pl-en">getName</span>()
+    {
+        <span class="pl-k">return</span> <span class="pl-s1">name</span>;
+    }
+
+    <span class="pl-k">public</span> <span class="pl-smi">int</span> <span class="pl-en">getAge</span>()
+    {
+        <span class="pl-k">return</span> <span class="pl-s1">age</span>;
+    }
+}</pre></div>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">FinalTest</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Test</span>
+{
+    <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>()
+    {
+        <span class="pl-k">final</span> <span class="pl-smi">int</span> <span class="pl-c1">NUMBER</span> = <span class="pl-c1">100</span>;
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"NUMBER = "</span> + <span class="pl-c1">NUMBER</span>);
+        <span class="pl-k">final</span> <span class="pl-smi">Student</span> <span class="pl-s1">stu</span> = <span class="pl-k">new</span> <span class="pl-smi">Student</span>(<span class="pl-s">"Alice"</span>, <span class="pl-c1">20</span>);
+        <span class="pl-c">// stu.name = "Berry";</span>
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">stu</span>.<span class="pl-s1">name</span>);
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">stu</span>.<span class="pl-s1">age</span>);
+    }
+}</pre></div>
+<h2>枚举</h2>
+<ul>
+<li>枚举是一个特殊的<code class="notranslate">Javabean</code>类，这个类的对象是有限个</li>
+<li>使用场景：订单的状态、月份、星期、游戏角色职业、会议室预约状态、设备状态..</li>
+</ul>
+<h3>枚举的定义格式</h3>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">public</span> <span class="pl-k">enum</span> <span class="pl-smi">枚举类名</span>{
+    <span class="pl-s1">枚举项1</span>,<span class="pl-s1">枚举项2</span>,<span class="pl-s1">枚举项3</span>;
+    <span class="pl-smi">属性</span>;
+    <span class="pl-s1">行为</span>;
+}</pre></div>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">EnumTest</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">enum</span> <span class="pl-smi">OrderState</span>
+{
+
+    <span class="pl-c">// 电商项目中，订单的状态只有以下6种，请编写代码实现。</span>
+    <span class="pl-c">// 待支付  PAYMENT_PENDING</span>
+    <span class="pl-c">// 处理中  PROCESSING</span>
+    <span class="pl-c">// 己发货  SHIPPEDDELIVERED</span>
+    <span class="pl-c">// 配送中  OUT FOR _DELIVERY</span>
+    <span class="pl-c">// 己送达  DILIVERED</span>
+    <span class="pl-c">// 己取消  CANCELLED</span>
+
+    <span class="pl-c">// 列出所有对象</span>
+    <span class="pl-c1">PAYMENT_PENDING</span>(<span class="pl-s">"待支付"</span>),
+    <span class="pl-c1">PROCESSING</span>(<span class="pl-s">"处理中"</span>),
+    <span class="pl-c1">SHIPPED</span>(<span class="pl-s">"己发货"</span>),
+    <span class="pl-c1">OUT_FOR_DELIVERY</span>(<span class="pl-s">"配送中"</span>),
+    <span class="pl-c1">DELIVERED</span>(<span class="pl-s">"己送达"</span>),
+    <span class="pl-c1">CANCELLED</span>(<span class="pl-s">"己取消"</span>);
+    <span class="pl-k">final</span> <span class="pl-k">private</span> <span class="pl-smi">String</span> <span class="pl-s1">name</span>;
+
+    <span class="pl-smi">OrderState</span>(<span class="pl-smi">String</span> <span class="pl-s1">name</span>)
+    {
+        <span class="pl-smi">this</span>.<span class="pl-s1">name</span> = <span class="pl-s1">name</span>;
+    }
+
+    <span class="pl-k">public</span> <span class="pl-smi">String</span> <span class="pl-en">getName</span>()
+    {
+        <span class="pl-k">return</span> <span class="pl-s1">name</span>;
+    }
+}</pre></div>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">EnumTest</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Test</span>
+{
+    <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>()
+    {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-smi">OrderState</span>.<span class="pl-c1">PAYMENT_PENDING</span>.<span class="pl-en">getName</span>());
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-smi">OrderState</span>.<span class="pl-c1">PROCESSING</span>.<span class="pl-en">getName</span>());
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-smi">OrderState</span>.<span class="pl-c1">SHIPPED</span>.<span class="pl-en">getName</span>());
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-smi">OrderState</span>.<span class="pl-c1">OUT_FOR_DELIVERY</span>.<span class="pl-en">getName</span>());
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-smi">OrderState</span>.<span class="pl-c1">DELIVERED</span>.<span class="pl-en">getName</span>());
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-smi">OrderState</span>.<span class="pl-c1">CANCELLED</span>.<span class="pl-en">getName</span>());
+        <span class="pl-smi">OrderState</span> <span class="pl-s1">o1</span> = <span class="pl-smi">OrderState</span>.<span class="pl-c1">PAYMENT_PENDING</span>;
+        <span class="pl-k">switch</span>(<span class="pl-s1">o1</span>)
+        {
+            <span class="pl-k">case</span> <span class="pl-c1">PAYMENT_PENDING</span>-&gt; <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"订单状态为:待支付"</span>);
+            <span class="pl-k">case</span> <span class="pl-c1">PROCESSING</span> -&gt; <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"订单状态为:处理中"</span>);
+            <span class="pl-k">case</span> <span class="pl-c1">SHIPPED</span> -&gt; <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"订单状态为:己发货"</span>);
+            <span class="pl-k">case</span> <span class="pl-c1">OUT_FOR_DELIVERY</span> -&gt; <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"订单状态为:配送中"</span>);
+            <span class="pl-k">case</span> <span class="pl-c1">DELIVERED</span> -&gt; <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"订单状态为:己送达"</span>);
+            <span class="pl-k">case</span> <span class="pl-c1">CANCELLED</span> -&gt; <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"订单状态为:己取消"</span>);
+        }
+    }
+}</pre></div>
+<p>所有的枚举项，默认使用<code class="notranslate">public static final</code>修饰</p>
+<h3>枚举的注意事项</h3>
+<ul>
+<li>每一个枚举项，都是该枚举类的对象</li>
+<li>枚举项在底层其实就是常量，默认用<code class="notranslate">public static final</code>修饰</li>
+<li>枚举类的第一行上必须是枚举项，每个枚举项之间用逗号隔开，以分号作为结尾</li>
+</ul></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://Whitegveking.github.io/Whitegve-king.github.io">Cyy的JAVA学习日记</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","Whitegveking/Whitegve-king.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>
+
+</html>
