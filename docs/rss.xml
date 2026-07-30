@@ -1,5 +1,78 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Wed, 29 Jul 2026 17:07:43 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>方法、JAVA原理（后续面向对象会单开一篇）</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/fang-fa-%E3%80%81JAVA-yuan-li-%EF%BC%88-hou-xu-mian-xiang-dui-xiang-hui-dan-kai-yi-pian-%EF%BC%89.html</link><description># 1、方法
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Thu, 30 Jul 2026 09:45:51 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>面向对象</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/mian-xiang-dui-xiang.html</link><description># 面向对象基础
+
+## 什么是面向对象？
+
+**对象**：把相关的**数据**和**方法**组织为一个**整体**来看待
+
+**面向对象**：利用**对象**进行软件开发
+
+## 类和对象
+
+用一个类来描述狗狗
+
+```java
+package object;
+
+public class Dog
+{
+    String name;
+    int age;
+    double weight;
+    String color;
+}
+```
+
+```java
+package object;
+
+public class ObjectDemo1
+{
+    public static void printDogInfo(Dog dog)
+    {
+        System.out.println('小狗的名字是：' + dog.name);
+        System.out.println('小狗的年龄是：' + dog.age);
+        System.out.println('小狗的体重是：' + dog.weight);
+        System.out.println('小狗的颜色是：' + dog.color);
+    }
+    static void main()
+    {
+        // 创建对象，记录第一只小狗的信息
+        Dog dog1 = new Dog();
+        dog1.name = '旺财';
+        dog1.age = 3;
+        dog1.weight = 5.5;
+        dog1.color = '黄色';
+        printDogInfo(dog1);
+    }
+}
+```
+
+**`new`**：创建一个大空间
+
+**`Dog`**：管理狗狗的信息
+
+**`dog1`**：大空间的名字
+
+- 描述一类事物的类叫`Javabean`类
+- 带有`main`方法的类叫测试类
+- `Javabean`类可以写属性和行为
+
+## 面向对象中的数据安全问题
+
+### `private`关键字
+
+是一个权限修饰符，可以修饰成员变量和成员方法 
+
+**特点**：一旦被`private`修饰，只能在本类中才能访问，外界无法访问
+
+```java
+package ObjectDeno4;
+
+public class Dog
+{
+    /*
+    * 小狗有属性:姓名、年龄。</description><guid isPermaLink="true">https://Whitegveking.github.io/Whitegve-king.github.io/post/mian-xiang-dui-xiang.html</guid><pubDate>Wed, 29 Jul 2026 09:52:20 +0000</pubDate></item><item><title>方法、JAVA原理（后续面向对象会单开一篇）</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/fang-fa-%E3%80%81JAVA-yuan-li-%EF%BC%88-hou-xu-mian-xiang-dui-xiang-hui-dan-kai-yi-pian-%EF%BC%89.html</link><description># 1、方法
 
 ## 什么是方法?应用场景?好处?
 
