@@ -451,4 +451,65 @@ public class Test
 - 每一个枚举项，都是该枚举类的对象
 - 枚举项在底层其实就是常量，默认用`public static final`修饰
 - 枚举类的第一行上必须是枚举项，每个枚举项之间用逗号隔开，以分号作为结尾
+- 枚举类的构造方法必须是`private`修饰，不让外界创建本类的对象
+- 编译器会给枚举类新增两个默认存在的方法：`values(),valueOf()`
+
+- `values()`:表示获取本类所有的枚举项
+- `valueOf()`：表示获取一个指定的枚举项	
+
+- 枚举类的构造方法默认使用`private`修饰
+
+**默认用`public static final`修饰**
+
+```JAVA
+PS C:\Users\72982\IdeaProjects\oopAdvanced\out\production\oopAdvanced\EnumTest> javap .\OrderState.class
+Compiled from "OrderState.java"
+public final class EnumTest.OrderState extends java.lang.Enum<EnumTest.OrderState> {
+  public static final EnumTest.OrderState PAYMENT_PENDING;
+  public static final EnumTest.OrderState PROCESSING;
+  public static final EnumTest.OrderState SHIPPED;
+  public static final EnumTest.OrderState OUT_FOR_DELIVERY;
+  public static final EnumTest.OrderState DELIVERED;
+  public static final EnumTest.OrderState CANCELLED;
+  public static final EnumTest.OrderState aa;
+  public static EnumTest.OrderState[] values();
+  public static EnumTest.OrderState valueOf(java.lang.String);
+  public java.lang.String getName();
+  static {};
+}
+```
+
+**`values()、valueOf()`**:
+
+```java
+package EnumTest;
+
+public class Test2
+{
+    static void main()
+    {
+        OrderState[] arr = OrderState.values();
+        for(OrderState j:arr)
+        {
+            System.out.println(j);
+        }
+
+        System.out.println("--------------------------");
+        System.out.println(OrderState.valueOf("PAYMENT_PENDING"));
+    }
+}
+```
+
+```cmd
+"C:\JAVA tools\bin\java.exe" "-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=56915" -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopAdvanced\out\production\oopAdvanced EnumTest.Test2
+PAYMENT_PENDING
+PROCESSING
+SHIPPED
+OUT_FOR_DELIVERY
+DELIVERED
+CANCELLED
+aa
+--------------------------
+PAYMENT_PENDING
+```
 

@@ -1060,10 +1060,74 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>所有的枚举项，默认使用<code class="notranslate">public static final</code>修饰</p>
 <h3>枚举的注意事项</h3>
 <ul>
-<li>每一个枚举项，都是该枚举类的对象</li>
-<li>枚举项在底层其实就是常量，默认用<code class="notranslate">public static final</code>修饰</li>
-<li>枚举类的第一行上必须是枚举项，每个枚举项之间用逗号隔开，以分号作为结尾</li>
-</ul></div>
+<li>
+<p>每一个枚举项，都是该枚举类的对象</p>
+</li>
+<li>
+<p>枚举项在底层其实就是常量，默认用<code class="notranslate">public static final</code>修饰</p>
+</li>
+<li>
+<p>枚举类的第一行上必须是枚举项，每个枚举项之间用逗号隔开，以分号作为结尾</p>
+</li>
+<li>
+<p>枚举类的构造方法必须是<code class="notranslate">private</code>修饰，不让外界创建本类的对象</p>
+</li>
+<li>
+<p>编译器会给枚举类新增两个默认存在的方法：<code class="notranslate">values(),valueOf()</code></p>
+</li>
+<li>
+<p><code class="notranslate">values()</code>:表示获取本类所有的枚举项</p>
+</li>
+<li>
+<p><code class="notranslate">valueOf()</code>：表示获取一个指定的枚举项</p>
+</li>
+<li>
+<p>枚举类的构造方法默认使用<code class="notranslate">private</code>修饰</p>
+</li>
+</ul>
+<p><strong>默认用<code class="notranslate">public static final</code>修饰</strong></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-smi">PS</span> <span class="pl-s1">C</span>:\U<span class="pl-s1">sers</span><span class="pl-cce">\72</span><span class="pl-c1">982</span>\I<span class="pl-s1">deaProjects</span>\o<span class="pl-s1">opAdvanced</span>\o<span class="pl-s1">ut</span>\p<span class="pl-s1">roduction</span>\o<span class="pl-s1">opAdvanced</span>\E<span class="pl-s1">numTest</span>&gt; <span class="pl-s1">javap</span> .\O<span class="pl-s1">rderState</span>.<span class="pl-k">class</span>
+<span class="pl-smi">Compiled</span> <span class="pl-s1">from</span> <span class="pl-s">"OrderState.java"</span>
+<span class="pl-k">public</span> <span class="pl-k">final</span> <span class="pl-k">class</span> <span class="pl-s1">EnumTest</span>.<span class="pl-smi">OrderState</span> <span class="pl-k">extends</span> <span class="pl-smi">java</span>.<span class="pl-smi">lang</span>.<span class="pl-smi">Enum</span>&lt;<span class="pl-smi">EnumTest</span>.<span class="pl-smi">OrderState</span>&gt; {
+  <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">final</span> <span class="pl-smi">EnumTest</span>.<span class="pl-smi">OrderState</span> <span class="pl-c1">PAYMENT_PENDING</span>;
+  <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">final</span> <span class="pl-smi">EnumTest</span>.<span class="pl-smi">OrderState</span> <span class="pl-c1">PROCESSING</span>;
+  <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">final</span> <span class="pl-smi">EnumTest</span>.<span class="pl-smi">OrderState</span> <span class="pl-c1">SHIPPED</span>;
+  <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">final</span> <span class="pl-smi">EnumTest</span>.<span class="pl-smi">OrderState</span> <span class="pl-c1">OUT_FOR_DELIVERY</span>;
+  <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">final</span> <span class="pl-smi">EnumTest</span>.<span class="pl-smi">OrderState</span> <span class="pl-c1">DELIVERED</span>;
+  <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">final</span> <span class="pl-smi">EnumTest</span>.<span class="pl-smi">OrderState</span> <span class="pl-c1">CANCELLED</span>;
+  <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">final</span> <span class="pl-smi">EnumTest</span>.<span class="pl-smi">OrderState</span> <span class="pl-s1">aa</span>;
+  <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-smi">EnumTest</span>.<span class="pl-smi">OrderState</span>[] <span class="pl-en">values</span>();
+  <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-smi">EnumTest</span>.<span class="pl-smi">OrderState</span> <span class="pl-en">valueOf</span>(<span class="pl-smi">java</span>.<span class="pl-smi">lang</span>.<span class="pl-smi">String</span><span class="pl-s1"></span>);
+  <span class="pl-k">public</span> <span class="pl-smi">java</span>.<span class="pl-smi">lang</span>.<span class="pl-smi">String</span> <span class="pl-en">getName</span>();
+  <span class="pl-k">static</span> {};
+}</pre></div>
+<p><strong><code class="notranslate">values()、valueOf()</code></strong>:</p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">EnumTest</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Test2</span>
+{
+    <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>()
+    {
+        <span class="pl-smi">OrderState</span>[] <span class="pl-s1">arr</span> = <span class="pl-smi">OrderState</span>.<span class="pl-en">values</span>();
+        <span class="pl-k">for</span>(<span class="pl-smi">OrderState</span> <span class="pl-s1">j</span>:<span class="pl-s1">arr</span>)
+        {
+            <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">j</span>);
+        }
+
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"--------------------------"</span>);
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-smi">OrderState</span>.<span class="pl-en">valueOf</span>(<span class="pl-s">"PAYMENT_PENDING"</span>));
+    }
+}</pre></div>
+<div class="highlight highlight-source-batchfile"><pre class="notranslate"><span class="pl-s"><span class="pl-pds">"</span>C:\JAVA tools\bin\java.exe<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=56915<span class="pl-pds">"</span></span> -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopAdvanced\out\production\oopAdvanced EnumTest.Test2
+PAYMENT_PENDING
+PROCESSING
+SHIPPED
+OUT_FOR_DELIVERY
+DELIVERED
+CANCELLED
+aa
+--------------------------
+PAYMENT_PENDING</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
