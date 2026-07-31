@@ -1,5 +1,436 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Thu, 30 Jul 2026 09:47:21 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>面向对象原理、static、final、枚举</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/mian-xiang-dui-xiang-yuan-li-%E3%80%81static%E3%80%81final%E3%80%81-mei-ju.html</link><description># 面向对象原理
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Fri, 31 Jul 2026 09:45:23 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>继承</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/ji-cheng.html</link><description># 面向对象高级
+
+## 面向对象三大特征
+
+- 封装
+- 继承
+- 多态
+
+## 封装
+
+把零散的数据和行为封装成一个整体，在进行数据传递的时候只需传递整体
+
+## 继承
+
+### 什么是继承？继承的好处？
+
+- 继承是类与类之间的一种父子关系，Java中提供关键字`extends`，用于建立类与类之间的关系
+- 可以吧多个子类中重复的代码抽取到父类中，提高代码的复用性
+- 子类可以在父类的基础上，增加其他的功能，使子类更强大
+
+```java
+package oopextendstests1;
+
+public class Person
+{
+    String name;
+    int age;
+    public void eat()
+    {
+        System.out.println('eating');
+    }
+}
+
+package oopextendstests1;
+
+public class Student extends Person
+{
+    String grade;
+    public void study()
+    {
+        System.out.println('studing');
+    }
+}
+
+package oopextendstests1;
+
+public class Teacher extends Person
+{
+    String subject;
+    public void teach()
+    {
+        System.out.println('teaching');
+    }
+}
+
+package oopextendstests1;
+
+public class Test
+{
+    static void main()
+    {
+        // 创建三个对象分别测试属性
+        Student stu = new Student();
+        Teacher teacher = new Teacher();
+        Person person = new Person();
+        // 测试属性
+        stu.name = '张三';
+        stu.age = 20;
+        stu.grade = '大一';
+        System.out.println('姓名: ' + stu.name + ',年龄: ' + stu.age + ',年级: ' + stu.grade);
+
+        teacher.name = '李四';
+        teacher.age = 30;
+        teacher.subject = '数学';
+        System.out.println('姓名: ' + teacher.name + ',年龄: ' + teacher.age + ',学科: ' + teacher.subject);
+
+        person.name = '王五';
+        person.age = 40;
+        System.out.println('姓名: ' + person.name + ',年龄: ' + person.age);
+        // 测试方法
+        stu.study();
+        stu.eat();
+
+        teacher.teach();
+        teacher.eat();
+
+        person.eat();
+    }
+}
+```
+
+```cmd
+'C:\JAVA tools\bin\java.exe' '-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=59437' -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopExtends\out\production\oopExtends oopextendstests.Test
+姓名: 张三,年龄: 20,年级: 大一
+姓名: 李四,年龄: 30,学科: 数学
+姓名: 王五,年龄: 40
+studing
+eating
+teaching
+eating
+eating
+```
+
+#### 总结
+
+**1、什么是继承？**
+
+面向对象三大特征之一，可以让类跟类之间产生父子关系
+
+**2、继承的作用是什么**
+
+- **操作**：多个子类中重复的代码抽取到父类，子类可以直接使用
+- **好处**：减少代码冗余，提高代码复用性
+
+**3、继承的格式？**
+
+`public calss 子类 extends 父类 {}`
+
+**4、继承后子类的好处**
+
+- 子类可以得到父类的属性和行为，子类可以使用
+- 子类可以在父类的基础上新增其他功能，子类更强大
+
+### 如何设计一个继承结构
+
+当类与类之间存在共性内容，**并满足子类是父类的一种**，就可以考虑使用继承来优化代码
+
+父类要能代表子类
+
+&lt;img width='1470' height='786' alt='Image' src='https://github.com/user-attachments/assets/e0c9517b-19aa-4cab-ac9f-e25b983fb412' /&gt;
+
+&lt;img width='543' height='462' alt='Image' src='https://github.com/user-attachments/assets/0153d366-2f6f-4465-b097-aba3ffaee7b6' /&gt;
+
+```java
+package oopextendstests2;
+
+public class SmartDevice
+{
+    String brand;
+    int price;
+}
+```
+
+```java
+package oopextendstests2;
+
+public class Telephone extends SmartDevice
+{
+    public void phonecall()
+    {
+        System.out.println('ringing');
+    }
+
+    public void sendMessage()
+    {
+        System.out.println('sending message');
+    }
+}
+```
+
+```java
+package oopextendstests2;
+
+public class Laptop extends SmartDevice
+{
+    public void code()
+    {
+        System.out.println('coding');
+    }
+}
+```
+
+```java
+package oopextendstests2;
+
+public class Android extends Telephone
+{
+    public void nfc()
+    {
+        System.out.println('using nfc');
+    }
+}
+```
+
+```java
+package oopextendstests2;
+
+public class IOS extends Telephone
+{
+
+}
+```
+
+类图
+
+&lt;img width='501' height='648' alt='Image' src='https://github.com/user-attachments/assets/3c7e6ef4-7285-4d7a-8a00-de5d5961c648' /&gt;
+
+#### 总结
+
+1. 用画图法解决
+2. 分类
+3. 抽取共性内容不断往上抽取（自下而上）
+4. 写代码（自上而下）
+
+### 继承的特点
+
+JAVA只支持**单继承**，不支持多继承，但支持**多层继承**
+
+**单继承**：一个子类只能继承一个父类
+
+**不支持多继承**：子类不能同时继承多个父类
+
+**多层继承**：分为直接父类和间接父类
+
+&lt;img width='1202' height='408' alt='Image' src='https://github.com/user-attachments/assets/fee9ab3f-7119-4307-bc74-8fe9da0abff1' /&gt;
+
+JAVA中的**顶级父类**为：`Object`，每一个类都直接或者间接继承于`Object`
+
+### 继承中的成员特点
+
+#### 成员变量
+
+- **书写规则**：把多个子类中相同的属性抽取到父类中
+- **调用规则**：就近原则
+
+| 关键字  |   作用   |
+| :-----: | :------: |
+| `this`  | **本类** |
+| `super` | **父类** |
+
+```java
+package oopextendstests3;
+
+import java.sql.SQLOutput;
+
+public class Test
+{
+    static void main()
+    {
+        Zi zi = new Zi();
+        zi.ziShow();
+    }
+}
+
+
+class Fu
+{
+    String name = 'Fu';
+    String address = 'FuAddress';
+}
+
+class Zi extends Fu
+{
+    String name = 'Zi';
+
+    public void ziShow()
+    {
+        // 要求输出结果为'Zi'，请在此处补充代码
+        System.out.println(name);
+        System.out.println(this.name);
+
+        // 要求输出结果为'Fu'，请在此处补充代码
+        System.out.println(super.name);
+
+        // 要求输出结果为'FuAddress'，请在此处补充代码
+        System.out.println(address);
+        System.out.println(this.address);
+        System.out.println(super.address);
+    }
+}
+```
+
+```cmd
+'C:\JAVA tools\bin\java.exe' '-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=60197' -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopExtends\out\production\oopExtends oopextendstests3.Test
+Zi
+Zi
+Fu
+FuAddress
+FuAddress
+FuAddress
+```
+
+#### 成员方法
+
+- **书写规则**：把多个子类中共性的成员方法抽取到父类当中
+- **调用规则**：遵循就近原则
+
+```java
+package oopextendstests4;
+
+public class Test
+{
+    static void main()
+    {
+
+    }
+}
+
+class Fu
+{
+    public void eat()
+    {
+        System.out.println('eating');
+    }
+
+    public void drink()
+    {
+        System.out.println('drinking');
+    }
+}
+
+class Zi1 extends Fu
+{
+    public void lunch()
+    {
+        eat();
+        drink();
+        System.out.println('-----------------------');
+        super.eat();
+        super.drink();
+    }
+}
+```
+
+```cmd
+'C:\JAVA tools\bin\java.exe' '-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=56555' -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopExtends\out\production\oopExtends oopextendstests4.Test
+eating
+drinking
+-----------------------
+eating
+drinking
+```
+
+
+
+##### 方法的重写
+
+- **方法重写**：在子类中，把父类的方法再写一遍，方法声明保持一致
+- **使用场景**：如果父类的方法不能满足子类的要求了，子类中可以把该方法再重写一遍
+
+```java
+package oppextendstests5;
+
+public class FirstGenerationPhone
+{
+    public void call()
+    {
+        System.out.println('make a phone call');
+    }
+}
+```
+
+```java
+package oppextendstests5;
+
+public class SecondGenerationPhone extends FirstGenerationPhone
+{
+    public void sendMessage()
+    {
+        System.out.println('send a message');
+    }
+}
+```
+
+```java
+package oppextendstests5;
+
+public class ThirdGenerationPhone extends SecondGenerationPhone
+{
+    @Override
+    public void call()
+    {
+        System.out.println('make a video phone call');
+    }
+
+    public void playGames()
+    {
+        System.out.println('play games');
+    }
+}
+```
+
+```java
+package oppextendstests5;
+
+import oopextendstests2.Telephone;
+
+public class Test
+{
+    /*
+    第一代手机:
+        功能:打电话
+    第二代手机:
+        功能:打电话，发短信
+    第三代手机:
+        功能:打电话升级为视频通话，发短信，玩游戏
+    */
+    static void main()
+    {
+        FirstGenerationPhone phone1 = new FirstGenerationPhone();
+        phone1.call();
+        System.out.println('-------------------');
+
+        SecondGenerationPhone phone2 = new SecondGenerationPhone();
+        phone2.call();
+        phone2.sendMessage();
+        System.out.println('-------------------');
+
+        ThirdGenerationPhone phone3 = new ThirdGenerationPhone();
+        phone3.call();
+        phone3.sendMessage();
+        phone3.playGames();
+    }
+
+}
+```
+
+```cmd
+'C:\JAVA tools\bin\java.exe' '-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=64640' -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopExtends\out\production\oopExtends oppextendstests5.Test
+make a phone call
+-------------------
+make a phone call
+send a message
+-------------------
+make a video phone call
+send a message
+play games
+```
+
+###### 注意事项和要求
+
+1. 重写方法的**名称**、**形参列表**必须与父类中的一致，方法体按照实际需求书写。</description><guid isPermaLink="true">https://Whitegveking.github.io/Whitegve-king.github.io/post/ji-cheng.html</guid><pubDate>Fri, 31 Jul 2026 09:44:59 +0000</pubDate></item><item><title>面向对象原理、static、final、枚举</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/mian-xiang-dui-xiang-yuan-li-%E3%80%81static%E3%80%81final%E3%80%81-mei-ju.html</link><description># 面向对象原理
 
 ## JAVA中对象的内存分配
 

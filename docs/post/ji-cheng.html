@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script src='https://blog.meekdai.com/Gmeek/plugins/GmeekBSZ.js'></script>
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/165184260?v=4&size=64"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# 面向对象高级
+
+## 面向对象三大特征
+
+- 封装
+- 继承
+- 多态
+
+## 封装
+
+把零散的数据和行为封装成一个整体，在进行数据传递的时候只需传递整体
+
+## 继承
+
+### 什么是继承？继承的好处？
+
+- 继承是类与类之间的一种父子关系，Java中提供关键字`extends`，用于建立类与类之间的关系
+- 可以吧多个子类中重复的代码抽取到父类中，提高代码的复用性
+- 子类可以在父类的基础上，增加其他的功能，使子类更强大
+
+```java
+package oopextendstests1;
+
+public class Person
+{
+    String name;
+    int age;
+    public void eat()
+    {
+        System.out.println('eating');
+    }
+}
+
+package oopextendstests1;
+
+public class Student extends Person
+{
+    String grade;
+    public void study()
+    {
+        System.out.println('studing');
+    }
+}
+
+package oopextendstests1;
+
+public class Teacher extends Person
+{
+    String subject;
+    public void teach()
+    {
+        System.out.println('teaching');
+    }
+}
+
+package oopextendstests1;
+
+public class Test
+{
+    static void main()
+    {
+        // 创建三个对象分别测试属性
+        Student stu = new Student();
+        Teacher teacher = new Teacher();
+        Person person = new Person();
+        // 测试属性
+        stu.name = '张三';
+        stu.age = 20;
+        stu.grade = '大一';
+        System.out.println('姓名: ' + stu.name + ',年龄: ' + stu.age + ',年级: ' + stu.grade);
+
+        teacher.name = '李四';
+        teacher.age = 30;
+        teacher.subject = '数学';
+        System.out.println('姓名: ' + teacher.name + ',年龄: ' + teacher.age + ',学科: ' + teacher.subject);
+
+        person.name = '王五';
+        person.age = 40;
+        System.out.println('姓名: ' + person.name + ',年龄: ' + person.age);
+        // 测试方法
+        stu.study();
+        stu.eat();
+
+        teacher.teach();
+        teacher.eat();
+
+        person.eat();
+    }
+}
+```
+
+```cmd
+'C:\JAVA tools\bin\java.exe' '-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=59437' -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopExtends\out\production\oopExtends oopextendstests.Test
+姓名: 张三,年龄: 20,年级: 大一
+姓名: 李四,年龄: 30,学科: 数学
+姓名: 王五,年龄: 40
+studing
+eating
+teaching
+eating
+eating
+```
+
+#### 总结
+
+**1、什么是继承？**
+
+面向对象三大特征之一，可以让类跟类之间产生父子关系
+
+**2、继承的作用是什么**
+
+- **操作**：多个子类中重复的代码抽取到父类，子类可以直接使用
+- **好处**：减少代码冗余，提高代码复用性
+
+**3、继承的格式？**
+
+`public calss 子类 extends 父类 {}`
+
+**4、继承后子类的好处**
+
+- 子类可以得到父类的属性和行为，子类可以使用
+- 子类可以在父类的基础上新增其他功能，子类更强大
+
+### 如何设计一个继承结构
+
+当类与类之间存在共性内容，**并满足子类是父类的一种**，就可以考虑使用继承来优化代码
+
+父类要能代表子类
+
+<img width='1470' height='786' alt='Image' src='https://github.com/user-attachments/assets/e0c9517b-19aa-4cab-ac9f-e25b983fb412' />
+
+<img width='543' height='462' alt='Image' src='https://github.com/user-attachments/assets/0153d366-2f6f-4465-b097-aba3ffaee7b6' />
+
+```java
+package oopextendstests2;
+
+public class SmartDevice
+{
+    String brand;
+    int price;
+}
+```
+
+```java
+package oopextendstests2;
+
+public class Telephone extends SmartDevice
+{
+    public void phonecall()
+    {
+        System.out.println('ringing');
+    }
+
+    public void sendMessage()
+    {
+        System.out.println('sending message');
+    }
+}
+```
+
+```java
+package oopextendstests2;
+
+public class Laptop extends SmartDevice
+{
+    public void code()
+    {
+        System.out.println('coding');
+    }
+}
+```
+
+```java
+package oopextendstests2;
+
+public class Android extends Telephone
+{
+    public void nfc()
+    {
+        System.out.println('using nfc');
+    }
+}
+```
+
+```java
+package oopextendstests2;
+
+public class IOS extends Telephone
+{
+
+}
+```
+
+类图
+
+<img width='501' height='648' alt='Image' src='https://github.com/user-attachments/assets/3c7e6ef4-7285-4d7a-8a00-de5d5961c648' />
+
+#### 总结
+
+1. 用画图法解决
+2. 分类
+3. 抽取共性内容不断往上抽取（自下而上）
+4. 写代码（自上而下）
+
+### 继承的特点
+
+JAVA只支持**单继承**，不支持多继承，但支持**多层继承**
+
+**单继承**：一个子类只能继承一个父类
+
+**不支持多继承**：子类不能同时继承多个父类
+
+**多层继承**：分为直接父类和间接父类
+
+<img width='1202' height='408' alt='Image' src='https://github.com/user-attachments/assets/fee9ab3f-7119-4307-bc74-8fe9da0abff1' />
+
+JAVA中的**顶级父类**为：`Object`，每一个类都直接或者间接继承于`Object`
+
+### 继承中的成员特点
+
+#### 成员变量
+
+- **书写规则**：把多个子类中相同的属性抽取到父类中
+- **调用规则**：就近原则
+
+| 关键字  |   作用   |
+| :-----: | :------: |
+| `this`  | **本类** |
+| `super` | **父类** |
+
+```java
+package oopextendstests3;
+
+import java.sql.SQLOutput;
+
+public class Test
+{
+    static void main()
+    {
+        Zi zi = new Zi();
+        zi.ziShow();
+    }
+}
+
+
+class Fu
+{
+    String name = 'Fu';
+    String address = 'FuAddress';
+}
+
+class Zi extends Fu
+{
+    String name = 'Zi';
+
+    public void ziShow()
+    {
+        // 要求输出结果为'Zi'，请在此处补充代码
+        System.out.println(name);
+        System.out.println(this.name);
+
+        // 要求输出结果为'Fu'，请在此处补充代码
+        System.out.println(super.name);
+
+        // 要求输出结果为'FuAddress'，请在此处补充代码
+        System.out.println(address);
+        System.out.println(this.address);
+        System.out.println(super.address);
+    }
+}
+```
+
+```cmd
+'C:\JAVA tools\bin\java.exe' '-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=60197' -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopExtends\out\production\oopExtends oopextendstests3.Test
+Zi
+Zi
+Fu
+FuAddress
+FuAddress
+FuAddress
+```
+
+#### 成员方法
+
+- **书写规则**：把多个子类中共性的成员方法抽取到父类当中
+- **调用规则**：遵循就近原则
+
+```java
+package oopextendstests4;
+
+public class Test
+{
+    static void main()
+    {
+
+    }
+}
+
+class Fu
+{
+    public void eat()
+    {
+        System.out.println('eating');
+    }
+
+    public void drink()
+    {
+        System.out.println('drinking');
+    }
+}
+
+class Zi1 extends Fu
+{
+    public void lunch()
+    {
+        eat();
+        drink();
+        System.out.println('-----------------------');
+        super.eat();
+        super.drink();
+    }
+}
+```
+
+```cmd
+'C:\JAVA tools\bin\java.exe' '-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=56555' -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopExtends\out\production\oopExtends oopextendstests4.Test
+eating
+drinking
+-----------------------
+eating
+drinking
+```
+
+
+
+##### 方法的重写
+
+- **方法重写**：在子类中，把父类的方法再写一遍，方法声明保持一致
+- **使用场景**：如果父类的方法不能满足子类的要求了，子类中可以把该方法再重写一遍
+
+```java
+package oppextendstests5;
+
+public class FirstGenerationPhone
+{
+    public void call()
+    {
+        System.out.println('make a phone call');
+    }
+}
+```
+
+```java
+package oppextendstests5;
+
+public class SecondGenerationPhone extends FirstGenerationPhone
+{
+    public void sendMessage()
+    {
+        System.out.println('send a message');
+    }
+}
+```
+
+```java
+package oppextendstests5;
+
+public class ThirdGenerationPhone extends SecondGenerationPhone
+{
+    @Override
+    public void call()
+    {
+        System.out.println('make a video phone call');
+    }
+
+    public void playGames()
+    {
+        System.out.println('play games');
+    }
+}
+```
+
+```java
+package oppextendstests5;
+
+import oopextendstests2.Telephone;
+
+public class Test
+{
+    /*
+    第一代手机:
+        功能:打电话
+    第二代手机:
+        功能:打电话，发短信
+    第三代手机:
+        功能:打电话升级为视频通话，发短信，玩游戏
+    */
+    static void main()
+    {
+        FirstGenerationPhone phone1 = new FirstGenerationPhone();
+        phone1.call();
+        System.out.println('-------------------');
+
+        SecondGenerationPhone phone2 = new SecondGenerationPhone();
+        phone2.call();
+        phone2.sendMessage();
+        System.out.println('-------------------');
+
+        ThirdGenerationPhone phone3 = new ThirdGenerationPhone();
+        phone3.call();
+        phone3.sendMessage();
+        phone3.playGames();
+    }
+
+}
+```
+
+```cmd
+'C:\JAVA tools\bin\java.exe' '-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=64640' -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopExtends\out\production\oopExtends oppextendstests5.Test
+make a phone call
+-------------------
+make a phone call
+send a message
+-------------------
+make a video phone call
+send a message
+play games
+```
+
+###### 注意事项和要求
+
+1. 重写方法的**名称**、**形参列表**必须与父类中的一致，方法体按照实际需求书写。">
+<meta property="og:title" content="继承">
+<meta property="og:description" content="# 面向对象高级
+
+## 面向对象三大特征
+
+- 封装
+- 继承
+- 多态
+
+## 封装
+
+把零散的数据和行为封装成一个整体，在进行数据传递的时候只需传递整体
+
+## 继承
+
+### 什么是继承？继承的好处？
+
+- 继承是类与类之间的一种父子关系，Java中提供关键字`extends`，用于建立类与类之间的关系
+- 可以吧多个子类中重复的代码抽取到父类中，提高代码的复用性
+- 子类可以在父类的基础上，增加其他的功能，使子类更强大
+
+```java
+package oopextendstests1;
+
+public class Person
+{
+    String name;
+    int age;
+    public void eat()
+    {
+        System.out.println('eating');
+    }
+}
+
+package oopextendstests1;
+
+public class Student extends Person
+{
+    String grade;
+    public void study()
+    {
+        System.out.println('studing');
+    }
+}
+
+package oopextendstests1;
+
+public class Teacher extends Person
+{
+    String subject;
+    public void teach()
+    {
+        System.out.println('teaching');
+    }
+}
+
+package oopextendstests1;
+
+public class Test
+{
+    static void main()
+    {
+        // 创建三个对象分别测试属性
+        Student stu = new Student();
+        Teacher teacher = new Teacher();
+        Person person = new Person();
+        // 测试属性
+        stu.name = '张三';
+        stu.age = 20;
+        stu.grade = '大一';
+        System.out.println('姓名: ' + stu.name + ',年龄: ' + stu.age + ',年级: ' + stu.grade);
+
+        teacher.name = '李四';
+        teacher.age = 30;
+        teacher.subject = '数学';
+        System.out.println('姓名: ' + teacher.name + ',年龄: ' + teacher.age + ',学科: ' + teacher.subject);
+
+        person.name = '王五';
+        person.age = 40;
+        System.out.println('姓名: ' + person.name + ',年龄: ' + person.age);
+        // 测试方法
+        stu.study();
+        stu.eat();
+
+        teacher.teach();
+        teacher.eat();
+
+        person.eat();
+    }
+}
+```
+
+```cmd
+'C:\JAVA tools\bin\java.exe' '-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=59437' -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopExtends\out\production\oopExtends oopextendstests.Test
+姓名: 张三,年龄: 20,年级: 大一
+姓名: 李四,年龄: 30,学科: 数学
+姓名: 王五,年龄: 40
+studing
+eating
+teaching
+eating
+eating
+```
+
+#### 总结
+
+**1、什么是继承？**
+
+面向对象三大特征之一，可以让类跟类之间产生父子关系
+
+**2、继承的作用是什么**
+
+- **操作**：多个子类中重复的代码抽取到父类，子类可以直接使用
+- **好处**：减少代码冗余，提高代码复用性
+
+**3、继承的格式？**
+
+`public calss 子类 extends 父类 {}`
+
+**4、继承后子类的好处**
+
+- 子类可以得到父类的属性和行为，子类可以使用
+- 子类可以在父类的基础上新增其他功能，子类更强大
+
+### 如何设计一个继承结构
+
+当类与类之间存在共性内容，**并满足子类是父类的一种**，就可以考虑使用继承来优化代码
+
+父类要能代表子类
+
+<img width='1470' height='786' alt='Image' src='https://github.com/user-attachments/assets/e0c9517b-19aa-4cab-ac9f-e25b983fb412' />
+
+<img width='543' height='462' alt='Image' src='https://github.com/user-attachments/assets/0153d366-2f6f-4465-b097-aba3ffaee7b6' />
+
+```java
+package oopextendstests2;
+
+public class SmartDevice
+{
+    String brand;
+    int price;
+}
+```
+
+```java
+package oopextendstests2;
+
+public class Telephone extends SmartDevice
+{
+    public void phonecall()
+    {
+        System.out.println('ringing');
+    }
+
+    public void sendMessage()
+    {
+        System.out.println('sending message');
+    }
+}
+```
+
+```java
+package oopextendstests2;
+
+public class Laptop extends SmartDevice
+{
+    public void code()
+    {
+        System.out.println('coding');
+    }
+}
+```
+
+```java
+package oopextendstests2;
+
+public class Android extends Telephone
+{
+    public void nfc()
+    {
+        System.out.println('using nfc');
+    }
+}
+```
+
+```java
+package oopextendstests2;
+
+public class IOS extends Telephone
+{
+
+}
+```
+
+类图
+
+<img width='501' height='648' alt='Image' src='https://github.com/user-attachments/assets/3c7e6ef4-7285-4d7a-8a00-de5d5961c648' />
+
+#### 总结
+
+1. 用画图法解决
+2. 分类
+3. 抽取共性内容不断往上抽取（自下而上）
+4. 写代码（自上而下）
+
+### 继承的特点
+
+JAVA只支持**单继承**，不支持多继承，但支持**多层继承**
+
+**单继承**：一个子类只能继承一个父类
+
+**不支持多继承**：子类不能同时继承多个父类
+
+**多层继承**：分为直接父类和间接父类
+
+<img width='1202' height='408' alt='Image' src='https://github.com/user-attachments/assets/fee9ab3f-7119-4307-bc74-8fe9da0abff1' />
+
+JAVA中的**顶级父类**为：`Object`，每一个类都直接或者间接继承于`Object`
+
+### 继承中的成员特点
+
+#### 成员变量
+
+- **书写规则**：把多个子类中相同的属性抽取到父类中
+- **调用规则**：就近原则
+
+| 关键字  |   作用   |
+| :-----: | :------: |
+| `this`  | **本类** |
+| `super` | **父类** |
+
+```java
+package oopextendstests3;
+
+import java.sql.SQLOutput;
+
+public class Test
+{
+    static void main()
+    {
+        Zi zi = new Zi();
+        zi.ziShow();
+    }
+}
+
+
+class Fu
+{
+    String name = 'Fu';
+    String address = 'FuAddress';
+}
+
+class Zi extends Fu
+{
+    String name = 'Zi';
+
+    public void ziShow()
+    {
+        // 要求输出结果为'Zi'，请在此处补充代码
+        System.out.println(name);
+        System.out.println(this.name);
+
+        // 要求输出结果为'Fu'，请在此处补充代码
+        System.out.println(super.name);
+
+        // 要求输出结果为'FuAddress'，请在此处补充代码
+        System.out.println(address);
+        System.out.println(this.address);
+        System.out.println(super.address);
+    }
+}
+```
+
+```cmd
+'C:\JAVA tools\bin\java.exe' '-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=60197' -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopExtends\out\production\oopExtends oopextendstests3.Test
+Zi
+Zi
+Fu
+FuAddress
+FuAddress
+FuAddress
+```
+
+#### 成员方法
+
+- **书写规则**：把多个子类中共性的成员方法抽取到父类当中
+- **调用规则**：遵循就近原则
+
+```java
+package oopextendstests4;
+
+public class Test
+{
+    static void main()
+    {
+
+    }
+}
+
+class Fu
+{
+    public void eat()
+    {
+        System.out.println('eating');
+    }
+
+    public void drink()
+    {
+        System.out.println('drinking');
+    }
+}
+
+class Zi1 extends Fu
+{
+    public void lunch()
+    {
+        eat();
+        drink();
+        System.out.println('-----------------------');
+        super.eat();
+        super.drink();
+    }
+}
+```
+
+```cmd
+'C:\JAVA tools\bin\java.exe' '-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=56555' -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopExtends\out\production\oopExtends oopextendstests4.Test
+eating
+drinking
+-----------------------
+eating
+drinking
+```
+
+
+
+##### 方法的重写
+
+- **方法重写**：在子类中，把父类的方法再写一遍，方法声明保持一致
+- **使用场景**：如果父类的方法不能满足子类的要求了，子类中可以把该方法再重写一遍
+
+```java
+package oppextendstests5;
+
+public class FirstGenerationPhone
+{
+    public void call()
+    {
+        System.out.println('make a phone call');
+    }
+}
+```
+
+```java
+package oppextendstests5;
+
+public class SecondGenerationPhone extends FirstGenerationPhone
+{
+    public void sendMessage()
+    {
+        System.out.println('send a message');
+    }
+}
+```
+
+```java
+package oppextendstests5;
+
+public class ThirdGenerationPhone extends SecondGenerationPhone
+{
+    @Override
+    public void call()
+    {
+        System.out.println('make a video phone call');
+    }
+
+    public void playGames()
+    {
+        System.out.println('play games');
+    }
+}
+```
+
+```java
+package oppextendstests5;
+
+import oopextendstests2.Telephone;
+
+public class Test
+{
+    /*
+    第一代手机:
+        功能:打电话
+    第二代手机:
+        功能:打电话，发短信
+    第三代手机:
+        功能:打电话升级为视频通话，发短信，玩游戏
+    */
+    static void main()
+    {
+        FirstGenerationPhone phone1 = new FirstGenerationPhone();
+        phone1.call();
+        System.out.println('-------------------');
+
+        SecondGenerationPhone phone2 = new SecondGenerationPhone();
+        phone2.call();
+        phone2.sendMessage();
+        System.out.println('-------------------');
+
+        ThirdGenerationPhone phone3 = new ThirdGenerationPhone();
+        phone3.call();
+        phone3.sendMessage();
+        phone3.playGames();
+    }
+
+}
+```
+
+```cmd
+'C:\JAVA tools\bin\java.exe' '-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=64640' -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopExtends\out\production\oopExtends oppextendstests5.Test
+make a phone call
+-------------------
+make a phone call
+send a message
+-------------------
+make a video phone call
+send a message
+play games
+```
+
+###### 注意事项和要求
+
+1. 重写方法的**名称**、**形参列表**必须与父类中的一致，方法体按照实际需求书写。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://Whitegveking.github.io/Whitegve-king.github.io/post/ji-cheng.html">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/165184260?v=4&size=64">
+<title>继承</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">继承</h1>
+<div class="title-right">
+    <a href="https://Whitegveking.github.io/Whitegve-king.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/Whitegveking/Whitegve-king.github.io/issues/7" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>面向对象高级</h1>
+<h2>面向对象三大特征</h2>
+<ul>
+<li>封装</li>
+<li>继承</li>
+<li>多态</li>
+</ul>
+<h2>封装</h2>
+<p>把零散的数据和行为封装成一个整体，在进行数据传递的时候只需传递整体</p>
+<h2>继承</h2>
+<h3>什么是继承？继承的好处？</h3>
+<ul>
+<li>继承是类与类之间的一种父子关系，Java中提供关键字<code class="notranslate">extends</code>，用于建立类与类之间的关系</li>
+<li>可以吧多个子类中重复的代码抽取到父类中，提高代码的复用性</li>
+<li>子类可以在父类的基础上，增加其他的功能，使子类更强大</li>
+</ul>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">oopextendstests1</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Person</span>
+{
+    <span class="pl-smi">String</span> <span class="pl-s1">name</span>;
+    <span class="pl-smi">int</span> <span class="pl-s1">age</span>;
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">eat</span>()
+    {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"eating"</span>);
+    }
+}
+
+<span class="pl-k">package</span> <span class="pl-s1">oopextendstests1</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Student</span> <span class="pl-k">extends</span> <span class="pl-smi">Person</span>
+{
+    <span class="pl-smi">String</span> <span class="pl-s1">grade</span>;
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">study</span>()
+    {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"studing"</span>);
+    }
+}
+
+<span class="pl-k">package</span> <span class="pl-s1">oopextendstests1</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Teacher</span> <span class="pl-k">extends</span> <span class="pl-smi">Person</span>
+{
+    <span class="pl-smi">String</span> <span class="pl-s1">subject</span>;
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">teach</span>()
+    {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"teaching"</span>);
+    }
+}
+
+<span class="pl-k">package</span> <span class="pl-s1">oopextendstests1</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Test</span>
+{
+    <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>()
+    {
+        <span class="pl-c">// 创建三个对象分别测试属性</span>
+        <span class="pl-smi">Student</span> <span class="pl-s1">stu</span> = <span class="pl-k">new</span> <span class="pl-smi">Student</span>();
+        <span class="pl-smi">Teacher</span> <span class="pl-s1">teacher</span> = <span class="pl-k">new</span> <span class="pl-smi">Teacher</span>();
+        <span class="pl-smi">Person</span> <span class="pl-s1">person</span> = <span class="pl-k">new</span> <span class="pl-smi">Person</span>();
+        <span class="pl-c">// 测试属性</span>
+        <span class="pl-s1">stu</span>.<span class="pl-s1">name</span> = <span class="pl-s">"张三"</span>;
+        <span class="pl-s1">stu</span>.<span class="pl-s1">age</span> = <span class="pl-c1">20</span>;
+        <span class="pl-s1">stu</span>.<span class="pl-s1">grade</span> = <span class="pl-s">"大一"</span>;
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"姓名: "</span> + <span class="pl-s1">stu</span>.<span class="pl-s1">name</span> + <span class="pl-s">",年龄: "</span> + <span class="pl-s1">stu</span>.<span class="pl-s1">age</span> + <span class="pl-s">",年级: "</span> + <span class="pl-s1">stu</span>.<span class="pl-s1">grade</span>);
+
+        <span class="pl-s1">teacher</span>.<span class="pl-s1">name</span> = <span class="pl-s">"李四"</span>;
+        <span class="pl-s1">teacher</span>.<span class="pl-s1">age</span> = <span class="pl-c1">30</span>;
+        <span class="pl-s1">teacher</span>.<span class="pl-s1">subject</span> = <span class="pl-s">"数学"</span>;
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"姓名: "</span> + <span class="pl-s1">teacher</span>.<span class="pl-s1">name</span> + <span class="pl-s">",年龄: "</span> + <span class="pl-s1">teacher</span>.<span class="pl-s1">age</span> + <span class="pl-s">",学科: "</span> + <span class="pl-s1">teacher</span>.<span class="pl-s1">subject</span>);
+
+        <span class="pl-s1">person</span>.<span class="pl-s1">name</span> = <span class="pl-s">"王五"</span>;
+        <span class="pl-s1">person</span>.<span class="pl-s1">age</span> = <span class="pl-c1">40</span>;
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"姓名: "</span> + <span class="pl-s1">person</span>.<span class="pl-s1">name</span> + <span class="pl-s">",年龄: "</span> + <span class="pl-s1">person</span>.<span class="pl-s1">age</span>);
+        <span class="pl-c">// 测试方法</span>
+        <span class="pl-s1">stu</span>.<span class="pl-en">study</span>();
+        <span class="pl-s1">stu</span>.<span class="pl-en">eat</span>();
+
+        <span class="pl-s1">teacher</span>.<span class="pl-en">teach</span>();
+        <span class="pl-s1">teacher</span>.<span class="pl-en">eat</span>();
+
+        <span class="pl-s1">person</span>.<span class="pl-en">eat</span>();
+    }
+}</pre></div>
+<div class="highlight highlight-source-batchfile"><pre class="notranslate"><span class="pl-s"><span class="pl-pds">"</span>C:\JAVA tools\bin\java.exe<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=59437<span class="pl-pds">"</span></span> -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopExtends\out\production\oopExtends oopextendstests.Test
+姓名: 张三,年龄: 20,年级: 大一
+姓名: 李四,年龄: 30,学科: 数学
+姓名: 王五,年龄: <span class="pl-c1">40</span>
+studing
+eating
+teaching
+eating
+eating</pre></div>
+<h4>总结</h4>
+<p><strong>1、什么是继承？</strong></p>
+<p>面向对象三大特征之一，可以让类跟类之间产生父子关系</p>
+<p><strong>2、继承的作用是什么</strong></p>
+<ul>
+<li><strong>操作</strong>：多个子类中重复的代码抽取到父类，子类可以直接使用</li>
+<li><strong>好处</strong>：减少代码冗余，提高代码复用性</li>
+</ul>
+<p><strong>3、继承的格式？</strong></p>
+<p><code class="notranslate">public calss 子类 extends 父类 {}</code></p>
+<p><strong>4、继承后子类的好处</strong></p>
+<ul>
+<li>子类可以得到父类的属性和行为，子类可以使用</li>
+<li>子类可以在父类的基础上新增其他功能，子类更强大</li>
+</ul>
+<h3>如何设计一个继承结构</h3>
+<p>当类与类之间存在共性内容，<strong>并满足子类是父类的一种</strong>，就可以考虑使用继承来优化代码</p>
+<p>父类要能代表子类</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/e0c9517b-19aa-4cab-ac9f-e25b983fb412"><img width="1470" height="786" alt="Image" src="https://github.com/user-attachments/assets/e0c9517b-19aa-4cab-ac9f-e25b983fb412" style="max-width: 100%; height: auto; max-height: 786px;; aspect-ratio: 1470 / 786; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/0153d366-2f6f-4465-b097-aba3ffaee7b6"><img width="543" height="462" alt="Image" src="https://github.com/user-attachments/assets/0153d366-2f6f-4465-b097-aba3ffaee7b6" style="max-width: 100%; height: auto; max-height: 462px;; aspect-ratio: 543 / 462; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">oopextendstests2</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">SmartDevice</span>
+{
+    <span class="pl-smi">String</span> <span class="pl-s1">brand</span>;
+    <span class="pl-smi">int</span> <span class="pl-s1">price</span>;
+}</pre></div>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">oopextendstests2</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Telephone</span> <span class="pl-k">extends</span> <span class="pl-smi">SmartDevice</span>
+{
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">phonecall</span>()
+    {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"ringing"</span>);
+    }
+
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">sendMessage</span>()
+    {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"sending message"</span>);
+    }
+}</pre></div>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">oopextendstests2</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Laptop</span> <span class="pl-k">extends</span> <span class="pl-smi">SmartDevice</span>
+{
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">code</span>()
+    {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"coding"</span>);
+    }
+}</pre></div>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">oopextendstests2</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Android</span> <span class="pl-k">extends</span> <span class="pl-smi">Telephone</span>
+{
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">nfc</span>()
+    {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"using nfc"</span>);
+    }
+}</pre></div>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">oopextendstests2</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-c1">IOS</span> <span class="pl-k">extends</span> <span class="pl-smi">Telephone</span>
+{
+
+}</pre></div>
+<p>类图</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/3c7e6ef4-7285-4d7a-8a00-de5d5961c648"><img width="501" height="648" alt="Image" src="https://github.com/user-attachments/assets/3c7e6ef4-7285-4d7a-8a00-de5d5961c648" style="max-width: 100%; height: auto; max-height: 648px;; aspect-ratio: 501 / 648; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<h4>总结</h4>
+<ol>
+<li>用画图法解决</li>
+<li>分类</li>
+<li>抽取共性内容不断往上抽取（自下而上）</li>
+<li>写代码（自上而下）</li>
+</ol>
+<h3>继承的特点</h3>
+<p>JAVA只支持<strong>单继承</strong>，不支持多继承，但支持<strong>多层继承</strong></p>
+<p><strong>单继承</strong>：一个子类只能继承一个父类</p>
+<p><strong>不支持多继承</strong>：子类不能同时继承多个父类</p>
+<p><strong>多层继承</strong>：分为直接父类和间接父类</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/fee9ab3f-7119-4307-bc74-8fe9da0abff1"><img width="1202" height="408" alt="Image" src="https://github.com/user-attachments/assets/fee9ab3f-7119-4307-bc74-8fe9da0abff1" style="max-width: 100%; height: auto; max-height: 408px;; aspect-ratio: 1202 / 408; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<p>JAVA中的<strong>顶级父类</strong>为：<code class="notranslate">Object</code>，每一个类都直接或者间接继承于<code class="notranslate">Object</code></p>
+<h3>继承中的成员特点</h3>
+<h4>成员变量</h4>
+<ul>
+<li><strong>书写规则</strong>：把多个子类中相同的属性抽取到父类中</li>
+<li><strong>调用规则</strong>：就近原则</li>
+</ul>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="center">关键字</th>
+<th align="center">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><code class="notranslate">this</code></td>
+<td align="center"><strong>本类</strong></td>
+</tr>
+<tr>
+<td align="center"><code class="notranslate">super</code></td>
+<td align="center"><strong>父类</strong></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">oopextendstests3</span>;
+
+<span class="pl-k">import</span> <span class="pl-s1">java</span>.<span class="pl-s1">sql</span>.<span class="pl-s1">SQLOutput</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Test</span>
+{
+    <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>()
+    {
+        <span class="pl-smi">Zi</span> <span class="pl-s1">zi</span> = <span class="pl-k">new</span> <span class="pl-smi">Zi</span>();
+        <span class="pl-s1">zi</span>.<span class="pl-en">ziShow</span>();
+    }
+}
+
+
+<span class="pl-k">class</span> <span class="pl-smi">Fu</span>
+{
+    <span class="pl-smi">String</span> <span class="pl-s1">name</span> = <span class="pl-s">"Fu"</span>;
+    <span class="pl-smi">String</span> <span class="pl-s1">address</span> = <span class="pl-s">"FuAddress"</span>;
+}
+
+<span class="pl-k">class</span> <span class="pl-smi">Zi</span> <span class="pl-k">extends</span> <span class="pl-smi">Fu</span>
+{
+    <span class="pl-smi">String</span> <span class="pl-s1">name</span> = <span class="pl-s">"Zi"</span>;
+
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">ziShow</span>()
+    {
+        <span class="pl-c">// 要求输出结果为"Zi"，请在此处补充代码</span>
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">name</span>);
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-smi">this</span>.<span class="pl-s1">name</span>);
+
+        <span class="pl-c">// 要求输出结果为"Fu"，请在此处补充代码</span>
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-en">super</span>.<span class="pl-s1">name</span>);
+
+        <span class="pl-c">// 要求输出结果为"FuAddress"，请在此处补充代码</span>
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">address</span>);
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-smi">this</span>.<span class="pl-s1">address</span>);
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-en">super</span>.<span class="pl-s1">address</span>);
+    }
+}</pre></div>
+<div class="highlight highlight-source-batchfile"><pre class="notranslate"><span class="pl-s"><span class="pl-pds">"</span>C:\JAVA tools\bin\java.exe<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=60197<span class="pl-pds">"</span></span> -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopExtends\out\production\oopExtends oopextendstests3.Test
+Zi
+Zi
+Fu
+FuAddress
+FuAddress
+FuAddress</pre></div>
+<h4>成员方法</h4>
+<ul>
+<li><strong>书写规则</strong>：把多个子类中共性的成员方法抽取到父类当中</li>
+<li><strong>调用规则</strong>：遵循就近原则</li>
+</ul>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">oopextendstests4</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Test</span>
+{
+    <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>()
+    {
+
+    }
+}
+
+<span class="pl-k">class</span> <span class="pl-smi">Fu</span>
+{
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">eat</span>()
+    {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"eating"</span>);
+    }
+
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">drink</span>()
+    {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"drinking"</span>);
+    }
+}
+
+<span class="pl-k">class</span> <span class="pl-smi">Zi1</span> <span class="pl-k">extends</span> <span class="pl-smi">Fu</span>
+{
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">lunch</span>()
+    {
+        <span class="pl-en">eat</span>();
+        <span class="pl-en">drink</span>();
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"-----------------------"</span>);
+        <span class="pl-en">super</span>.<span class="pl-en">eat</span>();
+        <span class="pl-en">super</span>.<span class="pl-en">drink</span>();
+    }
+}</pre></div>
+<div class="highlight highlight-source-batchfile"><pre class="notranslate"><span class="pl-s"><span class="pl-pds">"</span>C:\JAVA tools\bin\java.exe<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=56555<span class="pl-pds">"</span></span> -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopExtends\out\production\oopExtends oopextendstests4.Test
+eating
+drinking
+-----------------------
+eating
+drinking</pre></div>
+<h5>方法的重写</h5>
+<ul>
+<li><strong>方法重写</strong>：在子类中，把父类的方法再写一遍，方法声明保持一致</li>
+<li><strong>使用场景</strong>：如果父类的方法不能满足子类的要求了，子类中可以把该方法再重写一遍</li>
+</ul>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">oppextendstests5</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">FirstGenerationPhone</span>
+{
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">call</span>()
+    {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"make a phone call"</span>);
+    }
+}</pre></div>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">oppextendstests5</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">SecondGenerationPhone</span> <span class="pl-k">extends</span> <span class="pl-smi">FirstGenerationPhone</span>
+{
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">sendMessage</span>()
+    {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"send a message"</span>);
+    }
+}</pre></div>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">oppextendstests5</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">ThirdGenerationPhone</span> <span class="pl-k">extends</span> <span class="pl-smi">SecondGenerationPhone</span>
+{
+    <span class="pl-c1">@</span><span class="pl-c1">Override</span>
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">call</span>()
+    {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"make a video phone call"</span>);
+    }
+
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">playGames</span>()
+    {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"play games"</span>);
+    }
+}</pre></div>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">oppextendstests5</span>;
+
+<span class="pl-k">import</span> <span class="pl-s1">oopextendstests2</span>.<span class="pl-s1">Telephone</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Test</span>
+{
+    <span class="pl-c">/*</span>
+<span class="pl-c">    第一代手机:</span>
+<span class="pl-c">        功能:打电话</span>
+<span class="pl-c">    第二代手机:</span>
+<span class="pl-c">        功能:打电话，发短信</span>
+<span class="pl-c">    第三代手机:</span>
+<span class="pl-c">        功能:打电话升级为视频通话，发短信，玩游戏</span>
+<span class="pl-c">    */</span>
+    <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>()
+    {
+        <span class="pl-smi">FirstGenerationPhone</span> <span class="pl-s1">phone1</span> = <span class="pl-k">new</span> <span class="pl-smi">FirstGenerationPhone</span>();
+        <span class="pl-s1">phone1</span>.<span class="pl-en">call</span>();
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"-------------------"</span>);
+
+        <span class="pl-smi">SecondGenerationPhone</span> <span class="pl-s1">phone2</span> = <span class="pl-k">new</span> <span class="pl-smi">SecondGenerationPhone</span>();
+        <span class="pl-s1">phone2</span>.<span class="pl-en">call</span>();
+        <span class="pl-s1">phone2</span>.<span class="pl-en">sendMessage</span>();
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"-------------------"</span>);
+
+        <span class="pl-smi">ThirdGenerationPhone</span> <span class="pl-s1">phone3</span> = <span class="pl-k">new</span> <span class="pl-smi">ThirdGenerationPhone</span>();
+        <span class="pl-s1">phone3</span>.<span class="pl-en">call</span>();
+        <span class="pl-s1">phone3</span>.<span class="pl-en">sendMessage</span>();
+        <span class="pl-s1">phone3</span>.<span class="pl-en">playGames</span>();
+    }
+
+}</pre></div>
+<div class="highlight highlight-source-batchfile"><pre class="notranslate"><span class="pl-s"><span class="pl-pds">"</span>C:\JAVA tools\bin\java.exe<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=64640<span class="pl-pds">"</span></span> -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\oopExtends\out\production\oopExtends oppextendstests5.Test
+make a phone <span class="pl-k">call</span>
+-------------------
+make a phone <span class="pl-k">call</span>
+send a message
+-------------------
+make a video phone <span class="pl-k">call</span>
+send a message
+play games</pre></div>
+<h6>注意事项和要求</h6>
+<ol>
+<li>重写方法的<strong>名称</strong>、<strong>形参列表</strong>必须与父类中的一致，方法体按照实际需求书写。</li>
+<li><strong>了解</strong>:子类重写父类方法时，访问权限子类必须大于等于父类(空着不写&lt;<code class="notranslate">protected</code>&lt;<code class="notranslate">public</code>)</li>
+<li>了解:子类重写父类方法时，返回值类型子类必须小于等于父类</li>
+<li>建议:重写的方法申明和父类保持一致即可</li>
+<li><code class="notranslate">final</code>修饰类为最终类，里面所有的方法不能被重写</li>
+<li><code class="notranslate">private</code>私有方法，<code class="notranslate">static</code>静态方法，<code class="notranslate">final</code>最终方法不能被重写</li>
+</ol>
+<h4>总结</h4>
+<p>1.<strong>继承中成员方法的特点</strong>:</p>
+<ul>
+<li><strong>书写规则</strong>:抽取子类中共性的行为</li>
+<li><strong>调用规则</strong>:就近原则</li>
+<li><strong>this调用</strong>:先访问本类，再访问父类</li>
+<li><strong>super调用</strong>:直接访问父类</li>
+</ul>
+<p>2.<strong>什么是方法重写</strong>**?**</p>
+<ul>
+<li>在继承体系中，子类出现了和父类中一模一样的方法声明</li>
+<li>我们就称子类的这个方法是重写的方法</li>
+<li>重写的方法上需要加<code class="notranslate">@Override</code>注解，校验重写的语法是否正确</li>
+</ul>
+<p>3.<strong>什么时候使用方法重写?</strong></p>
+<p>当父类的方法不能满足子类要求的时候，需要进行方法重写</p>
+<p>4.<strong>重写方法有哪些基本要求?</strong></p>
+<p>子类重写的方法申明跟父类保持一致</p>
+<p><code class="notranslate">private</code>私有方法、<code class="notranslate">static</code>静态方法、<code class="notranslate">final</code>最终方法不能被重写</p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://Whitegveking.github.io/Whitegve-king.github.io">Cyy的JAVA学习日记</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","Whitegveking/Whitegve-king.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>
+
+</html>
