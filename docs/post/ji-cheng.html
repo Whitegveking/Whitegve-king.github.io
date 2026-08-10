@@ -1340,7 +1340,43 @@ play games</pre></div>
 <p>当父类的方法不能满足子类要求的时候，需要进行方法重写</p>
 <p>4.<strong>重写方法有哪些基本要求?</strong></p>
 <p>子类重写的方法申明跟父类保持一致</p>
-<p><code class="notranslate">private</code>私有方法、<code class="notranslate">static</code>静态方法、<code class="notranslate">final</code>最终方法不能被重写</p></div>
+<p><code class="notranslate">private</code>私有方法、<code class="notranslate">static</code>静态方法、<code class="notranslate">final</code>最终方法不能被重写</p>
+<h3>子类能从父类继承什么</h3>
+<ul>
+<li>
+<p><strong>构造方法</strong>：不能被子类继承，可以利用<code class="notranslate">super</code>关键字调用</p>
+</li>
+<li>
+<p><strong>成员变量</strong>：可以被子类继承，<code class="notranslate">private</code>也可以，只是不能被调用</p>
+</li>
+<li>
+<p><strong>成员方法</strong>：</p>
+<ul>
+<li>虚方法可以被继承</li>
+<li><code class="notranslate">final</code>修饰的最终方法不能被继承，可以被调用</li>
+<li><code class="notranslate">static</code>修饰的静态方法不能被继承，可以被调用</li>
+<li><code class="notranslate">private</code>修饰的私有方法不能被继承，不能被调用</li>
+<li>方法重写:子类替换虚方法表里面方法的地址值</li>
+</ul>
+<p>​</p>
+</li>
+</ul>
+<h3>内存分析</h3>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-c">// 利用第三方工具获取对象真实的内存地址 6250988f0 3660</span>
+<span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"对象z在内存中真实内存地址为: "</span>+<span class="pl-smi">Long</span>.<span class="pl-en">toHexString</span>(<span class="pl-c1">VM</span>.<span class="pl-en">current</span>().<span class="pl-en">addressOf</span>(<span class="pl-s1">z</span>)));</pre></div>
+<p>获取对象地址后在终端使用<code class="notranslate">jps</code>命令获取<code class="notranslate">java</code>进程编号，再使用<code class="notranslate">jhsdb hsdb</code>打开内存分析工具复制对象地址，再打开<code class="notranslate">Memory Viewer</code>获取输入<code class="notranslate">java</code>进程编号</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/c38cc3ed-447a-4092-8bf9-e87a9c2aaceb"><img width="1421" height="1070" alt="Image" src="https://github.com/user-attachments/assets/c38cc3ed-447a-4092-8bf9-e87a9c2aaceb" style="max-width: 100%; height: auto; max-height: 1070px;; aspect-ratio: 1421 / 1070; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<h3>虚方法的继承规则</h3>
+<p><strong>虚方法</strong>：普通的成员方法，非<code class="notranslate">final、static、private</code>修饰的成员方法</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/e5fb2216-c969-439b-852a-a508f836be12"><img width="1278" height="525" alt="Image" src="https://github.com/user-attachments/assets/e5fb2216-c969-439b-852a-a508f836be12" style="max-width: 100%; height: auto; max-height: 525px;; aspect-ratio: 1278 / 525; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<p><strong>继承结构的内存图</strong></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/bc586f50-e30e-4ff0-a45d-0828069361af"><img width="1524" height="756" alt="Image" src="https://github.com/user-attachments/assets/bc586f50-e30e-4ff0-a45d-0828069361af" style="max-width: 100%; height: auto; max-height: 756px;; aspect-ratio: 1524 / 756; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<h3><code class="notranslate">Java</code>中的权限修饰符</h3>
+<ul>
+<li><strong>权限修饰符</strong>：关键字，用来控制一个成员被访问的范围</li>
+<li><strong>修饰的内容</strong>：可以修饰成员变量、成员方法、构造方法等</li>
+</ul>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/b8d22153-897e-4b80-89ea-6e6440b0f5e6"><img width="1338" height="420" alt="Image" src="https://github.com/user-attachments/assets/b8d22153-897e-4b80-89ea-6e6440b0f5e6" style="max-width: 100%; height: auto; max-height: 420px;; aspect-ratio: 1338 / 420; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
