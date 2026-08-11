@@ -996,7 +996,181 @@ drink water
 cat eat fish
 drink water</pre></div>
 <h3>抽象类和抽象方法的意义</h3>
-<p>给出一个统一的格式，包括函数名、形参等，强制子类必须按照这种格式进行重写，方便调用和查看格式</p></div>
+<p>给出一个统一的格式，包括函数名、形参等，强制子类必须按照这种格式进行重写，方便调用和查看格式</p>
+<h2>接口</h2>
+<p><strong>接口</strong>：接口就是一个规则，而且是独立于继承体系以外的规则（可以理解为干爹）</p>
+<p><strong>格式</strong>：用关键词<code class="notranslate">interface</code>，<code class="notranslate">public interface 接口名{...}</code></p>
+<p><strong>使用</strong>：接口和类之间是实现关系，通过<code class="notranslate">implements</code>关键字表示，<code class="notranslate">public class 类名 implements 接口{...}</code></p>
+<p><strong>注意点</strong></p>
+<ul>
+<li>接口不能实例化</li>
+<li>接口的子类（实现类），要么重写接口中的所有抽象方法，要么实现类是一个抽象类</li>
+<li>一个类可以实现多个接口，也可以在继承一个类的同时，实现多个接口</li>
+<li><code class="notranslate">public class 类名 implements 接口1,接口2{...}</code></li>
+<li><code class="notranslate">public class 类名 extends 父类 implements 接口1,接口2{...}</code></li>
+</ul>
+<h3>接口中成员的特点</h3>
+<p><strong>成员变量</strong>：只能是常量。默认修饰符：<code class="notranslate">public static final</code></p>
+<p><strong>构造方法</strong>：无</p>
+<p><strong>成员方法</strong>：只能是抽象方法。默认修饰符：<code class="notranslate">public abstract</code></p>
+<h3>接口和类之间的关系</h3>
+<p><strong>类和类之间的关系</strong></p>
+<ul>
+<li>继承关系，只能单继承，不能多继承，但不能多层继承</li>
+</ul>
+<p><strong>类和接口之间的关系</strong></p>
+<ul>
+<li>实现关系，可以单实现，可以多实现，还可以在继承一个类的同时实现多个接口</li>
+<li>如果父类也是一个抽象类的话，子类中需要把来自继承和实现的所有抽象方法进行重写，要么子类本身也是一个抽象类</li>
+<li>如果多个接口中出现了重复的抽象方法，此时我们只需要重写一次就行了</li>
+</ul>
+<p><strong>接口和接口之间的关系</strong></p>
+<ul>
+<li>继承关系，可以单继承，也可以多继承</li>
+<li>如果有一个接口A继承了多个接口，此时相当于是把多个接口中的抽象方法全部继承下来了，之后实现类实现接口A的时候，就要把所有的抽象方法进行重写</li>
+</ul>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/2fd21215-c3c4-418d-bf93-37be6eea212d"><img width="1581" height="693" alt="Image" src="https://github.com/user-attachments/assets/2fd21215-c3c4-418d-bf93-37be6eea212d" style="max-width: 100%; height: auto; max-height: 693px;; aspect-ratio: 1581 / 693; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">polytests05</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Person</span>
+{
+    <span class="pl-k">private</span> <span class="pl-smi">String</span> <span class="pl-s1">name</span>;
+    <span class="pl-k">private</span> <span class="pl-smi">int</span> <span class="pl-s1">age</span>;
+
+    <span class="pl-k">public</span> <span class="pl-smi">Person</span>()
+    {
+    }
+
+    <span class="pl-k">public</span> <span class="pl-smi">Person</span>(<span class="pl-smi">String</span> <span class="pl-s1">name</span>, <span class="pl-smi">int</span> <span class="pl-s1">age</span>)
+    {
+        <span class="pl-smi">this</span>.<span class="pl-s1">name</span> = <span class="pl-s1">name</span>;
+        <span class="pl-smi">this</span>.<span class="pl-s1">age</span> = <span class="pl-s1">age</span>;
+    }
+
+    <span class="pl-k">public</span> <span class="pl-smi">String</span> <span class="pl-en">getName</span>()
+    {
+        <span class="pl-k">return</span> <span class="pl-s1">name</span>;
+    }
+
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">setName</span>(<span class="pl-smi">String</span> <span class="pl-s1">name</span>)
+    {
+        <span class="pl-smi">this</span>.<span class="pl-s1">name</span> = <span class="pl-s1">name</span>;
+    }
+
+    <span class="pl-k">public</span> <span class="pl-smi">int</span> <span class="pl-en">getAge</span>()
+    {
+        <span class="pl-k">return</span> <span class="pl-s1">age</span>;
+    }
+
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">setAge</span>(<span class="pl-smi">int</span> <span class="pl-s1">age</span>)
+    {
+        <span class="pl-smi">this</span>.<span class="pl-s1">age</span> = <span class="pl-s1">age</span>;
+    }
+}
+
+<span class="pl-k">package</span> <span class="pl-s1">polytests05</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">abstract</span> <span class="pl-k">class</span> <span class="pl-smi">Athlete</span> <span class="pl-k">extends</span> <span class="pl-smi">Person</span>
+{
+    <span class="pl-k">public</span> <span class="pl-k">abstract</span> <span class="pl-smi">void</span> <span class="pl-en">learn</span>();
+}
+
+<span class="pl-k">package</span> <span class="pl-s1">polytests05</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">abstract</span> <span class="pl-k">class</span> <span class="pl-smi">Coach</span> <span class="pl-k">extends</span> <span class="pl-smi">Person</span>
+{
+    <span class="pl-k">public</span> <span class="pl-k">abstract</span> <span class="pl-smi">void</span> <span class="pl-en">teach</span>();
+}
+<span class="pl-k">package</span> <span class="pl-s1">polytests05</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">interface</span> <span class="pl-smi">English</span>
+{
+
+    <span class="pl-smi">void</span> <span class="pl-en">speakEnglish</span>();
+}
+
+<span class="pl-k">package</span> <span class="pl-s1">polytests05</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">PpAthlete</span> <span class="pl-k">extends</span> <span class="pl-smi">Athlete</span> <span class="pl-k">implements</span> <span class="pl-smi">English</span>
+{
+
+    <span class="pl-c1">@</span><span class="pl-c1">Override</span>
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">learn</span>()
+    {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"learning pingpong"</span>);
+    }
+
+    <span class="pl-c1">@</span><span class="pl-c1">Override</span>
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">speakEnglish</span>()
+    {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"pingpong athlete can speak English"</span>);
+    }
+}
+
+<span class="pl-k">package</span> <span class="pl-s1">polytests05</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">PpCoach</span> <span class="pl-k">extends</span> <span class="pl-smi">Coach</span> <span class="pl-k">implements</span> <span class="pl-smi">English</span>
+{
+    <span class="pl-c1">@</span><span class="pl-c1">Override</span>
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">teach</span>()
+    {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"teaching pingpong"</span>);
+    }
+
+    <span class="pl-c1">@</span><span class="pl-c1">Override</span>
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">speakEnglish</span>()
+    {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"pingpong coach can speak English"</span>);
+    }
+}</pre></div>
+<h3>接口的新特性</h3>
+<ul>
+<li><strong>JDK7及以前</strong>:接口中只能定义抽象方法</li>
+<li><strong>JDK8新特性</strong>:为了接口升级时向下兼容，接口中可以定义有方法体的方法(默认、静态)。默认方法用<code class="notranslate">default</code>修饰，子类可以不重写默认方法，如果多个接口中存在相同名字的默认方法，子类就必须对该方法进行重写。</li>
+<li><strong>JDK9新特性</strong>:为了抽取重复代码，接口中可以定义私有方法(私有普通方法，私有静态方法)，只为本接口使用</li>
+</ul>
+<h2>内部类</h2>
+<p><strong>内部类</strong>：在一个类的里面再定义一个类</p>
+<p><strong>用处</strong>：如果一个类表示的事物是一个类的一部分，且单独存在时没有任何意义</p>
+<h3>内部类的分类</h3>
+<p><strong>成员内部类</strong></p>
+<p>写在成员位置的，属于外部类的成员</p>
+<ul>
+<li>获取成员内部类对象的方式一:当成员内部类被private修饰时。在外部类编写方法，对外提供内部类对象</li>
+<li>获取成员内部类对象的方式二:当成员内部类被非私有修饰时，直接创建对象。<code class="notranslate">Outer.Inner oi= new Outer().new Inner();</code></li>
+</ul>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/a9a00645-d980-41a0-9336-862f4c10323b"><img width="1593" height="905" alt="Image" src="https://github.com/user-attachments/assets/a9a00645-d980-41a0-9336-862f4c10323b" style="max-width: 100%; height: auto; max-height: 905px;; aspect-ratio: 1593 / 905; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">innerclassdemo01</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Outer</span>
+{
+    <span class="pl-k">private</span> <span class="pl-smi">int</span> <span class="pl-s1">a</span> = <span class="pl-c1">10</span>;
+    <span class="pl-k">class</span> <span class="pl-smi">Inner</span>
+    {
+        <span class="pl-k">private</span> <span class="pl-smi">int</span> <span class="pl-s1">a</span> =<span class="pl-c1">20</span>;
+        <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">show</span>()
+        {
+            <span class="pl-smi">int</span> <span class="pl-s1">a</span> = <span class="pl-c1">30</span>;
+            <span class="pl-c">// Outer.this获取了外部类对象的地址值</span>
+            <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-smi">Outer</span>.<span class="pl-smi">this</span>.<span class="pl-s1">a</span>);
+            <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-smi">this</span>.<span class="pl-s1">a</span>);
+            <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">a</span>);
+        }
+    }
+}</pre></div>
+<div class="highlight highlight-source-batchfile"><pre class="notranslate"><span class="pl-s"><span class="pl-pds">"</span>C:\JAVA tools\bin\java.exe<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=58554<span class="pl-pds">"</span></span> -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\innerclass\out\production\innerclass innerclassdemo01.Test
+<span class="pl-c1">10</span>
+<span class="pl-c1">20</span>
+<span class="pl-c1">30</span></pre></div>
+<p><strong>静态内部类</strong></p>
+<ul>
+<li>静态内部类只能访问外部类中的静态变量和静态方法</li>
+<li>如果在静态内部类中，想要访问外部类非静态的内容，需要创建外部类的对象</li>
+<li><code class="notranslate">外部类名.内部类名 对象名 = new 外部类名.内部类名();</code></li>
+<li>先创建对象，用对象调用静态内部类中非静态方法</li>
+</ul>
+<p><strong>局部内部类</strong></p>
+<p>==<strong>匿名内部类</strong>==</p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
