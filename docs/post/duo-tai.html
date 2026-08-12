@@ -1170,7 +1170,44 @@ drink water</pre></div>
 <li>先创建对象，用对象调用静态内部类中非静态方法</li>
 </ul>
 <p><strong>局部内部类</strong></p>
-<p>==<strong>匿名内部类</strong>==</p></div>
+<p>==<strong>匿名内部类</strong>==</p>
+<ul>
+<li>一个没有名字的内部类</li>
+<li><strong>作用</strong>：在继承一个类或者实现一个接口的时候少写一个文件，也是lambda的前置知识点</li>
+</ul>
+<p><strong>定义格式</strong>：</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/ab671166-1142-4d09-9a91-f65bb23ecead"><img width="975" height="155" alt="Image" src="https://github.com/user-attachments/assets/ab671166-1142-4d09-9a91-f65bb23ecead" style="max-width: 100%; height: auto; max-height: 155px;; aspect-ratio: 975 / 155; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<p>匿名内部类的定义格式 = 没有名字的java类 + 继承/实现 + 重写方法 + 创建对象</p>
+<p>最终也是可以理解为是一个<strong>没有名字的java类的对象</strong></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">innerclassdemo02</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">interface</span> <span class="pl-smi">Swim</span>
+{
+    <span class="pl-k">public</span> <span class="pl-k">abstract</span> <span class="pl-smi">void</span> <span class="pl-en">swim</span>();
+}
+<span class="pl-k">package</span> <span class="pl-s1">innerclassdemo02</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Test</span>
+{
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">goSwim</span>(<span class="pl-smi">Swim</span> <span class="pl-s1">s</span>)
+    {
+        <span class="pl-s1">s</span>.<span class="pl-en">swim</span>();
+    }
+    <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>()
+    {
+        <span class="pl-smi">Swim</span> <span class="pl-s1">s</span> = <span class="pl-k">new</span> <span class="pl-smi">Swim</span>()
+        {
+            <span class="pl-c1">@</span><span class="pl-c1">Override</span>
+            <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">swim</span>()
+            {
+                <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"someone is swimming"</span>);
+            }
+        };
+        <span class="pl-en">goSwim</span>(<span class="pl-s1">s</span>);
+    }
+}</pre></div>
+<div class="highlight highlight-source-batchfile"><pre class="notranslate"><span class="pl-s"><span class="pl-pds">"</span>C:\JAVA tools\bin\java.exe<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=49670<span class="pl-pds">"</span></span> -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\innerclass\out\production\innerclass innerclassdemo02.Test
+someone is swimming</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
