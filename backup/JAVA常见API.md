@@ -240,3 +240,19 @@ public class Test
 
 }
 ```
+
+```cmd
+"C:\JAVA tools\bin\java.exe" "-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=56169" -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\API\out\production\API-String APIdemo06.Test
+newStr = hello java
+c = true
+s = true
+e = true
+index = 4
+str.isEmpty() = false
+chars = [h, e, l, l, o,  , w, o, r, l, d]
+str.toUpperCase() = HELLO WORLD
+str.toLowerCase() = hello world
+str2 =   hello world  
+str2.trim() = hello world
+```
+
