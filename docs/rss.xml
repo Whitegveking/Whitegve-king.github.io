@@ -1,5 +1,31 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Mon, 10 Aug 2026 09:56:45 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>多态</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/duo-tai.html</link><description># 多态
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Wed, 12 Aug 2026 09:56:58 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>JAVA常见API</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/JAVA-chang-jian-API.html</link><description># JAVA常见API
+
+**API**：JDK提供各种功能的JAVA类
+
+**不需要导包的情况**：
+
+1. 使用本包中的类
+2. 使用`java.lang`包下的类
+
+```java
+import java.util.Random;
+
+public class Test
+{
+    static void main()
+    {
+        Random rand = new Random();
+        // [0.0-1.0)
+        double v = rand.nextDouble();
+        System.out.println(v);
+    }
+}
+```
+
+## 字符串String
+
+`String`类，定义在`java.lang`包下，无需导包。</description><guid isPermaLink="true">https://Whitegveking.github.io/Whitegve-king.github.io/post/JAVA-chang-jian-API.html</guid><pubDate>Wed, 12 Aug 2026 09:56:24 +0000</pubDate></item><item><title>多态</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/duo-tai.html</link><description># 多态
 
 **什么是多态**：事物的多种形态
 
