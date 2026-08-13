@@ -256,3 +256,90 @@ str2 =   hello world
 str2.trim() = hello world
 ```
 
+### StringBuilder
+
+```java
+package APIdemo07;
+
+public class Test
+{
+    static void main()
+    {
+        StringBuilder sb1 = new StringBuilder();
+        System.out.println("sb1.length() = " + sb1.length());
+        System.out.println("---" + sb1 + "***");
+
+        StringBuilder sb2 = new StringBuilder("hello");
+        sb2.append("abcde");
+        sb2.append("abcde");
+        sb2.append("abcde");
+        String res = sb2.toString();
+        System.out.println("sb2.length() = " + sb2.length());
+        System.out.println("res = " + res);
+        sb2.reverse();
+        System.out.println("sb2.length() = " + sb2.length());
+        System.out.println(sb2);
+
+    }
+}
+```
+
+### ArrayList
+
+|           方法            | 作用     |
+| :-----------------------: | -------- |
+|    `boolean add(E e)`     | 添加数据 |
+| `void add(int index,E e)` | 添加数据 |
+|   `boolean remove(E e)`   | 删除元素 |
+|   `E remove(int index)`   | 删除元素 |
+|  `E set(int index,E e)`   | 修改元素 |
+|    `E get(int index)`     | 获取元素 |
+|       `int size()`        | 集合长度 |
+
+如果没有进行限定，集合中可以存储任意类型的数据
+
+**泛型**：限定容器当中的数据类型
+
+```java
+package arraylistdemo01;
+
+import java.util.ArrayList;
+
+public class Test
+{
+    static void main()
+    {
+        ArrayList<String> strlist = new ArrayList<String>();
+        strlist.add("Alice");
+        strlist.add("Bob");
+        System.out.println("strlist.add(\"Charlie\") = " + strlist.add("Charlie"));
+        System.out.println("strlist = " + strlist);
+
+        strlist.add(strlist.size()-2,"aaa");
+        System.out.println("strlist = " + strlist);
+
+        System.out.println("strlist.remove(\"Alice\") = " + strlist.remove("Alice"));
+
+        strlist.set(0,"Brian");
+        System.out.println("strlist = " + strlist);
+
+        for (int i = 0; i < strlist.size(); i++) {
+            System.out.println("strlist.get(" + i + ") = " + strlist.get(i));
+        }
+    }
+}
+
+```
+
+```cmd
+"C:\JAVA tools\bin\java.exe" "-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=63370" -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\API-ArrayList\out\production\API-ArrayList arraylistdemo01.Test
+strlist.add("Charlie") = true
+strlist = [Alice, Bob, Charlie]
+strlist = [Alice, aaa, Bob, Charlie]
+strlist.remove("Alice") = true
+strlist = [Brian, Bob, Charlie]
+strlist.get(0) = Brian
+strlist.get(1) = Bob
+strlist.get(2) = Charlie
+```
+
