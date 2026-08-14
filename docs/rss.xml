@@ -1,5 +1,68 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Wed, 12 Aug 2026 09:56:58 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>JAVA常见API</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/JAVA-chang-jian-API.html</link><description># JAVA常见API
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Fri, 14 Aug 2026 09:10:46 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>Maven</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/Maven.html</link><description># Maven
+
+## 概述
+
+Maven是一款用于管理和构建Java项目的工具，是apache旗下的一个开源软件，它基于项目对象模型（POM）的概念，通过一小段描述信息（pom.xml）来管理项目的构建
+
+### Maven的模型
+
+&lt;img width='1311' height='555' alt='Image' src='https://github.com/user-attachments/assets/350db351-9920-43c2-9a7b-2bd890472343' /&gt;
+
+### Maven的仓库
+
+Maven的仓库是用来存储和管理jar包的
+
+Maven中有哪几类仓库？查找依赖（jar）的顺序是什么样的？
+
+1. 本地仓库
+2. 远程仓库
+3. 中央仓库
+
+### Maven的标准目录
+
+&lt;img width='350' height='330' alt='Image' src='https://github.com/user-attachments/assets/64e653f7-079f-4efe-9463-4857890076f2' /&gt;
+
+### Maven坐标
+
+- 是资源（jar）的**唯一标识**，通过该坐标可以**唯一定位资源位置**
+- 使用坐标来**定义项目**或**引入项目中需要的依赖**
+
+**由三个部分组成**：
+
+- **groupId**：组织名称
+- **artifactId**：模块名称
+- **version**：版本号
+
+---
+
+
+
+## Maven的作用
+
+### 依赖管理
+
+方便快捷地管理项目依赖的资源（jar包）
+
+&lt;img width='438' height='201' alt='Image' src='https://github.com/user-attachments/assets/8ae87705-3184-4fa2-845e-447f19db22c7' /&gt;
+
+描述jar包的信息，如版本，Maven就会自动联网下载该资源
+
+### 项目构建
+
+提供了一套标准化的跨平台自动化项目构建方式：
+
+​	编译---&gt;测试---&gt;打包---&gt;发布
+
+### 统一项目结构
+
+提供标准、统一的项目结构
+
+## 依赖管理
+
+### 依赖配置
+
+依赖:指当前项目运行所需要的jar包，一个项目中可以引入多个依赖。</description><guid isPermaLink="true">https://Whitegveking.github.io/Whitegve-king.github.io/post/Maven.html</guid><pubDate>Fri, 14 Aug 2026 09:10:20 +0000</pubDate></item><item><title>JAVA常见API</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/JAVA-chang-jian-API.html</link><description># JAVA常见API
 
 **API**：JDK提供各种功能的JAVA类
 
