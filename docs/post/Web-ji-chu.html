@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script src='https://blog.meekdai.com/Gmeek/plugins/GmeekBSZ.js'></script>
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/165184260?v=4&size=64"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="
+
+# Web基础
+
+**web程序架构以及基础知识**：
+
+<img width='1139' height='342' alt='Image' src='https://github.com/user-attachments/assets/61935a2f-3e73-4f67-8924-d18ffae21d76' />
+
+- 静态资源： 服务器上存储的不会改变的数据，通常不会根据用户的请求而变化。">
+<meta property="og:title" content="Web基础">
+<meta property="og:description" content="
+
+# Web基础
+
+**web程序架构以及基础知识**：
+
+<img width='1139' height='342' alt='Image' src='https://github.com/user-attachments/assets/61935a2f-3e73-4f67-8924-d18ffae21d76' />
+
+- 静态资源： 服务器上存储的不会改变的数据，通常不会根据用户的请求而变化。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://Whitegveking.github.io/Whitegve-king.github.io/post/Web-ji-chu.html">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/165184260?v=4&size=64">
+<title>Web基础</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">Web基础</h1>
+<div class="title-right">
+    <a href="https://Whitegveking.github.io/Whitegve-king.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/Whitegveking/Whitegve-king.github.io/issues/12" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>Web基础</h1>
+<p><strong>web程序架构以及基础知识</strong>：</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/61935a2f-3e73-4f67-8924-d18ffae21d76"><img width="1139" height="342" alt="Image" src="https://github.com/user-attachments/assets/61935a2f-3e73-4f67-8924-d18ffae21d76" style="max-width: 100%; height: auto; max-height: 342px;; aspect-ratio: 1139 / 342; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<ul>
+<li>静态资源： 服务器上存储的不会改变的数据，通常不会根据用户的请求而变化。比如：HTML、CSS、JS、图片、视频等（负责页面展示）</li>
+<li>动态资源： 服务器端根据用户请求和其他数据动态生成的，内容可能会在每次请求时都发生变化。比如：Servlet、JSP等（负责逻辑处理） Spring框架</li>
+<li>B/S 架构： Browser/Server，浏览器/服务器架构模式。客户端只需浏览器，应用程序的逻辑和数据都存在服务器端。（维护方便 体验一般）</li>
+<li>C/S 架构： Client/Server，客户端/服务器架构模式。需要单独开发维护客户端。（体验不错 开发维护麻烦）</li>
+</ul>
+<h2>HTTP协议</h2>
+<p><strong>概念</strong>：<em>Hyper Text Transfer Protocol</em>，<strong>超文本</strong>传输协议，规定了浏览器和服务器之间数据传输的规则。</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/88909605-e823-4511-bb68-7a5ec840b53f"><img width="1025" height="195" alt="Image" src="https://github.com/user-attachments/assets/88909605-e823-4511-bb68-7a5ec840b53f" style="max-width: 100%; height: auto; max-height: 195px;; aspect-ratio: 1025 / 195; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<p><strong>特点</strong>：</p>
+<ol>
+<li>基于TCP协议：面向连接，安全</li>
+<li>基于请求-响应模型的：一次请求对应一次响应</li>
+<li>HTTP协议是无状态的协议：对于事务处理没有记忆能力。每次请求-响应都是独立的
+<ul>
+<li>缺点：多次请求之间不能共享数据</li>
+<li>优点：速度快</li>
+</ul>
+</li>
+</ol>
+<h2>HTTP-请求协议</h2>
+<h3>请求数据格式</h3>
+<div class="highlight highlight-source-httpspec"><pre class="notranslate"><span class="pl-k">GET</span><span class="pl-c1"> /brand/findAll?name=OPPO&amp;status=1 HTTP/1.1</span>
+<span class="pl-ii">Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*</span>
+<span class="pl-s"><span class="pl-v">Accept-Encoding:</span> gzip, deflate, br</span>
+<span class="pl-s"><span class="pl-v">Accept-Language:</span> zh-CN,zh;q=0.9</span>
+<span class="pl-s"><span class="pl-v">Host:</span> localhost:8080</span>
+<span class="pl-s"><span class="pl-v">User-Agent:</span> Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/...</span></pre></div>
+<div class="highlight highlight-source-httpspec"><pre class="notranslate"><span class="pl-k">POST</span><span class="pl-c1"> /brand HTTP/1.1</span>
+<span class="pl-s"><span class="pl-v">Accept:</span> application/json, text/plain, */*</span>
+<span class="pl-s"><span class="pl-v">Accept-Encoding:</span> gzip, deflate, br</span>
+<span class="pl-s"><span class="pl-v">Accept-Language:</span> zh-CN,zh;q=0.9</span>
+<span class="pl-s"><span class="pl-v">Content-Length:</span> 161</span>
+<span class="pl-s"><span class="pl-v">Content-Type:</span> application/json;charset=UTF-8</span>
+<span class="pl-s"><span class="pl-v">Cookie:</span> Idea-8296eb32=841b16f0-0cfe-495a-9cc9-d5aaa71501a6; JSESSIONID=0FDE4E430876BD9C5C955F061207386F</span>
+<span class="pl-s"><span class="pl-v">Host:</span> localhost:8080</span>
+<span class="pl-s"><span class="pl-v">User-Agent:</span> Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/...</span>
+
+{<span class="pl-ent">"status"</span>:<span class="pl-c1">1</span>,<span class="pl-ent">"brandName"</span>:<span class="pl-s"><span class="pl-pds">"</span>黑马<span class="pl-pds">"</span></span>,<span class="pl-ent">"companyName"</span>:<span class="pl-s"><span class="pl-pds">"</span>黑马程序员<span class="pl-pds">"</span></span>,<span class="pl-ent">"id"</span>:<span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>,<span class="pl-ent">"description"</span>:<span class="pl-s"><span class="pl-pds">"</span>黑马程序员<span class="pl-pds">"</span></span>}</pre></div>
+<p><strong>请求行</strong>：请求数据第一行（请求方式、资源路径、协议）</p>
+<div class="highlight highlight-source-httpspec"><pre class="notranslate"><span class="pl-k">GET</span><span class="pl-c1"> /brand/findAll?name=OPPO&amp;status=1 HTTP/1.1</span>
+<span class="pl-k">POST</span><span class="pl-c1"> /brand HTTP/1.1</span></pre></div>
+<p><strong>请求头</strong>：第二行开始，格式：<code class="notranslate">key:value</code></p>
+<div class="highlight highlight-source-httpspec"><pre class="notranslate"><span class="pl-ii">Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*</span>
+<span class="pl-s"><span class="pl-v">Accept-Encoding:</span> gzip, deflate, br</span>
+<span class="pl-s"><span class="pl-v">Accept-Language:</span> zh-CN,zh;q=0.9</span>
+<span class="pl-s"><span class="pl-v">Host:</span> localhost:8080</span>
+<span class="pl-s"><span class="pl-v">User-Agent:</span> Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/...</span>
+<span class="pl-s"><span class="pl-v">Accept:</span> application/json, text/plain, */*</span>
+<span class="pl-s"><span class="pl-v">Accept-Encoding:</span> gzip, deflate, br</span>
+<span class="pl-s"><span class="pl-v">Accept-Language:</span> zh-CN,zh;q=0.9</span>
+<span class="pl-s"><span class="pl-v">Content-Length:</span> 161</span>
+<span class="pl-s"><span class="pl-v">Content-Type:</span> application/json;charset=UTF-8</span>
+<span class="pl-s"><span class="pl-v">Cookie:</span> Idea-8296eb32=841b16f0-0cfe-495a-9cc9-d5aaa71501a6; JSESSIONID=0FDE4E430876BD9C5C955F061207386F</span>
+<span class="pl-s"><span class="pl-v">Host:</span> localhost:8080</span>
+<span class="pl-s"><span class="pl-v">User-Agent:</span> Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/...</span></pre></div>
+<p><strong>请求体</strong>：与请求头之间用空行分隔，表示POST请求，存放请求数据</p>
+<div class="highlight highlight-source-httpspec"><pre class="notranslate">{<span class="pl-ent">"status"</span>:<span class="pl-c1">1</span>,<span class="pl-ent">"brandName"</span>:<span class="pl-s"><span class="pl-pds">"</span>黑马<span class="pl-pds">"</span></span>,<span class="pl-ent">"companyName"</span>:<span class="pl-s"><span class="pl-pds">"</span>黑马程序员<span class="pl-pds">"</span></span>,<span class="pl-ent">"id"</span>:<span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>,<span class="pl-ent">"description"</span>:<span class="pl-s"><span class="pl-pds">"</span>黑马程序员<span class="pl-pds">"</span></span>}</pre></div>
+<p><strong>请求头说明</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>头字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">Host</code></td>
+<td>请求的主机名</td>
+</tr>
+<tr>
+<td><code class="notranslate">User-Agent</code></td>
+<td>浏览器版本，例如Chrome浏览器的标识类似Mozilla/5.0 ... Chrome/79，IE浏览器的标识类似Mozilla/5.0 (Windows NT ...) like Gecko</td>
+</tr>
+<tr>
+<td><code class="notranslate">Accept</code></td>
+<td>表示浏览器能接收的资源类型，如text/*,image/*或者*/*表示所有</td>
+</tr>
+<tr>
+<td><code class="notranslate">Accept-Language</code></td>
+<td>表示浏览器偏好的语言，服务器可以据此返回不同语言的网页；</td>
+</tr>
+<tr>
+<td><code class="notranslate">Accept-Encoding</code></td>
+<td>表示浏览器可以支持的压缩类型，例如gzip，deflate等。</td>
+</tr>
+<tr>
+<td><code class="notranslate">Content-Type</code></td>
+<td>请求主体的数据类型。</td>
+</tr>
+<tr>
+<td><code class="notranslate">Content-Length</code></td>
+<td>请求主体的大小（单位：字节）。</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>请求方式-GET</strong>：请求参数在请求行中，没有请求体，如:<code class="notranslate">/brand/findAll?name=OPPO&amp;status=1</code>。GET请求大小在浏览器中是有限制的。</p>
+<p><strong>请求方式-POST</strong>：请求参数在请求体中，POST请求大小是没有限制的。</p>
+<h3>请求数据获取</h3>
+<p>Web服务器(Tomcat)对HTTP协议的请求数据进行解析，并进行了封装(HttpServletRequest)，在调用Controller（请求处理类）方法的时候传递给了该方法。这样，就使得程序员不必直接对协议进行操作，让Web开发更加便捷。</p>
+<p><strong>小结</strong>：</p>
+<ol>
+<li>
+<p>HTTP请求数据需要程序员自己解析吗？</p>
+<p>不需要，web服务器负责对HTTP请求数据进行解析，并封装为了请求对象</p>
+</li>
+<li>
+<p>如何获取请求数据?</p>
+<p><code class="notranslate">HttpServletRequest</code>对象里面封装了所有的请求信息</p>
+</li>
+</ol>
+<h2>HTTP-响应协议</h2>
+<h3>响应数据格式</h3>
+<div class="highlight highlight-source-httpspec"><pre class="notranslate"><span class="pl-c1">HTTP/1.1 200 OK</span>
+<span class="pl-s"><span class="pl-v">Content-Type:</span> application/json</span>
+<span class="pl-s"><span class="pl-v">Transfer-Encoding:</span> chunked</span>
+<span class="pl-s"><span class="pl-v">Date:</span> Tue, 10 May 2022 07:51:07 GMT</span>
+<span class="pl-s"><span class="pl-v">Keep-Alive:</span> timeout=60</span>
+<span class="pl-s"><span class="pl-v">Connection:</span> keep-alive</span>
+
+[{<span class="pl-ii">id: 1, brandName: "阿里巴巴", companyName: "腾讯计算机系统有限公司", description: "玩玩玩"</span>}]
+</pre></div>
+<p><strong>响应行</strong>：响应数据第二行（协议、状态码、描述）</p>
+<p><strong>响应头</strong>：第二行开始，格式：<code class="notranslate">key:value</code></p>
+<p><strong>响应体</strong>：最后一部分，存放响应数据</p>
+<p><strong>状态码</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>状态码</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1xx</td>
+<td>响应中-临时状态码，表示请求已经接收，告诉客户端应该继续请求或者如果它已经完成则忽略它。</td>
+</tr>
+<tr>
+<td>2xx</td>
+<td>成功-表示请求已经被成功接收，处理已完成。</td>
+</tr>
+<tr>
+<td>3xx</td>
+<td>重定向-重定向到其他地方；让客户端再发起一次请求以完成整个处理。</td>
+</tr>
+<tr>
+<td>4xx</td>
+<td>客户端错误-处理发生错误，责任在客户端。如：请求了不存在的资源、客户端未被授权、禁止访问等。</td>
+</tr>
+<tr>
+<td>5xx</td>
+<td>服务器错误-处理发生错误，责任在服务端。如：程序抛出异常等。</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>响应头</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>响应头</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">Content-Type</code></td>
+<td>表示该响应内容的类型，例如text/html，application/json。</td>
+</tr>
+<tr>
+<td><code class="notranslate">Content-Length</code></td>
+<td>表示该响应内容的长度（字节数）。</td>
+</tr>
+<tr>
+<td><code class="notranslate">Content-Encoding</code></td>
+<td>表示该响应压缩算法，例如gzip。</td>
+</tr>
+<tr>
+<td><code class="notranslate">Cache-Control</code></td>
+<td>指示客户端应如何缓存，例如max-age=300表示可以最多缓存300秒。</td>
+</tr>
+<tr>
+<td><code class="notranslate">Set-Cookie</code></td>
+<td>告诉浏览器为当前页面所在的域设置cookie。</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>重定向</strong></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/6114afec-996d-4bc2-aeca-975011ab4c4a"><img width="969" height="450" alt="Image" src="https://github.com/user-attachments/assets/6114afec-996d-4bc2-aeca-975011ab4c4a" style="max-width: 100%; height: auto; max-height: 450px;; aspect-ratio: 969 / 450; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<h3>响应数据设置</h3>
+<p>Web服务器对HTTP协议的响应数据进行了封装(HttpServletResponse)，并在调用Controller方法的时候传递给了该方法。这样，就使得程序员不必直接对协议进行操作，让Web开发更加便捷。</p>
+<h3>实例服务端代码</h3>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">Demo</span>;
+
+<span class="pl-k">import</span> <span class="pl-s1">org</span>.<span class="pl-s1">springframework</span>.<span class="pl-s1">boot</span>.<span class="pl-s1">SpringApplication</span>;
+<span class="pl-k">import</span> <span class="pl-s1">org</span>.<span class="pl-s1">springframework</span>.<span class="pl-s1">boot</span>.<span class="pl-s1">autoconfigure</span>.<span class="pl-s1">SpringBootApplication</span>;
+
+<span class="pl-c1">@</span><span class="pl-c1">SpringBootApplication</span>
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Application</span>
+{
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>(<span class="pl-smi">String</span>[] <span class="pl-s1">args</span>)
+    {
+        <span class="pl-smi">SpringApplication</span>.<span class="pl-en">run</span>(<span class="pl-smi">Application</span>.<span class="pl-k">class</span>, <span class="pl-s1">args</span>);
+    }
+}</pre></div>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">Demo</span>;
+
+<span class="pl-k">import</span> <span class="pl-s1">org</span>.<span class="pl-s1">springframework</span>.<span class="pl-s1">web</span>.<span class="pl-s1">bind</span>.<span class="pl-s1">annotation</span>.<span class="pl-s1">RequestMapping</span>;
+<span class="pl-k">import</span> <span class="pl-s1">org</span>.<span class="pl-s1">springframework</span>.<span class="pl-s1">web</span>.<span class="pl-s1">bind</span>.<span class="pl-s1">annotation</span>.<span class="pl-s1">RestController</span>;
+
+<span class="pl-k">import</span> <span class="pl-s1">javax</span>.<span class="pl-s1">servlet</span>.<span class="pl-s1">http</span>.<span class="pl-s1">HttpServletRequest</span>;
+
+<span class="pl-c1">@</span><span class="pl-c1">RestController</span>
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">RequestController</span>
+{
+    <span class="pl-c1">@</span><span class="pl-c1">RequestMapping</span>(<span class="pl-s">"/request"</span>)
+    <span class="pl-k">public</span> <span class="pl-smi">String</span> <span class="pl-en">request</span>(<span class="pl-smi">HttpServletRequest</span> <span class="pl-s1">request</span>)
+    {
+        <span class="pl-c">// 1、获取请求方式</span>
+        <span class="pl-smi">String</span> <span class="pl-s1">method</span> = <span class="pl-s1">request</span>.<span class="pl-en">getMethod</span>();
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"请求方式："</span> + <span class="pl-s1">method</span>);
+
+        <span class="pl-c">// 2、获取请求url地址</span>
+        <span class="pl-smi">String</span> <span class="pl-s1">url</span> = <span class="pl-s1">request</span>.<span class="pl-en">getRequestURL</span>().<span class="pl-en">toString</span>();
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"请求url地址："</span> + <span class="pl-s1">url</span>);
+
+        <span class="pl-smi">String</span> <span class="pl-s1">uri</span> = <span class="pl-s1">request</span>.<span class="pl-en">getRequestURI</span>().<span class="pl-en">toString</span>();
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"请求uri地址："</span> + <span class="pl-s1">uri</span>);
+
+        <span class="pl-c">// 3、获取请求协议</span>
+        <span class="pl-smi">String</span> <span class="pl-s1">protocol</span> = <span class="pl-s1">request</span>.<span class="pl-en">getProtocol</span>();
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"请求协议："</span> + <span class="pl-s1">protocol</span>);
+
+        <span class="pl-c">// 4、获取请求参数 -name</span>
+        <span class="pl-smi">String</span> <span class="pl-s1">name</span> = <span class="pl-s1">request</span>.<span class="pl-en">getParameter</span>(<span class="pl-s">"name"</span>);
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"请求参数-name："</span> + <span class="pl-s1">name</span>);
+
+        <span class="pl-smi">String</span> <span class="pl-s1">age</span> = <span class="pl-s1">request</span>.<span class="pl-en">getParameter</span>(<span class="pl-s">"age"</span>);
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"请求参数-age："</span> + <span class="pl-s1">age</span>);
+
+        <span class="pl-c">// 5、获取请求头 -Accept</span>
+        <span class="pl-smi">String</span> <span class="pl-s1">accept</span> = <span class="pl-s1">request</span>.<span class="pl-en">getHeader</span>(<span class="pl-s">"Accept"</span>);
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"请求头-Accept："</span> + <span class="pl-s1">accept</span>);
+
+        <span class="pl-smi">String</span> <span class="pl-s1">cookie</span> = <span class="pl-s1">request</span>.<span class="pl-en">getHeader</span>(<span class="pl-s">"Cookie"</span>);
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"请求头-Cookie："</span> + <span class="pl-s1">cookie</span>);
+        <span class="pl-k">return</span> <span class="pl-s">"OK"</span>;
+    }
+}</pre></div>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">Demo</span>;
+
+<span class="pl-k">import</span> <span class="pl-s1">org</span>.<span class="pl-s1">springframework</span>.<span class="pl-s1">http</span>.<span class="pl-s1">ResponseEntity</span>;
+<span class="pl-k">import</span> <span class="pl-s1">org</span>.<span class="pl-s1">springframework</span>.<span class="pl-s1">web</span>.<span class="pl-s1">bind</span>.<span class="pl-s1">annotation</span>.<span class="pl-s1">RequestMapping</span>;
+<span class="pl-k">import</span> <span class="pl-s1">org</span>.<span class="pl-s1">springframework</span>.<span class="pl-s1">web</span>.<span class="pl-s1">bind</span>.<span class="pl-s1">annotation</span>.<span class="pl-s1">RestController</span>;
+
+<span class="pl-k">import</span> <span class="pl-s1">javax</span>.<span class="pl-s1">servlet</span>.<span class="pl-s1">http</span>.<span class="pl-s1">HttpServletResponse</span>;
+
+<span class="pl-c1">@</span><span class="pl-c1">RestController</span>
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">ResponseController</span>
+{
+    <span class="pl-c1">@</span><span class="pl-c1">RequestMapping</span>(<span class="pl-s">"/response"</span>)
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">response</span>(<span class="pl-smi">HttpServletResponse</span> <span class="pl-s1">response</span>)
+    {
+        <span class="pl-c">// 1、设置响应状态码</span>
+        <span class="pl-s1">response</span>.<span class="pl-en">setStatus</span>(<span class="pl-smi">HttpServletResponse</span>.<span class="pl-c1">SC_OK</span>);
+        <span class="pl-c">// response.setStatus(467);</span>
+
+        <span class="pl-c">// 2、设置响应头</span>
+        <span class="pl-s1">response</span>.<span class="pl-en">setHeader</span>(<span class="pl-s">"Content-Type"</span>, <span class="pl-s">"text/html;charset=UTF-8"</span>);
+
+        <span class="pl-c">// 3、设置响应体</span>
+        <span class="pl-k">try</span> {
+            <span class="pl-s1">response</span>.<span class="pl-en">getWriter</span>().<span class="pl-en">write</span>(<span class="pl-s">"Hello, World!"</span>);
+        } <span class="pl-k">catch</span> (<span class="pl-smi">Exception</span> <span class="pl-s1">e</span>) {
+            <span class="pl-s1">e</span>.<span class="pl-en">printStackTrace</span>();
+        }
+    }
+
+    <span class="pl-c1">@</span><span class="pl-c1">RequestMapping</span>(<span class="pl-s">"/responseEntity"</span>)
+    <span class="pl-k">public</span> <span class="pl-smi">ResponseEntity</span>&lt;<span class="pl-smi">String</span>&gt; <span class="pl-en">responseEntity</span>()
+    {
+        <span class="pl-k">return</span> <span class="pl-smi">ResponseEntity</span>
+                .<span class="pl-en">status</span>(<span class="pl-c1">401</span>)
+                .<span class="pl-en">header</span>(<span class="pl-s">"name"</span>, <span class="pl-s">"ai"</span>)
+                .<span class="pl-en">body</span>(<span class="pl-s">"&lt;h1&gt;hello response&lt;/h1&gt;"</span>);
+
+    }
+}</pre></div>
+<h2>分层解耦</h2>
+<h3>三层架构</h3>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/8d12d0df-25b1-4c92-b281-a794267fd676"><img width="1230" height="348" alt="Image" src="https://github.com/user-attachments/assets/8d12d0df-25b1-4c92-b281-a794267fd676" style="max-width: 100%; height: auto; max-height: 348px;; aspect-ratio: 1230 / 348; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<p><strong>基于单一职责原则分为三层</strong></p>
+<ul>
+<li>controller：控制层，接收前端发送的请求，对请求进行处理，并响应数据。</li>
+<li>service：业务逻辑层，处理具体的业务逻辑。</li>
+<li>dao：数据访问层(Data Access Object)（持久层），负责数据访问操作，包括数据的增、删、改、查。</li>
+</ul>
+<p>项目学习笔记</p>
+<h3>分层解耦思想</h3>
+<h3>IOC&amp;DI入门</h3>
+<h3>IOC详解</h3>
+<h3>DI详解</h3></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://Whitegveking.github.io/Whitegve-king.github.io">Cyy的JAVA学习日记</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","Whitegveking/Whitegve-king.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>
+
+</html>

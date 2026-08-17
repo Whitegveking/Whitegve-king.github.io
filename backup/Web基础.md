@@ -1,0 +1,305 @@
+
+
+# Web基础
+
+**web程序架构以及基础知识**：
+
+<img width="1139" height="342" alt="Image" src="https://github.com/user-attachments/assets/61935a2f-3e73-4f67-8924-d18ffae21d76" />
+
+- 静态资源： 服务器上存储的不会改变的数据，通常不会根据用户的请求而变化。比如：HTML、CSS、JS、图片、视频等（负责页面展示）
+- 动态资源： 服务器端根据用户请求和其他数据动态生成的，内容可能会在每次请求时都发生变化。比如：Servlet、JSP等（负责逻辑处理） Spring框架
+- B/S 架构： Browser/Server，浏览器/服务器架构模式。客户端只需浏览器，应用程序的逻辑和数据都存在服务器端。（维护方便 体验一般）
+- C/S 架构： Client/Server，客户端/服务器架构模式。需要单独开发维护客户端。（体验不错 开发维护麻烦）
+
+## HTTP协议
+
+**概念**：*Hyper Text Transfer Protocol*，**超文本**传输协议，规定了浏览器和服务器之间数据传输的规则。
+
+<img width="1025" height="195" alt="Image" src="https://github.com/user-attachments/assets/88909605-e823-4511-bb68-7a5ec840b53f" />
+
+**特点**：
+
+1. 基于TCP协议：面向连接，安全
+2. 基于请求-响应模型的：一次请求对应一次响应
+3. HTTP协议是无状态的协议：对于事务处理没有记忆能力。每次请求-响应都是独立的
+   - 缺点：多次请求之间不能共享数据
+   - 优点：速度快
+
+## HTTP-请求协议
+
+### 请求数据格式
+
+```http
+GET /brand/findAll?name=OPPO&status=1 HTTP/1.1
+Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*
+Accept-Encoding: gzip, deflate, br
+Accept-Language: zh-CN,zh;q=0.9
+Host: localhost:8080
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/...
+```
+
+```http
+POST /brand HTTP/1.1
+Accept: application/json, text/plain, */*
+Accept-Encoding: gzip, deflate, br
+Accept-Language: zh-CN,zh;q=0.9
+Content-Length: 161
+Content-Type: application/json;charset=UTF-8
+Cookie: Idea-8296eb32=841b16f0-0cfe-495a-9cc9-d5aaa71501a6; JSESSIONID=0FDE4E430876BD9C5C955F061207386F
+Host: localhost:8080
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/...
+
+{"status":1,"brandName":"黑马","companyName":"黑马程序员","id":"","description":"黑马程序员"}
+```
+
+**请求行**：请求数据第一行（请求方式、资源路径、协议）
+
+```http
+GET /brand/findAll?name=OPPO&status=1 HTTP/1.1
+POST /brand HTTP/1.1
+```
+
+
+
+**请求头**：第二行开始，格式：`key:value`
+
+```http
+Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*
+Accept-Encoding: gzip, deflate, br
+Accept-Language: zh-CN,zh;q=0.9
+Host: localhost:8080
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/...
+Accept: application/json, text/plain, */*
+Accept-Encoding: gzip, deflate, br
+Accept-Language: zh-CN,zh;q=0.9
+Content-Length: 161
+Content-Type: application/json;charset=UTF-8
+Cookie: Idea-8296eb32=841b16f0-0cfe-495a-9cc9-d5aaa71501a6; JSESSIONID=0FDE4E430876BD9C5C955F061207386F
+Host: localhost:8080
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/...
+```
+
+
+
+**请求体**：与请求头之间用空行分隔，表示POST请求，存放请求数据
+
+```http
+{"status":1,"brandName":"黑马","companyName":"黑马程序员","id":"","description":"黑马程序员"}
+```
+
+**请求头说明**
+
+| 头字段            | 说明                                                         |
+| ----------------- | ------------------------------------------------------------ |
+| `Host`            | 请求的主机名                                                 |
+| `User-Agent`      | 浏览器版本，例如Chrome浏览器的标识类似Mozilla/5.0 ... Chrome/79，IE浏览器的标识类似Mozilla/5.0 (Windows NT ...) like Gecko |
+| `Accept`          | 表示浏览器能接收的资源类型，如text/\*,image/\*或者*/\*表示所有 |
+| `Accept-Language` | 表示浏览器偏好的语言，服务器可以据此返回不同语言的网页；     |
+| `Accept-Encoding` | 表示浏览器可以支持的压缩类型，例如gzip，deflate等。          |
+| `Content-Type`    | 请求主体的数据类型。                                         |
+| `Content-Length`  | 请求主体的大小（单位：字节）。                               |
+
+**请求方式-GET**：请求参数在请求行中，没有请求体，如:`/brand/findAll?name=OPPO&status=1`。GET请求大小在浏览器中是有限制的。
+
+**请求方式-POST**：请求参数在请求体中，POST请求大小是没有限制的。
+
+### 请求数据获取
+
+Web服务器(Tomcat)对HTTP协议的请求数据进行解析，并进行了封装(HttpServletRequest)，在调用Controller（请求处理类）方法的时候传递给了该方法。这样，就使得程序员不必直接对协议进行操作，让Web开发更加便捷。
+
+**小结**：
+
+1. HTTP请求数据需要程序员自己解析吗？
+
+   不需要，web服务器负责对HTTP请求数据进行解析，并封装为了请求对象
+
+2. 如何获取请求数据?
+
+   `HttpServletRequest`对象里面封装了所有的请求信息
+
+
+
+## HTTP-响应协议
+
+### 响应数据格式
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 10 May 2022 07:51:07 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+[{id: 1, brandName: "阿里巴巴", companyName: "腾讯计算机系统有限公司", description: "玩玩玩"}]
+
+```
+
+**响应行**：响应数据第二行（协议、状态码、描述）
+
+**响应头**：第二行开始，格式：`key:value`
+
+**响应体**：最后一部分，存放响应数据
+
+
+
+**状态码**
+
+| 状态码 | 说明                                                         |
+| ------ | ------------------------------------------------------------ |
+| 1xx    | 响应中-临时状态码，表示请求已经接收，告诉客户端应该继续请求或者如果它已经完成则忽略它。 |
+| 2xx    | 成功-表示请求已经被成功接收，处理已完成。                    |
+| 3xx    | 重定向-重定向到其他地方；让客户端再发起一次请求以完成整个处理。 |
+| 4xx    | 客户端错误-处理发生错误，责任在客户端。如：请求了不存在的资源、客户端未被授权、禁止访问等。 |
+| 5xx    | 服务器错误-处理发生错误，责任在服务端。如：程序抛出异常等。  |
+
+**响应头**
+
+| 响应头             | 说明                                                         |
+| ------------------ | ------------------------------------------------------------ |
+| `Content-Type`     | 表示该响应内容的类型，例如text/html，application/json。      |
+| `Content-Length`   | 表示该响应内容的长度（字节数）。                             |
+| `Content-Encoding` | 表示该响应压缩算法，例如gzip。                               |
+| `Cache-Control`    | 指示客户端应如何缓存，例如max-age=300表示可以最多缓存300秒。 |
+| `Set-Cookie`       | 告诉浏览器为当前页面所在的域设置cookie。                     |
+
+**重定向**
+
+<img width="969" height="450" alt="Image" src="https://github.com/user-attachments/assets/6114afec-996d-4bc2-aeca-975011ab4c4a" />
+
+### 响应数据设置
+
+Web服务器对HTTP协议的响应数据进行了封装(HttpServletResponse)，并在调用Controller方法的时候传递给了该方法。这样，就使得程序员不必直接对协议进行操作，让Web开发更加便捷。
+
+### 实例服务端代码
+
+```java
+package Demo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class Application
+{
+    public static void main(String[] args)
+    {
+        SpringApplication.run(Application.class, args);
+    }
+}
+```
+
+```java
+package Demo;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+
+@RestController
+public class RequestController
+{
+    @RequestMapping("/request")
+    public String request(HttpServletRequest request)
+    {
+        // 1、获取请求方式
+        String method = request.getMethod();
+        System.out.println("请求方式：" + method);
+
+        // 2、获取请求url地址
+        String url = request.getRequestURL().toString();
+        System.out.println("请求url地址：" + url);
+
+        String uri = request.getRequestURI().toString();
+        System.out.println("请求uri地址：" + uri);
+
+        // 3、获取请求协议
+        String protocol = request.getProtocol();
+        System.out.println("请求协议：" + protocol);
+
+        // 4、获取请求参数 -name
+        String name = request.getParameter("name");
+        System.out.println("请求参数-name：" + name);
+
+        String age = request.getParameter("age");
+        System.out.println("请求参数-age：" + age);
+
+        // 5、获取请求头 -Accept
+        String accept = request.getHeader("Accept");
+        System.out.println("请求头-Accept：" + accept);
+
+        String cookie = request.getHeader("Cookie");
+        System.out.println("请求头-Cookie：" + cookie);
+        return "OK";
+    }
+}
+```
+
+```java
+package Demo;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletResponse;
+
+@RestController
+public class ResponseController
+{
+    @RequestMapping("/response")
+    public void response(HttpServletResponse response)
+    {
+        // 1、设置响应状态码
+        response.setStatus(HttpServletResponse.SC_OK);
+        // response.setStatus(467);
+
+        // 2、设置响应头
+        response.setHeader("Content-Type", "text/html;charset=UTF-8");
+
+        // 3、设置响应体
+        try {
+            response.getWriter().write("Hello, World!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/responseEntity")
+    public ResponseEntity<String> responseEntity()
+    {
+        return ResponseEntity
+                .status(401)
+                .header("name", "ai")
+                .body("<h1>hello response</h1>");
+
+    }
+}
+```
+
+## 分层解耦
+
+### 三层架构
+
+<img width="1230" height="348" alt="Image" src="https://github.com/user-attachments/assets/8d12d0df-25b1-4c92-b281-a794267fd676" />
+
+**基于单一职责原则分为三层**
+
+- controller：控制层，接收前端发送的请求，对请求进行处理，并响应数据。
+- service：业务逻辑层，处理具体的业务逻辑。
+- dao：数据访问层(Data Access Object)（持久层），负责数据访问操作，包括数据的增、删、改、查。
+
+[项目学习笔记](<C:\Users\72982\Desktop\JAVA学习日记\三层架构小项目学习笔记.md>)
+
+
+
+
+
+### 分层解耦思想
+
+### IOC&DI入门
+
+### IOC详解
+
+### DI详解
