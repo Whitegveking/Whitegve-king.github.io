@@ -1,5 +1,14 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Fri, 14 Aug 2026 09:10:46 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>Maven</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/Maven.html</link><description># Maven
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Mon, 17 Aug 2026 02:51:50 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>单元测试</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/dan-yuan-ce-shi.html</link><description># 单元测试
+
+**测试**：是一种用来促进鉴定软件的正确性、完整性、`安全性和质量的过程`
+
+**阶段划分**：
+
+| 测试类型 |                             介绍                             |                     目的                     |  测试人员   |
+| :------: | :----------------------------------------------------------: | :------------------------------------------: | :---------: |
+| 单元测试 |     对软件的基本组成单位（方法）进行测试，最小的测试单位     |         检验软件基本组成单位的正确性         |  开发人员   |
+| 集成测试 | 将已通过测试的单元，按设计要求组合成系统或子系统，再进行的测试。</description><guid isPermaLink="true">https://Whitegveking.github.io/Whitegve-king.github.io/post/dan-yuan-ce-shi.html</guid><pubDate>Mon, 17 Aug 2026 02:51:17 +0000</pubDate></item><item><title>Maven</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/Maven.html</link><description># Maven
 
 ## 概述
 
