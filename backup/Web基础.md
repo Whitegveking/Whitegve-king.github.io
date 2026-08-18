@@ -292,14 +292,166 @@ public class ResponseController
 
 [项目学习笔记](<C:\Users\72982\Desktop\JAVA学习日记\三层架构小项目学习笔记.md>)
 
-
-
-
-
 ### 分层解耦思想
+
+- 耦合：衡量软件中各个层/各个模块的依赖关联程度
+- 内聚：软件中各个功能模块内部的功能联系
 
 ### IOC&DI入门
 
+- **控制反转**:Inversion Of Control，简称IOC。**对象的创建控制权由程序自身转移到外部(容器)**，这种思想称为控制反转。
+- **依赖注入**:Dependency Injection，简称DI。容器为应用程序提供运行时，所依赖的资源，称之为依赖注入。
+- **Bean对象**:I0C容器中创建、管理的对象，称之为Bean。
+
+**实现分层解耦的思路是什么?**
+
+- 将项目中的类交给IOC容器管理(IOC，控制反转)
+- 应用程序运行时需要什么对象，直接依赖容器为其提供(DI，依赖注入）
+
+1.如何将一个类交给IOC容器管理?
+
+- `@Component`(注意:是加在实现类上，而非接口上)
+
+2.如何从I0C容器中找到该类型的bean，然后完成依赖注入?
+
+- `@Autowired`
+
 ### IOC详解
 
+| 注解        | 说明                 | 位置                                              |
+| ----------- | -------------------- | ------------------------------------------------- |
+| @Component  | 声明bean的基础注解   | 不属于以下三类时，用此注解                        |
+| @Controller | @Component的衍生注解 | 标注在控制层类上                                  |
+| @Service    | @Component的衍生注解 | 标注在业务层类上                                  |
+| @Repository | @Component的衍生注解 | 标注在数据访问层类上（由于与mybatis整合，用的少） |
+
+> [!CAUTION]
+>
+> 声明bean的时候，可以通过注解的value属性指定bean的名字，如果没有指定，默认为类名首字母小写
+
+- 前面声明bean的四大注解，要想生效，还需要被组件扫描注解@ComponentScan扫描。
+- 该注解虽然没有显式配置，但是实际上已经包含在了启动类声明注解 @SpringBootApplication中，默认扫描的范围是启动类所在包及其子包。
+
+> - `@Controller`：返回视图（如 JSP/Thymeleaf 页面），返回值字符串当作视图名称去解析跳转。
+> - `@RestController`：返回数据（如 JSON/XML），返回值字符串直接作为响应体输出给浏览器。
+>
+> `@RestController` = `@Controller` + `@ResponseBody`，是个组合注解。
+>
+> 所以：
+>
+> - 需要返回页面（跳转 HTML）→ 用 `@Controller`
+> - 需要返回 JSON/字符串给前端（前后端分离）→ 用 `@RestController`
+
 ### DI详解
+
+基于@Autowired进行依赖注入的常见方式有三种
+
+- 属性注入
+
+<img width="540" height="198" alt="Image" src="https://github.com/user-attachments/assets/d2afa188-626b-4f8a-941f-5e64d8d78ab5" />
+
+- 构造函数注入
+
+<img width="573" height="249" alt="Image" src="https://github.com/user-attachments/assets/f01b0190-44b8-4223-bc32-851245ca42d2" />
+
+- setter注入
+
+<img width="546" height="261" alt="Image" src="https://github.com/user-attachments/assets/83d9f88e-75a8-4f12-a257-9d9782ea02af" />
+
+**三种注入方式总结**
+
+#### 1. 属性注入（字段注入）
+```java
+@RestController
+public class UserController {
+    @Autowired
+    private UserService userService;
+}
+```
+
+- 优点：代码最简洁、方便快速开发
+- 缺点：依赖无法用`final`修饰、不易测试（无法new后再注入）、依赖关系隐蔽，可能会破坏类的封装性
+
+#### 2. 构造函数注入（推荐）
+```java
+@RestController
+public class UserController {
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+}
+```
+
+- 优点：依赖不可变（`final`）、对象创建即完整可用、易测试、能从根本**避免循环依赖**、清晰看出类的依赖关系，提高代码的安全性
+- 缺点：构造参数过多时代码冗余
+
+> 注：基于@Autowired，当类中只有一个构造方法时，@Autowired可以省略。
+
+#### 3. setter注入
+```java
+@RestController
+public class UserController {
+    private UserService userService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+}
+```
+
+- 优点：测试时可灵活更换依赖、保持类的封装性，依赖关系清晰
+- 缺点：依赖在对象创建后可被修改，可能出现"半初始化"状态
+
+**实现原理**：三种方式都是通过**反射**完成注入——
+
+- 属性注入：`field.set(bean, 依赖)`
+- 构造函数注入：`constructor.newInstance(构造参数)`
+- setter注入：反射调用setter方法
+
+整个过程由`AutowiredAnnotationBeanPostProcessor`在Bean实例化后、初始化前扫描`@Autowired`并完成赋值。
+
+**关于循环依赖**：
+
+| 注入方式 | 能否解决循环依赖 | 原因 |
+| --- | --- | --- |
+| 属性注入 | ✅ 能 | 借助三级缓存提前暴露半成品Bean引用 |
+| setter注入 | ✅ 能 | 属性创建后再赋值 |
+| 构造函数注入 | ❌ 不能 | 构造时必须先拿到完整依赖，两个Bean无法先创建，直接抛`BeanCurrentlyInCreationException` |
+
+> 注：Spring Boot 2.6+ 默认禁止循环依赖（`spring.main.allow-circular-references=false`），即使属性注入也会报错。
+
+**总结**：业务上优先使用**构造函数注入**，循环依赖属于设计坏味道，出现时应通过**重构拆分**解决。
+
+#### @AutoWired详解
+
+- @AutoWired注解，默认是按照类型进行注入的
+- 如果存在多个相同类型的bean，将会报出如下错误
+
+```cmd
+Field ... in ... required a single bean,but ... were found
+```
+
+**解决方案**
+
+| 方案   | 关键字       | 代码                                                         |
+| ------ | ------------ | ------------------------------------------------------------ |
+| 方案一 | `@Primary`   | ` @Primary @Service public class UserServiceImpl implements UserService { @Override public List<User> list(){ // 省略…… } }` |
+| 方案二 | `@Qualifier` | ` @RestController public class UserController { @Autowired @Qualifier("userServiceImpl") private UserService userService; }` |
+| 方案三 | `@Resource`  | ` @RestController public class UserController { @Resource(name = "userServiceImpl") private UserService userService; }` |
+
+1、依赖注入的注解
+
+- @Autowired：默认按照类型自动装配
+- 如果同类型的bean存在多个：
+- @Primary
+- @Autowired + @Qualifier
+- @Resource
+
+2、@Resource 与 @Autowired区别？
+
+- @Autowired是Spring框架提供的注解，而@Resource是JavaEE规范提供的
+- @Autowired默认是按照类型注入，而@Resource默认是按照名称注入

@@ -69,7 +69,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     font-size: 12px;
 }
 </style>
-
+<style>.markdown-alert{padding:0.5rem 1rem;margin-bottom:1rem;border-left:.25em solid var(--borderColor-default,var(--color-border-default));}.markdown-alert .markdown-alert-title {display:flex;font-weight:var(--base-text-weight-medium,500);align-items:center;line-height:1;}.markdown-alert>:first-child {margin-top:0;}.markdown-alert>:last-child {margin-bottom:0;}</style><style>.markdown-alert.markdown-alert-caution {border-left-color:var(--borderColor-danger-emphasis, var(--color-danger-emphasis));background-color:var(--color-danger-subtle);}.markdown-alert.markdown-alert-caution .markdown-alert-title {color: var(--fgColor-danger,var(--color-danger-fg));}</style>
 
 
 
@@ -402,9 +402,220 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <p>项目学习笔记</p>
 <h3>分层解耦思想</h3>
+<ul>
+<li>耦合：衡量软件中各个层/各个模块的依赖关联程度</li>
+<li>内聚：软件中各个功能模块内部的功能联系</li>
+</ul>
 <h3>IOC&amp;DI入门</h3>
+<ul>
+<li><strong>控制反转</strong>:Inversion Of Control，简称IOC。<strong>对象的创建控制权由程序自身转移到外部(容器)</strong>，这种思想称为控制反转。</li>
+<li><strong>依赖注入</strong>:Dependency Injection，简称DI。容器为应用程序提供运行时，所依赖的资源，称之为依赖注入。</li>
+<li><strong>Bean对象</strong>:I0C容器中创建、管理的对象，称之为Bean。</li>
+</ul>
+<p><strong>实现分层解耦的思路是什么?</strong></p>
+<ul>
+<li>将项目中的类交给IOC容器管理(IOC，控制反转)</li>
+<li>应用程序运行时需要什么对象，直接依赖容器为其提供(DI，依赖注入）</li>
+</ul>
+<p>1.如何将一个类交给IOC容器管理?</p>
+<ul>
+<li><code class="notranslate">@Component</code>(注意:是加在实现类上，而非接口上)</li>
+</ul>
+<p>2.如何从I0C容器中找到该类型的bean，然后完成依赖注入?</p>
+<ul>
+<li><code class="notranslate">@Autowired</code></li>
+</ul>
 <h3>IOC详解</h3>
-<h3>DI详解</h3></div>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>注解</th>
+<th>说明</th>
+<th>位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a class="user-mention notranslate" data-hovercard-type="organization" data-hovercard-url="/orgs/component/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/component">@component</a></td>
+<td>声明bean的基础注解</td>
+<td>不属于以下三类时，用此注解</td>
+</tr>
+<tr>
+<td><a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/controller/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/controller">@controller</a></td>
+<td><a class="user-mention notranslate" data-hovercard-type="organization" data-hovercard-url="/orgs/component/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/component">@component</a>的衍生注解</td>
+<td>标注在控制层类上</td>
+</tr>
+<tr>
+<td><a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/service/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/service">@service</a></td>
+<td><a class="user-mention notranslate" data-hovercard-type="organization" data-hovercard-url="/orgs/component/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/component">@component</a>的衍生注解</td>
+<td>标注在业务层类上</td>
+</tr>
+<tr>
+<td><a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/repository/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/repository">@repository</a></td>
+<td><a class="user-mention notranslate" data-hovercard-type="organization" data-hovercard-url="/orgs/component/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/component">@component</a>的衍生注解</td>
+<td>标注在数据访问层类上（由于与mybatis整合，用的少）</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<div class="markdown-alert markdown-alert-caution"><p class="markdown-alert-title"><svg data-component="Octicon" class="octicon octicon-stop mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Caution</p>
+<p>声明bean的时候，可以通过注解的value属性指定bean的名字，如果没有指定，默认为类名首字母小写</p>
+</div>
+<ul>
+<li>前面声明bean的四大注解，要想生效，还需要被组件扫描注解<a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/componentscan/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/componentscan">@componentscan</a>扫描。</li>
+<li>该注解虽然没有显式配置，但是实际上已经包含在了启动类声明注解 <a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/SpringBootApplication/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/SpringBootApplication">@SpringBootApplication</a>中，默认扫描的范围是启动类所在包及其子包。</li>
+</ul>
+<blockquote>
+<ul>
+<li><code class="notranslate">@Controller</code>：返回视图（如 JSP/Thymeleaf 页面），返回值字符串当作视图名称去解析跳转。</li>
+<li><code class="notranslate">@RestController</code>：返回数据（如 JSON/XML），返回值字符串直接作为响应体输出给浏览器。</li>
+</ul>
+<p><code class="notranslate">@RestController</code> = <code class="notranslate">@Controller</code> + <code class="notranslate">@ResponseBody</code>，是个组合注解。</p>
+<p>所以：</p>
+<ul>
+<li>需要返回页面（跳转 HTML）→ 用 <code class="notranslate">@Controller</code></li>
+<li>需要返回 JSON/字符串给前端（前后端分离）→ 用 <code class="notranslate">@RestController</code></li>
+</ul>
+</blockquote>
+<h3>DI详解</h3>
+<p>基于<a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/Autowired/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/Autowired">@Autowired</a>进行依赖注入的常见方式有三种</p>
+<ul>
+<li>属性注入</li>
+</ul>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/d2afa188-626b-4f8a-941f-5e64d8d78ab5"><img width="540" height="198" alt="Image" src="https://github.com/user-attachments/assets/d2afa188-626b-4f8a-941f-5e64d8d78ab5" style="max-width: 100%; height: auto; max-height: 198px;; aspect-ratio: 540 / 198; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<ul>
+<li>构造函数注入</li>
+</ul>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/f01b0190-44b8-4223-bc32-851245ca42d2"><img width="573" height="249" alt="Image" src="https://github.com/user-attachments/assets/f01b0190-44b8-4223-bc32-851245ca42d2" style="max-width: 100%; height: auto; max-height: 249px;; aspect-ratio: 573 / 249; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<ul>
+<li>setter注入</li>
+</ul>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/83d9f88e-75a8-4f12-a257-9d9782ea02af"><img width="546" height="261" alt="Image" src="https://github.com/user-attachments/assets/83d9f88e-75a8-4f12-a257-9d9782ea02af" style="max-width: 100%; height: auto; max-height: 261px;; aspect-ratio: 546 / 261; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<p><strong>三种注入方式总结</strong></p>
+<h4>1. 属性注入（字段注入）</h4>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-c1">@</span><span class="pl-c1">RestController</span>
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">UserController</span> {
+    <span class="pl-c1">@</span><span class="pl-c1">Autowired</span>
+    <span class="pl-k">private</span> <span class="pl-smi">UserService</span> <span class="pl-s1">userService</span>;
+}</pre></div>
+<ul>
+<li>优点：代码最简洁、方便快速开发</li>
+<li>缺点：依赖无法用<code class="notranslate">final</code>修饰、不易测试（无法new后再注入）、依赖关系隐蔽，可能会破坏类的封装性</li>
+</ul>
+<h4>2. 构造函数注入（推荐）</h4>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-c1">@</span><span class="pl-c1">RestController</span>
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">UserController</span> {
+    <span class="pl-k">private</span> <span class="pl-k">final</span> <span class="pl-smi">UserService</span> <span class="pl-s1">userService</span>;
+
+    <span class="pl-c1">@</span><span class="pl-c1">Autowired</span>
+    <span class="pl-k">public</span> <span class="pl-smi">UserController</span>(<span class="pl-smi">UserService</span> <span class="pl-s1">userService</span>) {
+        <span class="pl-smi">this</span>.<span class="pl-s1">userService</span> = <span class="pl-s1">userService</span>;
+    }
+}</pre></div>
+<ul>
+<li>优点：依赖不可变（<code class="notranslate">final</code>）、对象创建即完整可用、易测试、能从根本<strong>避免循环依赖</strong>、清晰看出类的依赖关系，提高代码的安全性</li>
+<li>缺点：构造参数过多时代码冗余</li>
+</ul>
+<blockquote>
+<p>注：基于<a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/Autowired/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/Autowired">@Autowired</a>，当类中只有一个构造方法时，<a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/Autowired/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/Autowired">@Autowired</a>可以省略。</p>
+</blockquote>
+<h4>3. setter注入</h4>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-c1">@</span><span class="pl-c1">RestController</span>
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">UserController</span> {
+    <span class="pl-k">private</span> <span class="pl-smi">UserService</span> <span class="pl-s1">userService</span>;
+
+    <span class="pl-c1">@</span><span class="pl-c1">Autowired</span>
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">setUserService</span>(<span class="pl-smi">UserService</span> <span class="pl-s1">userService</span>) {
+        <span class="pl-smi">this</span>.<span class="pl-s1">userService</span> = <span class="pl-s1">userService</span>;
+    }
+}</pre></div>
+<ul>
+<li>优点：测试时可灵活更换依赖、保持类的封装性，依赖关系清晰</li>
+<li>缺点：依赖在对象创建后可被修改，可能出现"半初始化"状态</li>
+</ul>
+<p><strong>实现原理</strong>：三种方式都是通过<strong>反射</strong>完成注入——</p>
+<ul>
+<li>属性注入：<code class="notranslate">field.set(bean, 依赖)</code></li>
+<li>构造函数注入：<code class="notranslate">constructor.newInstance(构造参数)</code></li>
+<li>setter注入：反射调用setter方法</li>
+</ul>
+<p>整个过程由<code class="notranslate">AutowiredAnnotationBeanPostProcessor</code>在Bean实例化后、初始化前扫描<code class="notranslate">@Autowired</code>并完成赋值。</p>
+<p><strong>关于循环依赖</strong>：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>注入方式</th>
+<th>能否解决循环依赖</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>属性注入</td>
+<td>✅ 能</td>
+<td>借助三级缓存提前暴露半成品Bean引用</td>
+</tr>
+<tr>
+<td>setter注入</td>
+<td>✅ 能</td>
+<td>属性创建后再赋值</td>
+</tr>
+<tr>
+<td>构造函数注入</td>
+<td>❌ 不能</td>
+<td>构造时必须先拿到完整依赖，两个Bean无法先创建，直接抛<code class="notranslate">BeanCurrentlyInCreationException</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<blockquote>
+<p>注：Spring Boot 2.6+ 默认禁止循环依赖（<code class="notranslate">spring.main.allow-circular-references=false</code>），即使属性注入也会报错。</p>
+</blockquote>
+<p><strong>总结</strong>：业务上优先使用<strong>构造函数注入</strong>，循环依赖属于设计坏味道，出现时应通过<strong>重构拆分</strong>解决。</p>
+<h4><a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/Autowired/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/Autowired">@Autowired</a>详解</h4>
+<ul>
+<li><a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/Autowired/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/Autowired">@Autowired</a>注解，默认是按照类型进行注入的</li>
+<li>如果存在多个相同类型的bean，将会报出如下错误</li>
+</ul>
+<div class="highlight highlight-source-batchfile"><pre class="notranslate">Field ... in ... required a single bean,but ... were found</pre></div>
+<p><strong>解决方案</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>方案</th>
+<th>关键字</th>
+<th>代码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>方案一</td>
+<td><code class="notranslate">@Primary</code></td>
+<td><code class="notranslate"> @Primary @Service public class UserServiceImpl implements UserService { @Override public List&lt;User&gt; list(){ // 省略…… } }</code></td>
+</tr>
+<tr>
+<td>方案二</td>
+<td><code class="notranslate">@Qualifier</code></td>
+<td><code class="notranslate"> @RestController public class UserController { @Autowired @Qualifier("userServiceImpl") private UserService userService; }</code></td>
+</tr>
+<tr>
+<td>方案三</td>
+<td><code class="notranslate">@Resource</code></td>
+<td><code class="notranslate"> @RestController public class UserController { @Resource(name = "userServiceImpl") private UserService userService; }</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p>1、依赖注入的注解</p>
+<ul>
+<li><a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/Autowired/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/Autowired">@Autowired</a>：默认按照类型自动装配</li>
+<li>如果同类型的bean存在多个：</li>
+<li><a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/primary/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/primary">@primary</a></li>
+<li><a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/Autowired/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/Autowired">@Autowired</a> + <a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/qualifier/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/qualifier">@qualifier</a></li>
+<li><a class="user-mention notranslate" data-hovercard-type="organization" data-hovercard-url="/orgs/resource/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/resource">@resource</a></li>
+</ul>
+<p>2、<a class="user-mention notranslate" data-hovercard-type="organization" data-hovercard-url="/orgs/resource/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/resource">@resource</a> 与 <a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/Autowired/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/Autowired">@Autowired</a>区别？</p>
+<ul>
+<li><a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/Autowired/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/Autowired">@Autowired</a>是Spring框架提供的注解，而<a class="user-mention notranslate" data-hovercard-type="organization" data-hovercard-url="/orgs/resource/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/resource">@resource</a>是JavaEE规范提供的</li>
+<li><a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/Autowired/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/Autowired">@Autowired</a>默认是按照类型注入，而<a class="user-mention notranslate" data-hovercard-type="organization" data-hovercard-url="/orgs/resource/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/resource">@resource</a>默认是按照名称注入</li>
+</ul></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
