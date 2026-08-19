@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script src='https://blog.meekdai.com/Gmeek/plugins/GmeekBSZ.js'></script>
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/165184260?v=4&size=64"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# MySQL
+
+## 数据库
+
+- 数据库：DataBase(DB)，是存储和管理数据的仓库
+- 数据库管理系统：DataBase Management System(DBMS),操纵和管理数据库的大型软件
+- SQL：Structured Query Language，操作关系型数据库的编程语言，定义了一套操作关系型数据库的统一标准
+
+## MySQL概述
+
+安装略
+
+### MySQL数据模型
+
+**关系型数据库**：建立在关系模型基础上，由多张相互连接的二维表组成的数据库
+
+**特点**：
+
+- 使用表存储数据，格式统一，便于维护
+- 使用SQL语言操作，标准统一，使用方便，可用于复杂查询
+
+## SQL语句
+
+**SQL**：一门操作关系型数据库的编程语言，定义操作所有关系型数据库的**统一标准**
+
+**分类**：
+
+| 分类 | 全称                       | 说明                                                   |
+| ---- | -------------------------- | ------------------------------------------------------ |
+| DDL  | Data Definition Language   | 数据定义语言，用来定义数据库对象(数据库，表，字段)     |
+| DML  | Data Manipulation Language | 数据操作语言，用来对数据库表中的数据进行增删改         |
+| DQL  | Data Query Language        | 数据查询语言，用来查询数据库中表的记录                 |
+| DCL  | Data Control Language      | 数据控制语言，用来创建数据库用户、控制数据库的访问权限 |
+
+#### DDL-数据定义语言
+
+**数据库相关操作**
+
+```mysql
+-- 查询所有数据库
+show databases;
+
+-- 查询当前数据库
+select database();
+
+-- 使用/切换数据库
+use 数据库名;
+
+-- 创建数据库
+create database [if not exists] 数据库名 [default charset utf8mb4];
+
+-- 删除数据库
+drop database [if exists] 数据库名;
+```
+
+**表相关操作**
+
+```mysql
+-- 创建表
+create table tablename(
+ 字段1 字段类型 [约束] [comment 字段1注释],
+ ......
+ 字段2 字段类型 [约束] [comment 字段2注释]
+)[comment 表注释];
+-- ========== 表操作 ==========
+
+-- 查看当前数据库中所有表
+show tables;
+
+-- 查看表结构（字段、类型、键、默认值）
+desc 表名;
+-- 完整建表语句
+show create table 表名;
+
+-- 创建表
+create table [if not exists] 表名 (
+ 字段名 类型 [约束] [comment '注释'],
+ ...
+ [表级约束]
+) [comment '表注释'];
+
+-- 复制表结构（不含数据）
+create table 新表名 like 旧表名;
+
+-- 删除表
+drop table [if exists] 表名;
+
+-- 清空表数据（保留表结构）
+truncate table 表名;
+
+-- ========== 约束操作（ALTER TABLE 整表级别） ==========
+
+-- 非空约束
+alter table 表名 modify 字段名 类型 not null; -- 添加
+alter table 表名 modify 字段名 类型 null; -- 删除
+
+-- 唯一约束
+alter table 表名 add constraint 约束名 unique (字段名); -- 添加
+alter table 表名 drop index 约束名; -- 删除
+
+-- 主键约束
+alter table 表名 add primary key (字段名); -- 添加（可用联合字段）
+alter table 表名 drop primary key; -- 删除
+
+-- 默认值约束
+alter table 表名 alter 字段名 set default 默认值; -- 添加/改
+alter table 表名 alter 字段名 drop default; -- 删除
+
+-- 外键约束
+alter table 表名 add constraint 约束名 foreign key (字段名) references 主表(主键字段); -- 添加
+alter table 表名 drop foreign key 约束名; -- 删除
+
+-- ========== 其他表操作 ==========
+
+-- 修改表名
+alter table 旧表名 rename to 新表名;
+
+-- 添加字段
+alter table 表名 add 字段名 类型 [约束] [comment '注释'];
+
+-- 修改字段类型/约束
+alter table 表名 modify 字段名 新类型 [约束];
+
+-- 修改字段名（同时可改类型）
+alter table 表名 change 旧字段名 新字段名 类型 [约束];
+
+-- 删除字段
+alter table 表名 drop column 字段名;
+
+-- 添加自增（MODIFY 必须带完整列定义）
+alter table 表名 modify 字段名 int auto_increment [其他属性];
+
+```
+
+**约束**：约束是作用域表中字段上的规则，用于限制存储在表中的数据
+
+**目的**：保证数据库中数据的正确性、有效性和完整性
+
+| 约束     | 描述                                             | 关键字      |
+| -------- | ------------------------------------------------ | ----------- |
+| 非空约束 | 限制该字段值不能为null                           | not null    |
+| 唯一约束 | 保证字段的所有数据都是唯一、不重复的             | unique      |
+| 主键约束 | 主键是一行数据的唯一标识，要求非空且唯一         | primary key |
+| 默认约束 | 保存数据时，如果未指定该字段值，则采用默认值     | default     |
+| 外键约束 | 让两张表的数据建立连接，保证数据的一致性和完整性 | foreign key |
+
+**数值类型**
+
+| 类型      | 大小(byte) | 有符号(SIGNED)范围                                    | 无符号(UNSIGNED)范围                                      | 描述             | 备注                                              |
+| --------- | ---------- | ----------------------------------------------------- | --------------------------------------------------------- | ---------------- | ------------------------------------------------- |
+| tinyint   | 1          | (-128, 127)                                           | (0, 255)                                                  | 小整数值         |                                                   |
+| smallint  | 2          | (-32768, 32767)                                       | (0, 65535)                                                | 大整数值         |                                                   |
+| mediumint | 3          | (-8388608, 8388607)                                   | (0, 16777215)                                             | 大整数值         |                                                   |
+| int       | 4          | (-2147483648, 2147483647)                             | (0, 4294967295)                                           | 大整数值         |                                                   |
+| bigint    | 8          | (-2^63, 2^63-1)                                       | (0, 2^64-1)                                               | 极大整数值       |                                                   |
+| float     | 4          | (-3.402823466 E+38, 3.402823466 E+38)                 | 0 和 (1.175494351 E-38, 3.402823466 E+38)                 | 单精度浮点数值   | float(5,2)：5表示整个数字长度，2 表示小数位个数   |
+| double    | 8          | (-1.7976931348623157 E+308, 1.7976931348623157 E+308) | 0 和 (2.2250738585072014 E-308, 1.7976931348623157 E+308) | 双精度浮点数值   | double(5,2)：5表示整个数字长度，2 表示小数位个数  |
+| decimal   |            |                                                       |                                                           | 小数值(精度更高) | decimal(5,2)：5表示整个数字长度，2 表示小数位个数 |
+
+**字符串类型**
+
+| 类型       | 大小                  | 描述                         |
+| ---------- | --------------------- | ---------------------------- |
+| char       | 0-255 bytes           | 定长字符串                   |
+| varchar    | 0-65535 bytes         | 变长字符串                   |
+| tinyblob   | 0-255 bytes           | 不超过255个字符的二进制数据  |
+| tinytext   | 0-255 bytes           | 短文本字符串                 |
+| blob       | 0-65 535 bytes        | 二进制形式的长文本数据       |
+| text       | 0-65 535 bytes        | 长文本数据                   |
+| mediumblob | 0-16 777 215 bytes    | 二进制形式的中等长度文本数据 |
+| mediumtext | 0-16 777 215 bytes    | 中等长度文本数据             |
+| longblob   | 0-4 294 967 295 bytes | 二进制形式的极大文本数据     |
+| longtext   | 0-4 294 967 295 bytes | 极大文本数据                 |
+
+**日期类型**
+
+| 类型      | 大小(byte) | 范围                                       | 格式                | 描述                     |
+| --------- | ---------- | ------------------------------------------ | ------------------- | ------------------------ |
+| date      | 3          | 1000-01-01 至 9999-12-31                   | YYYY-MM-DD          | 日期值                   |
+| time      | 3          | -838:59:59 至 838:59:59                    | HH:MM:SS            | 时间值或持续时间         |
+| year      | 1          | 1901 至 2155                               | YYYY                | 年份值                   |
+| datetime  | 8          | 1000-01-01 00:00:00 至 9999-12-31 23:59:59 | YYYY-MM-DD HH:MM:SS | 混合日期和时间值         |
+| timestamp | 4          | 1970-01-01 00:00:01 至 2038-01-19 03:14:07 | YYYY-MM-DD HH:MM:SS | 混合日期和时间值，时间戳 |
+
+#### DML-数据操作语言
+
+**INSERT**
+
+```mysql
+-- 指定字段添加数据
+insert into 表名(字段名1, 字段名2) values (值1, 值2);
+
+-- 全部字段添加数据
+insert into 表名 values (值1, 值2, ...);
+
+-- 批量添加数据（指定字段）
+insert into 表名(字段名1, 字段名2) values (值1, 值2), (值1, 值2);
+
+-- 批量添加数据（全部字段）
+insert into 表名 values (值1, 值2, ...), (值1, 值2, ...);
+```
+
+ 
+
+**UPDADE**
+
+```mysql
+-- 修改数据
+update 表名 set 字段名1 = 值1 , 字段名2 = 值2 , .... [ where 条件 ] ;
+```
+
+> [!CAUTION]
+>
+> 修改语句的条件可以有，也可以没有，如果没有条件，则会修改整张表的所有数据。">
+<meta property="og:title" content="MySQL">
+<meta property="og:description" content="# MySQL
+
+## 数据库
+
+- 数据库：DataBase(DB)，是存储和管理数据的仓库
+- 数据库管理系统：DataBase Management System(DBMS),操纵和管理数据库的大型软件
+- SQL：Structured Query Language，操作关系型数据库的编程语言，定义了一套操作关系型数据库的统一标准
+
+## MySQL概述
+
+安装略
+
+### MySQL数据模型
+
+**关系型数据库**：建立在关系模型基础上，由多张相互连接的二维表组成的数据库
+
+**特点**：
+
+- 使用表存储数据，格式统一，便于维护
+- 使用SQL语言操作，标准统一，使用方便，可用于复杂查询
+
+## SQL语句
+
+**SQL**：一门操作关系型数据库的编程语言，定义操作所有关系型数据库的**统一标准**
+
+**分类**：
+
+| 分类 | 全称                       | 说明                                                   |
+| ---- | -------------------------- | ------------------------------------------------------ |
+| DDL  | Data Definition Language   | 数据定义语言，用来定义数据库对象(数据库，表，字段)     |
+| DML  | Data Manipulation Language | 数据操作语言，用来对数据库表中的数据进行增删改         |
+| DQL  | Data Query Language        | 数据查询语言，用来查询数据库中表的记录                 |
+| DCL  | Data Control Language      | 数据控制语言，用来创建数据库用户、控制数据库的访问权限 |
+
+#### DDL-数据定义语言
+
+**数据库相关操作**
+
+```mysql
+-- 查询所有数据库
+show databases;
+
+-- 查询当前数据库
+select database();
+
+-- 使用/切换数据库
+use 数据库名;
+
+-- 创建数据库
+create database [if not exists] 数据库名 [default charset utf8mb4];
+
+-- 删除数据库
+drop database [if exists] 数据库名;
+```
+
+**表相关操作**
+
+```mysql
+-- 创建表
+create table tablename(
+ 字段1 字段类型 [约束] [comment 字段1注释],
+ ......
+ 字段2 字段类型 [约束] [comment 字段2注释]
+)[comment 表注释];
+-- ========== 表操作 ==========
+
+-- 查看当前数据库中所有表
+show tables;
+
+-- 查看表结构（字段、类型、键、默认值）
+desc 表名;
+-- 完整建表语句
+show create table 表名;
+
+-- 创建表
+create table [if not exists] 表名 (
+ 字段名 类型 [约束] [comment '注释'],
+ ...
+ [表级约束]
+) [comment '表注释'];
+
+-- 复制表结构（不含数据）
+create table 新表名 like 旧表名;
+
+-- 删除表
+drop table [if exists] 表名;
+
+-- 清空表数据（保留表结构）
+truncate table 表名;
+
+-- ========== 约束操作（ALTER TABLE 整表级别） ==========
+
+-- 非空约束
+alter table 表名 modify 字段名 类型 not null; -- 添加
+alter table 表名 modify 字段名 类型 null; -- 删除
+
+-- 唯一约束
+alter table 表名 add constraint 约束名 unique (字段名); -- 添加
+alter table 表名 drop index 约束名; -- 删除
+
+-- 主键约束
+alter table 表名 add primary key (字段名); -- 添加（可用联合字段）
+alter table 表名 drop primary key; -- 删除
+
+-- 默认值约束
+alter table 表名 alter 字段名 set default 默认值; -- 添加/改
+alter table 表名 alter 字段名 drop default; -- 删除
+
+-- 外键约束
+alter table 表名 add constraint 约束名 foreign key (字段名) references 主表(主键字段); -- 添加
+alter table 表名 drop foreign key 约束名; -- 删除
+
+-- ========== 其他表操作 ==========
+
+-- 修改表名
+alter table 旧表名 rename to 新表名;
+
+-- 添加字段
+alter table 表名 add 字段名 类型 [约束] [comment '注释'];
+
+-- 修改字段类型/约束
+alter table 表名 modify 字段名 新类型 [约束];
+
+-- 修改字段名（同时可改类型）
+alter table 表名 change 旧字段名 新字段名 类型 [约束];
+
+-- 删除字段
+alter table 表名 drop column 字段名;
+
+-- 添加自增（MODIFY 必须带完整列定义）
+alter table 表名 modify 字段名 int auto_increment [其他属性];
+
+```
+
+**约束**：约束是作用域表中字段上的规则，用于限制存储在表中的数据
+
+**目的**：保证数据库中数据的正确性、有效性和完整性
+
+| 约束     | 描述                                             | 关键字      |
+| -------- | ------------------------------------------------ | ----------- |
+| 非空约束 | 限制该字段值不能为null                           | not null    |
+| 唯一约束 | 保证字段的所有数据都是唯一、不重复的             | unique      |
+| 主键约束 | 主键是一行数据的唯一标识，要求非空且唯一         | primary key |
+| 默认约束 | 保存数据时，如果未指定该字段值，则采用默认值     | default     |
+| 外键约束 | 让两张表的数据建立连接，保证数据的一致性和完整性 | foreign key |
+
+**数值类型**
+
+| 类型      | 大小(byte) | 有符号(SIGNED)范围                                    | 无符号(UNSIGNED)范围                                      | 描述             | 备注                                              |
+| --------- | ---------- | ----------------------------------------------------- | --------------------------------------------------------- | ---------------- | ------------------------------------------------- |
+| tinyint   | 1          | (-128, 127)                                           | (0, 255)                                                  | 小整数值         |                                                   |
+| smallint  | 2          | (-32768, 32767)                                       | (0, 65535)                                                | 大整数值         |                                                   |
+| mediumint | 3          | (-8388608, 8388607)                                   | (0, 16777215)                                             | 大整数值         |                                                   |
+| int       | 4          | (-2147483648, 2147483647)                             | (0, 4294967295)                                           | 大整数值         |                                                   |
+| bigint    | 8          | (-2^63, 2^63-1)                                       | (0, 2^64-1)                                               | 极大整数值       |                                                   |
+| float     | 4          | (-3.402823466 E+38, 3.402823466 E+38)                 | 0 和 (1.175494351 E-38, 3.402823466 E+38)                 | 单精度浮点数值   | float(5,2)：5表示整个数字长度，2 表示小数位个数   |
+| double    | 8          | (-1.7976931348623157 E+308, 1.7976931348623157 E+308) | 0 和 (2.2250738585072014 E-308, 1.7976931348623157 E+308) | 双精度浮点数值   | double(5,2)：5表示整个数字长度，2 表示小数位个数  |
+| decimal   |            |                                                       |                                                           | 小数值(精度更高) | decimal(5,2)：5表示整个数字长度，2 表示小数位个数 |
+
+**字符串类型**
+
+| 类型       | 大小                  | 描述                         |
+| ---------- | --------------------- | ---------------------------- |
+| char       | 0-255 bytes           | 定长字符串                   |
+| varchar    | 0-65535 bytes         | 变长字符串                   |
+| tinyblob   | 0-255 bytes           | 不超过255个字符的二进制数据  |
+| tinytext   | 0-255 bytes           | 短文本字符串                 |
+| blob       | 0-65 535 bytes        | 二进制形式的长文本数据       |
+| text       | 0-65 535 bytes        | 长文本数据                   |
+| mediumblob | 0-16 777 215 bytes    | 二进制形式的中等长度文本数据 |
+| mediumtext | 0-16 777 215 bytes    | 中等长度文本数据             |
+| longblob   | 0-4 294 967 295 bytes | 二进制形式的极大文本数据     |
+| longtext   | 0-4 294 967 295 bytes | 极大文本数据                 |
+
+**日期类型**
+
+| 类型      | 大小(byte) | 范围                                       | 格式                | 描述                     |
+| --------- | ---------- | ------------------------------------------ | ------------------- | ------------------------ |
+| date      | 3          | 1000-01-01 至 9999-12-31                   | YYYY-MM-DD          | 日期值                   |
+| time      | 3          | -838:59:59 至 838:59:59                    | HH:MM:SS            | 时间值或持续时间         |
+| year      | 1          | 1901 至 2155                               | YYYY                | 年份值                   |
+| datetime  | 8          | 1000-01-01 00:00:00 至 9999-12-31 23:59:59 | YYYY-MM-DD HH:MM:SS | 混合日期和时间值         |
+| timestamp | 4          | 1970-01-01 00:00:01 至 2038-01-19 03:14:07 | YYYY-MM-DD HH:MM:SS | 混合日期和时间值，时间戳 |
+
+#### DML-数据操作语言
+
+**INSERT**
+
+```mysql
+-- 指定字段添加数据
+insert into 表名(字段名1, 字段名2) values (值1, 值2);
+
+-- 全部字段添加数据
+insert into 表名 values (值1, 值2, ...);
+
+-- 批量添加数据（指定字段）
+insert into 表名(字段名1, 字段名2) values (值1, 值2), (值1, 值2);
+
+-- 批量添加数据（全部字段）
+insert into 表名 values (值1, 值2, ...), (值1, 值2, ...);
+```
+
+ 
+
+**UPDADE**
+
+```mysql
+-- 修改数据
+update 表名 set 字段名1 = 值1 , 字段名2 = 值2 , .... [ where 条件 ] ;
+```
+
+> [!CAUTION]
+>
+> 修改语句的条件可以有，也可以没有，如果没有条件，则会修改整张表的所有数据。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://Whitegveking.github.io/Whitegve-king.github.io/post/MySQL.html">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/165184260?v=4&size=64">
+<title>MySQL</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+<style>.markdown-alert{padding:0.5rem 1rem;margin-bottom:1rem;border-left:.25em solid var(--borderColor-default,var(--color-border-default));}.markdown-alert .markdown-alert-title {display:flex;font-weight:var(--base-text-weight-medium,500);align-items:center;line-height:1;}.markdown-alert>:first-child {margin-top:0;}.markdown-alert>:last-child {margin-bottom:0;}</style><style>.markdown-alert.markdown-alert-note {border-left-color:var(--borderColor-accent-emphasis, var(--color-accent-emphasis));background-color:var(--color-accent-subtle);}.markdown-alert.markdown-alert-note .markdown-alert-title {color: var(--fgColor-accent,var(--color-accent-fg));}</style><style>.markdown-alert.markdown-alert-caution {border-left-color:var(--borderColor-danger-emphasis, var(--color-danger-emphasis));background-color:var(--color-danger-subtle);}.markdown-alert.markdown-alert-caution .markdown-alert-title {color: var(--fgColor-danger,var(--color-danger-fg));}</style>
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">MySQL</h1>
+<div class="title-right">
+    <a href="https://Whitegveking.github.io/Whitegve-king.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/Whitegveking/Whitegve-king.github.io/issues/14" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>MySQL</h1>
+<h2>数据库</h2>
+<ul>
+<li>数据库：DataBase(DB)，是存储和管理数据的仓库</li>
+<li>数据库管理系统：DataBase Management System(DBMS),操纵和管理数据库的大型软件</li>
+<li>SQL：Structured Query Language，操作关系型数据库的编程语言，定义了一套操作关系型数据库的统一标准</li>
+</ul>
+<h2>MySQL概述</h2>
+<p>安装略</p>
+<h3>MySQL数据模型</h3>
+<p><strong>关系型数据库</strong>：建立在关系模型基础上，由多张相互连接的二维表组成的数据库</p>
+<p><strong>特点</strong>：</p>
+<ul>
+<li>使用表存储数据，格式统一，便于维护</li>
+<li>使用SQL语言操作，标准统一，使用方便，可用于复杂查询</li>
+</ul>
+<h2>SQL语句</h2>
+<p><strong>SQL</strong>：一门操作关系型数据库的编程语言，定义操作所有关系型数据库的<strong>统一标准</strong></p>
+<p><strong>分类</strong>：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>分类</th>
+<th>全称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DDL</td>
+<td>Data Definition Language</td>
+<td>数据定义语言，用来定义数据库对象(数据库，表，字段)</td>
+</tr>
+<tr>
+<td>DML</td>
+<td>Data Manipulation Language</td>
+<td>数据操作语言，用来对数据库表中的数据进行增删改</td>
+</tr>
+<tr>
+<td>DQL</td>
+<td>Data Query Language</td>
+<td>数据查询语言，用来查询数据库中表的记录</td>
+</tr>
+<tr>
+<td>DCL</td>
+<td>Data Control Language</td>
+<td>数据控制语言，用来创建数据库用户、控制数据库的访问权限</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h4>DDL-数据定义语言</h4>
+<p><strong>数据库相关操作</strong></p>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 查询所有数据库</span>
+show databases;
+
+<span class="pl-c"><span class="pl-c">--</span> 查询当前数据库</span>
+<span class="pl-k">select</span> database();
+
+<span class="pl-c"><span class="pl-c">--</span> 使用/切换数据库</span>
+use 数据库名;
+
+<span class="pl-c"><span class="pl-c">--</span> 创建数据库</span>
+create database [if not exists] 数据库名 [default charset utf8mb4];
+
+<span class="pl-c"><span class="pl-c">--</span> 删除数据库</span>
+<span class="pl-k">drop</span> <span class="pl-k">database</span> [if exists] 数据库名;</pre></div>
+<p><strong>表相关操作</strong></p>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 创建表</span>
+<span class="pl-k">create</span> <span class="pl-k">table</span> <span class="pl-en">tablename</span>(
+ 字段<span class="pl-c1">1</span> 字段类型 [约束] [comment 字段<span class="pl-c1">1</span>注释],
+ ......
+ 字段<span class="pl-c1">2</span> 字段类型 [约束] [comment 字段<span class="pl-c1">2</span>注释]
+)[comment 表注释];
+<span class="pl-c"><span class="pl-c">--</span> ========== 表操作 ==========</span>
+
+<span class="pl-c"><span class="pl-c">--</span> 查看当前数据库中所有表</span>
+show tables;
+
+<span class="pl-c"><span class="pl-c">--</span> 查看表结构（字段、类型、键、默认值）</span>
+<span class="pl-k">desc</span> 表名;
+<span class="pl-c"><span class="pl-c">--</span> 完整建表语句</span>
+show create table 表名;
+
+<span class="pl-c"><span class="pl-c">--</span> 创建表</span>
+create table [if not exists] 表名 (
+ 字段名 类型 [约束] [comment <span class="pl-s"><span class="pl-pds">'</span>注释<span class="pl-pds">'</span></span>],
+ ...
+ [表级约束]
+) [comment <span class="pl-s"><span class="pl-pds">'</span>表注释<span class="pl-pds">'</span></span>];
+
+<span class="pl-c"><span class="pl-c">--</span> 复制表结构（不含数据）</span>
+create table 新表名 <span class="pl-k">like</span> 旧表名;
+
+<span class="pl-c"><span class="pl-c">--</span> 删除表</span>
+<span class="pl-k">drop</span> <span class="pl-k">table</span> [if exists] 表名;
+
+<span class="pl-c"><span class="pl-c">--</span> 清空表数据（保留表结构）</span>
+truncate table 表名;
+
+<span class="pl-c"><span class="pl-c">--</span> ========== 约束操作（ALTER TABLE 整表级别） ==========</span>
+
+<span class="pl-c"><span class="pl-c">--</span> 非空约束</span>
+<span class="pl-k">alter</span> <span class="pl-k">table</span> 表名 modify 字段名 类型 <span class="pl-k">not null</span>; <span class="pl-c"><span class="pl-c">--</span> 添加</span>
+<span class="pl-k">alter</span> <span class="pl-k">table</span> 表名 modify 字段名 类型 <span class="pl-k">null</span>; <span class="pl-c"><span class="pl-c">--</span> 删除</span>
+
+<span class="pl-c"><span class="pl-c">--</span> 唯一约束</span>
+<span class="pl-k">alter</span> <span class="pl-k">table</span> 表名 add <span class="pl-k">constraint</span> 约束名 unique (字段名); <span class="pl-c"><span class="pl-c">--</span> 添加</span>
+<span class="pl-k">alter</span> <span class="pl-k">table</span> 表名 drop index 约束名; <span class="pl-c"><span class="pl-c">--</span> 删除</span>
+
+<span class="pl-c"><span class="pl-c">--</span> 主键约束</span>
+<span class="pl-k">alter</span> <span class="pl-k">table</span> 表名 add <span class="pl-k">primary key</span> (字段名); <span class="pl-c"><span class="pl-c">--</span> 添加（可用联合字段）</span>
+<span class="pl-k">alter</span> <span class="pl-k">table</span> 表名 drop <span class="pl-k">primary key</span>; <span class="pl-c"><span class="pl-c">--</span> 删除</span>
+
+<span class="pl-c"><span class="pl-c">--</span> 默认值约束</span>
+<span class="pl-k">alter</span> <span class="pl-k">table</span> 表名 alter 字段名 <span class="pl-k">set</span> default 默认值; <span class="pl-c"><span class="pl-c">--</span> 添加/改</span>
+<span class="pl-k">alter</span> <span class="pl-k">table</span> 表名 alter 字段名 drop default; <span class="pl-c"><span class="pl-c">--</span> 删除</span>
+
+<span class="pl-c"><span class="pl-c">--</span> 外键约束</span>
+<span class="pl-k">alter</span> <span class="pl-k">table</span> 表名 add <span class="pl-k">constraint</span> 约束名 <span class="pl-k">foreign key</span> (字段名) <span class="pl-k">references</span> 主表(主键字段); <span class="pl-c"><span class="pl-c">--</span> 添加</span>
+<span class="pl-k">alter</span> <span class="pl-k">table</span> 表名 drop <span class="pl-k">foreign key</span> 约束名; <span class="pl-c"><span class="pl-c">--</span> 删除</span>
+
+<span class="pl-c"><span class="pl-c">--</span> ========== 其他表操作 ==========</span>
+
+<span class="pl-c"><span class="pl-c">--</span> 修改表名</span>
+<span class="pl-k">alter</span> <span class="pl-k">table</span> 旧表名 rename to 新表名;
+
+<span class="pl-c"><span class="pl-c">--</span> 添加字段</span>
+<span class="pl-k">alter</span> <span class="pl-k">table</span> 表名 add 字段名 类型 [约束] [comment <span class="pl-s"><span class="pl-pds">'</span>注释<span class="pl-pds">'</span></span>];
+
+<span class="pl-c"><span class="pl-c">--</span> 修改字段类型/约束</span>
+<span class="pl-k">alter</span> <span class="pl-k">table</span> 表名 modify 字段名 新类型 [约束];
+
+<span class="pl-c"><span class="pl-c">--</span> 修改字段名（同时可改类型）</span>
+<span class="pl-k">alter</span> <span class="pl-k">table</span> 表名 change 旧字段名 新字段名 类型 [约束];
+
+<span class="pl-c"><span class="pl-c">--</span> 删除字段</span>
+<span class="pl-k">alter</span> <span class="pl-k">table</span> 表名 drop column 字段名;
+
+<span class="pl-c"><span class="pl-c">--</span> 添加自增（MODIFY 必须带完整列定义）</span>
+<span class="pl-k">alter</span> <span class="pl-k">table</span> 表名 modify 字段名 <span class="pl-k">int</span> auto_increment [其他属性];
+</pre></div>
+<p><strong>约束</strong>：约束是作用域表中字段上的规则，用于限制存储在表中的数据</p>
+<p><strong>目的</strong>：保证数据库中数据的正确性、有效性和完整性</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>约束</th>
+<th>描述</th>
+<th>关键字</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>非空约束</td>
+<td>限制该字段值不能为null</td>
+<td>not null</td>
+</tr>
+<tr>
+<td>唯一约束</td>
+<td>保证字段的所有数据都是唯一、不重复的</td>
+<td>unique</td>
+</tr>
+<tr>
+<td>主键约束</td>
+<td>主键是一行数据的唯一标识，要求非空且唯一</td>
+<td>primary key</td>
+</tr>
+<tr>
+<td>默认约束</td>
+<td>保存数据时，如果未指定该字段值，则采用默认值</td>
+<td>default</td>
+</tr>
+<tr>
+<td>外键约束</td>
+<td>让两张表的数据建立连接，保证数据的一致性和完整性</td>
+<td>foreign key</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>数值类型</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>类型</th>
+<th>大小(byte)</th>
+<th>有符号(SIGNED)范围</th>
+<th>无符号(UNSIGNED)范围</th>
+<th>描述</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tinyint</td>
+<td>1</td>
+<td>(-128, 127)</td>
+<td>(0, 255)</td>
+<td>小整数值</td>
+<td></td>
+</tr>
+<tr>
+<td>smallint</td>
+<td>2</td>
+<td>(-32768, 32767)</td>
+<td>(0, 65535)</td>
+<td>大整数值</td>
+<td></td>
+</tr>
+<tr>
+<td>mediumint</td>
+<td>3</td>
+<td>(-8388608, 8388607)</td>
+<td>(0, 16777215)</td>
+<td>大整数值</td>
+<td></td>
+</tr>
+<tr>
+<td>int</td>
+<td>4</td>
+<td>(-2147483648, 2147483647)</td>
+<td>(0, 4294967295)</td>
+<td>大整数值</td>
+<td></td>
+</tr>
+<tr>
+<td>bigint</td>
+<td>8</td>
+<td>(-2^63, 2^63-1)</td>
+<td>(0, 2^64-1)</td>
+<td>极大整数值</td>
+<td></td>
+</tr>
+<tr>
+<td>float</td>
+<td>4</td>
+<td>(-3.402823466 E+38, 3.402823466 E+38)</td>
+<td>0 和 (1.175494351 E-38, 3.402823466 E+38)</td>
+<td>单精度浮点数值</td>
+<td>float(5,2)：5表示整个数字长度，2 表示小数位个数</td>
+</tr>
+<tr>
+<td>double</td>
+<td>8</td>
+<td>(-1.7976931348623157 E+308, 1.7976931348623157 E+308)</td>
+<td>0 和 (2.2250738585072014 E-308, 1.7976931348623157 E+308)</td>
+<td>双精度浮点数值</td>
+<td>double(5,2)：5表示整个数字长度，2 表示小数位个数</td>
+</tr>
+<tr>
+<td>decimal</td>
+<td></td>
+<td></td>
+<td></td>
+<td>小数值(精度更高)</td>
+<td>decimal(5,2)：5表示整个数字长度，2 表示小数位个数</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>字符串类型</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>类型</th>
+<th>大小</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>char</td>
+<td>0-255 bytes</td>
+<td>定长字符串</td>
+</tr>
+<tr>
+<td>varchar</td>
+<td>0-65535 bytes</td>
+<td>变长字符串</td>
+</tr>
+<tr>
+<td>tinyblob</td>
+<td>0-255 bytes</td>
+<td>不超过255个字符的二进制数据</td>
+</tr>
+<tr>
+<td>tinytext</td>
+<td>0-255 bytes</td>
+<td>短文本字符串</td>
+</tr>
+<tr>
+<td>blob</td>
+<td>0-65 535 bytes</td>
+<td>二进制形式的长文本数据</td>
+</tr>
+<tr>
+<td>text</td>
+<td>0-65 535 bytes</td>
+<td>长文本数据</td>
+</tr>
+<tr>
+<td>mediumblob</td>
+<td>0-16 777 215 bytes</td>
+<td>二进制形式的中等长度文本数据</td>
+</tr>
+<tr>
+<td>mediumtext</td>
+<td>0-16 777 215 bytes</td>
+<td>中等长度文本数据</td>
+</tr>
+<tr>
+<td>longblob</td>
+<td>0-4 294 967 295 bytes</td>
+<td>二进制形式的极大文本数据</td>
+</tr>
+<tr>
+<td>longtext</td>
+<td>0-4 294 967 295 bytes</td>
+<td>极大文本数据</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>日期类型</strong></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>类型</th>
+<th>大小(byte)</th>
+<th>范围</th>
+<th>格式</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>date</td>
+<td>3</td>
+<td>1000-01-01 至 9999-12-31</td>
+<td>YYYY-MM-DD</td>
+<td>日期值</td>
+</tr>
+<tr>
+<td>time</td>
+<td>3</td>
+<td>-838:59:59 至 838:59:59</td>
+<td>HH:MM:SS</td>
+<td>时间值或持续时间</td>
+</tr>
+<tr>
+<td>year</td>
+<td>1</td>
+<td>1901 至 2155</td>
+<td>YYYY</td>
+<td>年份值</td>
+</tr>
+<tr>
+<td>datetime</td>
+<td>8</td>
+<td>1000-01-01 00:00:00 至 9999-12-31 23:59:59</td>
+<td>YYYY-MM-DD HH:MM:SS</td>
+<td>混合日期和时间值</td>
+</tr>
+<tr>
+<td>timestamp</td>
+<td>4</td>
+<td>1970-01-01 00:00:01 至 2038-01-19 03:14:07</td>
+<td>YYYY-MM-DD HH:MM:SS</td>
+<td>混合日期和时间值，时间戳</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h4>DML-数据操作语言</h4>
+<p><strong>INSERT</strong></p>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 指定字段添加数据</span>
+<span class="pl-k">insert into</span> 表名(字段名<span class="pl-c1">1</span>, 字段名<span class="pl-c1">2</span>) <span class="pl-k">values</span> (值<span class="pl-c1">1</span>, 值<span class="pl-c1">2</span>);
+
+<span class="pl-c"><span class="pl-c">--</span> 全部字段添加数据</span>
+<span class="pl-k">insert into</span> 表名 <span class="pl-k">values</span> (值<span class="pl-c1">1</span>, 值<span class="pl-c1">2</span>, ...);
+
+<span class="pl-c"><span class="pl-c">--</span> 批量添加数据（指定字段）</span>
+<span class="pl-k">insert into</span> 表名(字段名<span class="pl-c1">1</span>, 字段名<span class="pl-c1">2</span>) <span class="pl-k">values</span> (值<span class="pl-c1">1</span>, 值<span class="pl-c1">2</span>), (值<span class="pl-c1">1</span>, 值<span class="pl-c1">2</span>);
+
+<span class="pl-c"><span class="pl-c">--</span> 批量添加数据（全部字段）</span>
+<span class="pl-k">insert into</span> 表名 <span class="pl-k">values</span> (值<span class="pl-c1">1</span>, 值<span class="pl-c1">2</span>, ...), (值<span class="pl-c1">1</span>, 值<span class="pl-c1">2</span>, ...);</pre></div>
+<p><strong>UPDADE</strong></p>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 修改数据</span>
+<span class="pl-k">update</span> 表名 <span class="pl-k">set</span> 字段名<span class="pl-c1">1</span> <span class="pl-k">=</span> 值<span class="pl-c1">1</span> , 字段名<span class="pl-c1">2</span> <span class="pl-k">=</span> 值<span class="pl-c1">2</span> , .... [ <span class="pl-k">where</span> 条件 ] ;</pre></div>
+<div class="markdown-alert markdown-alert-caution"><p class="markdown-alert-title"><svg data-component="Octicon" class="octicon octicon-stop mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Caution</p>
+<p>修改语句的条件可以有，也可以没有，如果没有条件，则会修改整张表的所有数据。</p>
+</div>
+<p><strong>DELETE</strong></p>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 删除数据</span>
+<span class="pl-k">delete</span> <span class="pl-k">from</span> 表名 [<span class="pl-k">where</span> 条件]</pre></div>
+<div class="markdown-alert markdown-alert-caution"><p class="markdown-alert-title"><svg data-component="Octicon" class="octicon octicon-stop mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Caution</p>
+<ol>
+<li>DELETE语句的条件可以有，也可以没有，如果没有条件，则会删除整张表的所有数据。</li>
+<li>DELETE 语句不能删除某一个字段的值(如果要操作，可以使用UPDATE，将该字段的值置为NULL)。</li>
+</ol>
+</div>
+<h4>DQL-数据查询语言</h4>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">select</span>
+ 字段列表
+<span class="pl-k">from</span>
+ 表名列表
+<span class="pl-k">where</span>
+ 条件列表
+<span class="pl-k">group by</span>
+ 分组字段列表
+<span class="pl-k">having</span>
+ 分组后条件列表
+<span class="pl-k">order by</span>
+ 排序字段列表
+<span class="pl-k">limit</span>
+ 分页参数</pre></div>
+<h5>基本查询</h5>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 查询多个字段</span>
+<span class="pl-k">select</span> 字段<span class="pl-c1">1</span>,字段<span class="pl-c1">2</span>,字段<span class="pl-c1">3</span> <span class="pl-k">from</span> 表名;
+
+<span class="pl-c"><span class="pl-c">--</span> 查询所有字段(通配符)</span>
+<span class="pl-k">select</span> <span class="pl-k">*</span> <span class="pl-k">from</span> 表名;
+
+<span class="pl-c"><span class="pl-c">--</span> 为查询字段设置别名，as关键字可以省略</span>
+<span class="pl-k">select</span> 字段<span class="pl-c1">1</span> [<span class="pl-k">as</span> 别名<span class="pl-c1">1</span>], 字段<span class="pl-c1">2</span> [<span class="pl-k">as</span> 别名<span class="pl-c1">2</span>] <span class="pl-k">from</span> 表名;
+
+<span class="pl-c"><span class="pl-c">--</span> 去除重复记录</span>
+<span class="pl-k">select distinct</span> 字段列表 <span class="pl-k">from</span> 表名;</pre></div>
+<div class="markdown-alert markdown-alert-caution"><p class="markdown-alert-title"><svg data-component="Octicon" class="octicon octicon-stop mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Caution</p>
+<p>*号代表查询所有字段，在实际开发中尽量少用（不直观，影响效率）</p>
+</div>
+<h5>条件查询</h5>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 条件查询</span>
+<span class="pl-k">select</span> 字段列表 <span class="pl-k">from</span> 表名 <span class="pl-k">where</span> 条件列表;</pre></div>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>比较运算符</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&gt;</td>
+<td>大于</td>
+</tr>
+<tr>
+<td>&gt;=</td>
+<td>大于等于</td>
+</tr>
+<tr>
+<td>&lt;</td>
+<td>小于</td>
+</tr>
+<tr>
+<td>&lt;=</td>
+<td>小于等于</td>
+</tr>
+<tr>
+<td>=</td>
+<td>等于</td>
+</tr>
+<tr>
+<td>&lt;&gt; 或 !=</td>
+<td>不等于</td>
+</tr>
+<tr>
+<td>between ... and ...</td>
+<td>在某个范围之内（含最小、最大值）</td>
+</tr>
+<tr>
+<td>in(...)</td>
+<td>在in之后的列表中的值，多选一</td>
+</tr>
+<tr>
+<td>like 占位符</td>
+<td>模糊匹配（_ 匹配单个字符，% 匹配任意个字符）</td>
+</tr>
+<tr>
+<td>is null</td>
+<td>是null</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>逻辑运算符</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>and 或 &amp;&amp;</td>
+<td>并且（多个条件同时成立）</td>
+</tr>
+<tr>
+<td>or 或 ||</td>
+<td>或者（多个条件任意一个成立）</td>
+</tr>
+<tr>
+<td>not 或 !</td>
+<td>非，不是</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h5>分组查询</h5>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 分组查询</span>
+<span class="pl-k">select</span> 字段列表 <span class="pl-k">from</span> 表名 [<span class="pl-k">where</span> 条件列表] <span class="pl-k">group by</span> 分组字段名 [<span class="pl-k">having</span> 分组后过滤条件]</pre></div>
+<div class="markdown-alert markdown-alert-caution"><p class="markdown-alert-title"><svg data-component="Octicon" class="octicon octicon-stop mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Caution</p>
+<ol>
+<li>分组之后，select后的字段列表能写的一般是分组字段+聚合函数</li>
+<li>执行顺序 where &gt; 聚合函数 &gt; having</li>
+</ol>
+</div>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>函数</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>count</td>
+<td>统计数量</td>
+</tr>
+<tr>
+<td>max</td>
+<td>最大值</td>
+</tr>
+<tr>
+<td>min</td>
+<td>最小值</td>
+</tr>
+<tr>
+<td>avg</td>
+<td>平均值</td>
+</tr>
+<tr>
+<td>sum</td>
+<td>求和</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h5>排序查询</h5>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 排序查询</span>
+<span class="pl-k">select</span> 字段列表 <span class="pl-k">from</span> 表名 [<span class="pl-k">where</span> 条件列表] [<span class="pl-k">group by</span> 分组字段名 <span class="pl-k">having</span> 分组后过滤条件] <span class="pl-k">order by</span> 排序字段 排序方式</pre></div>
+<ul>
+<li>排序方式:升序(asc)，降序(desc);默认为升序asc，是可以不写的</li>
+</ul>
+<div class="markdown-alert markdown-alert-caution"><p class="markdown-alert-title"><svg data-component="Octicon" class="octicon octicon-stop mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Caution</p>
+<p>如果是多字段排序，只有第一个字段（前字段）值相同时，才会根据第二个字段（后字段）进行排序</p>
+</div>
+<h5>分页查询</h5>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-c"><span class="pl-c">--</span> 排序查询</span>
+<span class="pl-k">select</span>字段 <span class="pl-k">from</span> 表名 [<span class="pl-k">where</span> 条件] [<span class="pl-k">group by</span> 分组字段 <span class="pl-k">having</span> 过滤条件] [<span class="pl-k">order by</span> 排序字段] <span class="pl-k">limit</span> 起始索引,查询记录数;</pre></div>
+<div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg data-component="Octicon" class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
+<ol>
+<li>起始索引从0开始</li>
+<li>分页查询是数据库的方言，不同的数据库有不同的实现，MySQL中是LIMIT</li>
+<li>如果起始索引为0，起始索引可以省略，直接简写为limit 10</li>
+<li>起始索引 = （页码-1）* 每页展示记录数</li>
+</ol>
+</div>
+<h2>多表设计</h2>
+<h2>多表查询</h2>
+<h2>事务</h2></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://Whitegveking.github.io/Whitegve-king.github.io">Cyy的JAVA学习日记</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","Whitegveking/Whitegve-king.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>
+
+</html>
