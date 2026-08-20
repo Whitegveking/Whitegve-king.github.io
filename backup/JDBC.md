@@ -77,7 +77,7 @@ public class JdbcTest
         Class.forName("com.mysql.cj.jdbc.Driver");
 
         // 2、获取数据库连接
-        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db01", "root", "Cyy20040211,.");
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db01", "root", "");
 
         // 3、获取SQL语句执行对象
         Statement statement = conn.createStatement();
@@ -104,7 +104,7 @@ public class JdbcTest
         Class.forName("com.mysql.cj.jdbc.Driver");
 
         // 2、获取数据库连接
-        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db01", "root", "Cyy20040211,.");
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db01", "root", "");
 
         // 3、获取SQL语句执行对象
         Statement statement = conn.createStatement();
@@ -161,7 +161,7 @@ public void testSelect1() throws ClassNotFoundException, SQLException
     Class.forName("com.mysql.cj.jdbc.Driver");
 
     // 2、获取数据库连接
-    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db01", "root", "Cyy20040211,.");
+    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db01", "root", "");
 
     // 3、预编译SQL，使用?占位符
     PreparedStatement pstmt = conn.prepareStatement("select * from employee where id = ? and job = ?");

@@ -171,7 +171,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         <span class="pl-smi">Class</span>.<span class="pl-en">forName</span>(<span class="pl-s">"com.mysql.cj.jdbc.Driver"</span>);
 
         <span class="pl-c">// 2、获取数据库连接</span>
-        <span class="pl-smi">Connection</span> <span class="pl-s1">conn</span> = <span class="pl-smi">DriverManager</span>.<span class="pl-en">getConnection</span>(<span class="pl-s">"jdbc:mysql://localhost:3306/db01"</span>, <span class="pl-s">"root"</span>, <span class="pl-s">"Cyy20040211,."</span>);
+        <span class="pl-smi">Connection</span> <span class="pl-s1">conn</span> = <span class="pl-smi">DriverManager</span>.<span class="pl-en">getConnection</span>(<span class="pl-s">"jdbc:mysql://localhost:3306/db01"</span>, <span class="pl-s">"root"</span>, <span class="pl-s">""</span>);
 
         <span class="pl-c">// 3、获取SQL语句执行对象</span>
         <span class="pl-smi">Statement</span> <span class="pl-s1">statement</span> = <span class="pl-s1">conn</span>.<span class="pl-en">createStatement</span>();
@@ -194,7 +194,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         <span class="pl-c1">Class</span>.<span class="pl-c1">forName</span>(<span class="pl-s"><span class="pl-pds">"</span>com.mysql.cj.jdbc.Driver<span class="pl-pds">"</span></span>);
 
         <span class="pl-k">//</span> <span class="pl-c1">2</span>、获取数据库连接
-        Connection conn <span class="pl-k">=</span> <span class="pl-c1">DriverManager</span>.<span class="pl-c1">getConnection</span>(<span class="pl-s"><span class="pl-pds">"</span>jdbc:mysql://localhost:3306/db01<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>root<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>Cyy20040211,.<span class="pl-pds">"</span></span>);
+        Connection conn <span class="pl-k">=</span> <span class="pl-c1">DriverManager</span>.<span class="pl-c1">getConnection</span>(<span class="pl-s"><span class="pl-pds">"</span>jdbc:mysql://localhost:3306/db01<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>root<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>);
 
         <span class="pl-k">//</span> <span class="pl-c1">3</span>、获取SQL语句执行对象
         Statement statement <span class="pl-k">=</span> <span class="pl-c1">conn</span>.<span class="pl-c1">createStatement</span>();
@@ -254,7 +254,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <span class="pl-smi">Class</span>.<span class="pl-en">forName</span>(<span class="pl-s">"com.mysql.cj.jdbc.Driver"</span>);
 
     <span class="pl-c">// 2、获取数据库连接</span>
-    <span class="pl-smi">Connection</span> <span class="pl-s1">conn</span> = <span class="pl-smi">DriverManager</span>.<span class="pl-en">getConnection</span>(<span class="pl-s">"jdbc:mysql://localhost:3306/db01"</span>, <span class="pl-s">"root"</span>, <span class="pl-s">"Cyy20040211,."</span>);
+    <span class="pl-smi">Connection</span> <span class="pl-s1">conn</span> = <span class="pl-smi">DriverManager</span>.<span class="pl-en">getConnection</span>(<span class="pl-s">"jdbc:mysql://localhost:3306/db01"</span>, <span class="pl-s">"root"</span>, <span class="pl-s">""</span>);
 
     <span class="pl-c">// 3、预编译SQL，使用?占位符</span>
     <span class="pl-smi">PreparedStatement</span> <span class="pl-s1">pstmt</span> = <span class="pl-s1">conn</span>.<span class="pl-en">prepareStatement</span>(<span class="pl-s">"select * from employee where id = ? and job = ?"</span>);
