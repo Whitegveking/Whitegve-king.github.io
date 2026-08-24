@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script src='https://blog.meekdai.com/Gmeek/plugins/GmeekBSZ.js'></script>
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/165184260?v=4&size=64"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# Web后端实战-Tlias案例
+
+## 准备工作
+
+### 开发规范-开发模式
+
+**前后端混合开发**
+
+- 分工不明确
+- 不便管理
+- 难以维护
+
+**前后端分离开发**
+
+- 当前最为主流的开发模式：前后端分离
+
+<img width='1152' height='621' alt='Image' src='https://github.com/user-attachments/assets/b6c2d44b-d972-4ec2-8036-c6b92c049b7f' />
+
+### 开发规范-Restful风格
+
+**REST**(REpresentational State Transfer)，表述性状态转换，它是一种软件架构风格。">
+<meta property="og:title" content="Web后端-Tlias案例-部门管理">
+<meta property="og:description" content="# Web后端实战-Tlias案例
+
+## 准备工作
+
+### 开发规范-开发模式
+
+**前后端混合开发**
+
+- 分工不明确
+- 不便管理
+- 难以维护
+
+**前后端分离开发**
+
+- 当前最为主流的开发模式：前后端分离
+
+<img width='1152' height='621' alt='Image' src='https://github.com/user-attachments/assets/b6c2d44b-d972-4ec2-8036-c6b92c049b7f' />
+
+### 开发规范-Restful风格
+
+**REST**(REpresentational State Transfer)，表述性状态转换，它是一种软件架构风格。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://Whitegveking.github.io/Whitegve-king.github.io/post/Web-hou-duan--Tlias-an-li---bu-men-guan-li.html">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/165184260?v=4&size=64">
+<title>Web后端-Tlias案例-部门管理</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+<style>.markdown-alert{padding:0.5rem 1rem;margin-bottom:1rem;border-left:.25em solid var(--borderColor-default,var(--color-border-default));}.markdown-alert .markdown-alert-title {display:flex;font-weight:var(--base-text-weight-medium,500);align-items:center;line-height:1;}.markdown-alert>:first-child {margin-top:0;}.markdown-alert>:last-child {margin-bottom:0;}</style><style>.markdown-alert.markdown-alert-note {border-left-color:var(--borderColor-accent-emphasis, var(--color-accent-emphasis));background-color:var(--color-accent-subtle);}.markdown-alert.markdown-alert-note .markdown-alert-title {color: var(--fgColor-accent,var(--color-accent-fg));}</style><style>.markdown-alert.markdown-alert-caution {border-left-color:var(--borderColor-danger-emphasis, var(--color-danger-emphasis));background-color:var(--color-danger-subtle);}.markdown-alert.markdown-alert-caution .markdown-alert-title {color: var(--fgColor-danger,var(--color-danger-fg));}</style>
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">Web后端-Tlias案例-部门管理</h1>
+<div class="title-right">
+    <a href="https://Whitegveking.github.io/Whitegve-king.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/Whitegveking/Whitegve-king.github.io/issues/17" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>Web后端实战-Tlias案例</h1>
+<h2>准备工作</h2>
+<h3>开发规范-开发模式</h3>
+<p><strong>前后端混合开发</strong></p>
+<ul>
+<li>分工不明确</li>
+<li>不便管理</li>
+<li>难以维护</li>
+</ul>
+<p><strong>前后端分离开发</strong></p>
+<ul>
+<li>当前最为主流的开发模式：前后端分离</li>
+</ul>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/b6c2d44b-d972-4ec2-8036-c6b92c049b7f"><img width="1152" height="621" alt="Image" src="https://github.com/user-attachments/assets/b6c2d44b-d972-4ec2-8036-c6b92c049b7f" style="max-width: 100%; height: auto; max-height: 621px;; aspect-ratio: 1152 / 621; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<h3>开发规范-Restful风格</h3>
+<p><strong>REST</strong>(REpresentational State Transfer)，表述性状态转换，它是一种软件架构风格。</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>传统风格url</th>
+<th>请求方式</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://localhost:8080/user/getById?id=1" rel="nofollow">http://localhost:8080/user/getById?id=1</a></td>
+<td>GET</td>
+<td>查询id为1的用户</td>
+<td>不规范</td>
+</tr>
+<tr>
+<td><a href="http://localhost:8080/user/saveUser" rel="nofollow">http://localhost:8080/user/saveUser</a></td>
+<td>POST</td>
+<td>新增用户</td>
+<td>难维护</td>
+</tr>
+<tr>
+<td><a href="http://localhost:8080/user/updateUser" rel="nofollow">http://localhost:8080/user/updateUser</a></td>
+<td>POST</td>
+<td>修改用户</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="http://localhost:8080/user/deleteUser?id=1" rel="nofollow">http://localhost:8080/user/deleteUser?id=1</a></td>
+<td>GET</td>
+<td>删除id为1的用户</td>
+<td></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>REST风格url</th>
+<th>请求方式</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://localhost:8080/users/1" rel="nofollow">http://localhost:8080/users/1</a></td>
+<td>GET</td>
+<td>查询id为1的用户</td>
+<td>URL定位资源</td>
+</tr>
+<tr>
+<td><a href="http://localhost:8080/users/1" rel="nofollow">http://localhost:8080/users/1</a></td>
+<td>DELETE</td>
+<td>删除id为1的用户</td>
+<td>HTTP动词描述操作</td>
+</tr>
+<tr>
+<td><a href="http://localhost:8080/users" rel="nofollow">http://localhost:8080/users</a></td>
+<td>POST</td>
+<td>新增用户</td>
+<td>简洁、规范、优雅</td>
+</tr>
+<tr>
+<td><a href="http://localhost:8080/users" rel="nofollow">http://localhost:8080/users</a></td>
+<td>PUT</td>
+<td>修改用户</td>
+<td></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<div class="markdown-alert markdown-alert-caution"><p class="markdown-alert-title"><svg data-component="Octicon" class="octicon octicon-stop mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Caution</p>
+<ol>
+<li>REST是风格，是约定方式，约定不是规定，可以打破。</li>
+<li>描述功能模块通常使用复数形式(加s)，表示此类资源，而非单个资源。如:users、books...</li>
+</ol>
+</div>
+<h3>项目框架讲解</h3>
+<h4>整体架构：三层架构</h4>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-smi">浏览器请求</span> → <span class="pl-s1">DeptController</span>（<span class="pl-s1">接收请求</span>、<span class="pl-s1">响应数据</span>）
+                ↓ <span class="pl-s1">调用</span>
+            <span class="pl-s1">DeptService</span> <span class="pl-s1">接口</span> ← <span class="pl-s1">DeptServiceImpl</span>（<span class="pl-s1">业务逻辑处理</span>）
+                ↓ <span class="pl-s1">调用</span>
+            <span class="pl-s1">DeptMapper</span>（<span class="pl-s1">数据库操作</span>，<span class="pl-s1">MyBatis</span>）
+                ↓
+              <span class="pl-s1">MySQL</span> <span class="pl-s1">数据库</span></pre></div>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>层</th>
+<th>包名</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>表现层</td>
+<td><code class="notranslate">controller</code></td>
+<td>接收前端请求、参数校验、返回 <code class="notranslate">Result</code> 统一响应</td>
+</tr>
+<tr>
+<td>业务层</td>
+<td><code class="notranslate">service</code> + <code class="notranslate">service.impl</code></td>
+<td>编写业务逻辑（如删除部门时同时删除员工）</td>
+</tr>
+<tr>
+<td>数据层</td>
+<td><code class="notranslate">mapper</code></td>
+<td>只负责 CRUD，操作数据库</td>
+</tr>
+<tr>
+<td>实体类</td>
+<td><code class="notranslate">pojo</code></td>
+<td><code class="notranslate">Dept</code> 封装数据、<code class="notranslate">Result</code> 统一响应结果</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h4>用到的注解</h4>
+<p><strong>Spring Boot 核心：</strong></p>
+<ul>
+<li><code class="notranslate">@SpringBootApplication</code> —— 启动类注解，包含自动配置 + 组件扫描（扫描启动类所在包及子包）</li>
+<li><code class="notranslate">@RestController</code> —— = <code class="notranslate">@Controller</code> + <code class="notranslate">@ResponseBody</code>，声明为 Bean 且方法返回值直接作为 JSON 响应</li>
+<li><code class="notranslate">@Service</code> —— 声明业务层 Bean，交给 IOC 容器管理</li>
+</ul>
+<p><strong>MyBatis：</strong></p>
+<ul>
+<li><code class="notranslate">@Mapper</code> —— 声明数据层接口，运行时由 MyBatis 自动生成代理实现并注入容器</li>
+</ul>
+<p><strong>Lombok：</strong></p>
+<ul>
+<li><code class="notranslate">@Data</code> —— 自动生成 getter/setter/toString/equals/hashCode</li>
+<li><code class="notranslate">@NoArgsConstructor</code> / <code class="notranslate">@AllArgsConstructor</code> —— 自动生成空参/全参构造方法</li>
+</ul>
+<h4>Service 为什么要有接口和 impl 实现，而 Mapper 只要接口？</h4>
+<p>核心区别在于：<strong>谁来生成实现类</strong>。</p>
+<p><strong>Mapper 不需要写实现 —— MyBatis 用动态代理帮你生成了</strong></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-c1">@</span><span class="pl-c1">Mapper</span>
+<span class="pl-k">public</span> <span class="pl-k">interface</span> <span class="pl-smi">DeptMapper</span> { ... }</pre></div>
+<p>只写接口，MyBatis 在运行时通过 <strong>JDK 动态代理</strong> 自动生成实现对象：</p>
+<ul>
+<li>拦截方法调用 → 根据方法上的 SQL 注解或 XML 找到 SQL → 执行 JDBC → 把结果封装成对象返回</li>
+</ul>
+<p>所以实现类是"框架造的"，自然不用写。</p>
+<p><strong>Service 需要自己写实现 —— 因为业务逻辑是自己写的代码</strong></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">DeptServiceImpl</span> <span class="pl-k">implements</span> <span class="pl-smi">DeptService</span> { }</pre></div>
+<p>业务逻辑没有框架能替你生成，必须自己写。拆成接口+实现的原因：</p>
+<ol>
+<li><strong>解耦</strong>：Controller 依赖的是 <code class="notranslate">DeptService</code> 接口而不是具体实现类，将来换实现（如本地存储换成 OSS 存储），Controller 一行代码都不用改。</li>
+<li><strong>多态与可替换</strong>：一个接口可以有多个实现类，按需切换。</li>
+<li><strong>方便测试</strong>：单元测试时可以 Mock 一个假的 Service 实现，不用跑真实业务。</li>
+<li><strong>规范约定</strong>："接口定义做什么（规范），实现类定义怎么做"，是企业开发的通用分层规范。</li>
+</ol>
+<div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg data-component="Octicon" class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
+<p>Spring 并不强制 Service 必须有接口，直接在类上标 <code class="notranslate">@Service</code> 也能运行。拆接口是工程规范和习惯做法；而 Mapper 是 MyBatis 的机制决定的"只能有接口"。</p>
+</div>
+<h2>接口开发-部门管理</h2>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/c588b2f2-5bf1-4b29-96da-ed4279bfe670"><img width="1248" height="366" alt="Image" src="https://github.com/user-attachments/assets/c588b2f2-5bf1-4b29-96da-ed4279bfe670" style="max-width: 100%; height: auto; max-height: 366px;; aspect-ratio: 1248 / 366; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<h3>当前接口代码结构（部门查询为例）</h3>
+<p><strong>Controller：DeptController</strong></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-c1">@</span><span class="pl-c1">RestController</span>
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">DeptController</span> {
+    <span class="pl-c1">@</span><span class="pl-c1">Autowired</span>
+    <span class="pl-k">private</span> <span class="pl-smi">DeptService</span> <span class="pl-s1">deptService</span>;
+
+    <span class="pl-c1">@</span><span class="pl-c1">RequestMapping</span>(<span class="pl-s">"/dept"</span>)
+    <span class="pl-k">public</span> <span class="pl-smi">Result</span> <span class="pl-en">list</span>() {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"查询全部部门数据"</span>);
+        <span class="pl-smi">List</span>&lt;<span class="pl-smi">Dept</span>&gt; <span class="pl-s1">deptlist</span> = <span class="pl-s1">deptService</span>.<span class="pl-en">findAll</span>();
+        <span class="pl-k">return</span> <span class="pl-smi">Result</span>.<span class="pl-en">success</span>(<span class="pl-s1">deptlist</span>);
+    }
+}</pre></div>
+<p><strong>Service 接口：DeptService</strong></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">public</span> <span class="pl-k">interface</span> <span class="pl-smi">DeptService</span> {
+    <span class="pl-smi">List</span>&lt;<span class="pl-smi">Dept</span>&gt; <span class="pl-en">findAll</span>();
+}</pre></div>
+<p><strong>Service 实现：DeptServiceImpl</strong></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-c1">@</span><span class="pl-c1">Service</span>
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">DeptServiceImpl</span> <span class="pl-k">implements</span> <span class="pl-smi">DeptService</span> {
+    <span class="pl-c1">@</span><span class="pl-c1">Autowired</span> <span class="pl-c">// 依赖注入</span>
+    <span class="pl-k">private</span> <span class="pl-smi">DeptMapper</span> <span class="pl-s1">deptMapper</span>;
+
+    <span class="pl-c1">@</span><span class="pl-c1">Override</span>
+    <span class="pl-k">public</span> <span class="pl-smi">List</span>&lt;<span class="pl-smi">Dept</span>&gt; <span class="pl-en">findAll</span>() {
+        <span class="pl-k">return</span> <span class="pl-s1">deptMapper</span>.<span class="pl-en">findAll</span>();
+    }
+}</pre></div>
+<p><strong>Mapper：DeptMapper</strong></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-c1">@</span><span class="pl-c1">Mapper</span>
+<span class="pl-k">public</span> <span class="pl-k">interface</span> <span class="pl-smi">DeptMapper</span> {
+    <span class="pl-c1">@</span><span class="pl-c1">Select</span>(<span class="pl-s">"select id, name, create_time, update_time from dept order by update_time desc;"</span>)
+    <span class="pl-smi">List</span>&lt;<span class="pl-smi">Dept</span>&gt; <span class="pl-en">findAll</span>();
+}</pre></div>
+<p><strong>实体类：Dept、Result</strong></p>
+<ul>
+<li><code class="notranslate">Dept</code>：使用 Lombok <code class="notranslate">@Data</code>、<code class="notranslate">@NoArgsConstructor</code>、<code class="notranslate">@AllArgsConstructor</code>，字段：id、name、createTime、updateTime</li>
+<li><code class="notranslate">Result</code>：统一响应封装，code/msg/data，提供 <code class="notranslate">success()</code>、<code class="notranslate">success(Object)</code>、<code class="notranslate">error(String)</code> 静态方法</li>
+</ul>
+<h3>遇到的问题与解决</h3>
+<h4>问题 1：请求返回 500，NullPointerException</h4>
+<p><strong>现象</strong>：调用 <code class="notranslate">/dept</code> 接口报错：</p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-smi">java</span>.<span class="pl-smi">lang</span>.<span class="pl-smi">NullPointerException</span>
+    <span class="pl-s1">at</span> <span class="pl-s1">com</span>.<span class="pl-s1">cyy</span>.<span class="pl-s1">tliaswebmanagement</span>.<span class="pl-s1">service</span>.<span class="pl-s1">impl</span>.<span class="pl-s1">DeptServiceImpl</span>.<span class="pl-en">findAll</span>(<span class="pl-smi">DeptServiceImpl</span>.<span class="pl-smi">java</span>:<span class="pl-c1">19</span>)</pre></div>
+<p><strong>原因</strong>：<code class="notranslate">DeptServiceImpl</code> 中 <code class="notranslate">deptMapper</code> 字段<strong>未加 <code class="notranslate">@Autowired</code></strong>，Spring 没有注入 Mapper Bean，字段为 <code class="notranslate">null</code>，调用 <code class="notranslate">deptMapper.findAll()</code> 抛空指针。</p>
+<p><strong>对比</strong>：Controller 里 <code class="notranslate">deptService</code> 有 <code class="notranslate">@Autowired</code>，所以能正常注入；Service 里漏写了。</p>
+<p><strong>修复</strong>：给 <code class="notranslate">deptMapper</code> 加上 <code class="notranslate">@Autowired</code>，或改用构造器注入（推荐）。</p>
+<h4>问题 2：<code class="notranslate">@Autowired</code> 字段注入会有 IDEA 警告“字段注入不推荐”</h4>
+<p><strong>现象</strong>：IntelliJ IDEA 在 <code class="notranslate">@Autowired private DeptMapper deptMapper;</code> 处显示黄色波浪线/提示。</p>
+<p><strong>本质</strong>：这是 <strong>IDEA 代码检查警告（Inspection）</strong>，不是编译错误。程序照样能跑，Spring 也能正常注入。</p>
+<p><strong>为什么不推荐字段注入</strong>：</p>
+<ol>
+<li><strong>无法用 <code class="notranslate">final</code></strong>，对象可变</li>
+<li><strong>掩盖依赖爆炸</strong>：类里塞十几个 <code class="notranslate">@Autowired</code> 字段看不出问题，构造器参数一长串立刻显眼</li>
+<li><strong>不利于单元测试</strong>：脱离容器只能靠反射注入 Mock</li>
+<li><strong>强依赖 IOC 容器</strong>：自己 <code class="notranslate">new DeptServiceImpl()</code> 字段全是 null —— 正是刚才 NPE 的根源</li>
+</ol>
+<p><strong>推荐写法：构造器注入（配合 Lombok）</strong></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-c1">@</span><span class="pl-c1">Service</span>
+<span class="pl-c1">@</span><span class="pl-c1">RequiredArgsConstructor</span> <span class="pl-c">// 为所有 final 字段生成构造器</span>
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">DeptServiceImpl</span> <span class="pl-k">implements</span> <span class="pl-smi">DeptService</span> {
+    <span class="pl-k">private</span> <span class="pl-k">final</span> <span class="pl-smi">DeptMapper</span> <span class="pl-s1">deptMapper</span>;
+    <span class="pl-c">// 自动拥有 public DeptServiceImpl(DeptMapper deptMapper) { this.deptMapper = deptMapper; }</span>
+}</pre></div>
+<div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg data-component="Octicon" class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
+<p>学习阶段跟教程用字段注入完全没问题；企业项目里更常用构造器注入。</p>
+</div>
+<h3>删除部门</h3>
+<h4>方式一：Controller接收简单参数</h4>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-c1">@</span><span class="pl-c1">DeleteMapping</span>(<span class="pl-s">"/depts"</span>)
+    <span class="pl-k">public</span> <span class="pl-smi">Result</span> <span class="pl-en">delete</span>(<span class="pl-smi">HttpServletRequest</span> <span class="pl-s1">request</span>) {
+        <span class="pl-smi">String</span> <span class="pl-s1">idStr</span> = <span class="pl-s1">request</span>.<span class="pl-en">getParameter</span>(<span class="pl-s">"id"</span>);
+        <span class="pl-smi">int</span> <span class="pl-s1">id</span> = <span class="pl-smi">Integer</span>.<span class="pl-en">parseInt</span>(<span class="pl-s1">idStr</span>);
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"根据ID删除部门数据，id="</span> + <span class="pl-s1">id</span>);
+        <span class="pl-k">return</span> <span class="pl-smi">Result</span>.<span class="pl-en">success</span>();
+    }</pre></div>
+<h4>方式二：通过Spring提供的<a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/RequestParam/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/RequestParam">@RequestParam</a>注解，将请求参数绑定给方法形参</h4>
+<p>一旦声明了<a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/RequestParam/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/RequestParam">@RequestParam</a>，该参数在请求时必须传递，如果不传递将会报错。（默认 required 为 true）</p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-c1">@</span><span class="pl-c1">DeleteMapping</span>(<span class="pl-s">"/depts"</span>)
+    <span class="pl-k">public</span> <span class="pl-smi">Result</span> <span class="pl-en">delete</span>(<span class="pl-c1">@</span><span class="pl-c1">RequestParam</span>(<span class="pl-s">"id"</span>) <span class="pl-smi">Integer</span> <span class="pl-s1">deptId</span>) {
+
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"根据ID删除部门数据，id="</span> + <span class="pl-s1">deptId</span>);
+        <span class="pl-k">return</span> <span class="pl-smi">Result</span>.<span class="pl-en">success</span>();
+    }</pre></div>
+<h4>方式三：如果请求参数名与形参变量名相同，直接定义方法形参即可接收。(省略RequestParam)(推荐)</h4>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-c1">@</span><span class="pl-c1">DeleteMapping</span>(<span class="pl-s">"/depts"</span>)
+    <span class="pl-k">public</span> <span class="pl-smi">Result</span> <span class="pl-en">delete</span>(<span class="pl-c1">@</span><span class="pl-c1">RequestParam</span>(<span class="pl-s1">required</span> = <span class="pl-c1">false</span>) <span class="pl-smi">Integer</span> <span class="pl-s1">id</span>) {
+
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"根据ID删除部门数据，id="</span> + <span class="pl-s1">id</span>);
+        <span class="pl-k">return</span> <span class="pl-smi">Result</span>.<span class="pl-en">success</span>();
+    }</pre></div>
+<h3>新增部门</h3>
+<p><strong>Controller：DeptController</strong></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-c1">@</span><span class="pl-c1">PostMapping</span>(<span class="pl-s">"/depts"</span>)
+<span class="pl-k">public</span> <span class="pl-smi">Result</span> <span class="pl-en">add</span>(<span class="pl-c1">@</span><span class="pl-c1">RequestBody</span> <span class="pl-smi">Dept</span> <span class="pl-s1">dept</span>) {
+    <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"添加部门： "</span> + <span class="pl-s1">dept</span>);
+    <span class="pl-s1">deptServiceimpl</span>.<span class="pl-en">add</span>(<span class="pl-s1">dept</span>);
+    <span class="pl-k">return</span> <span class="pl-smi">Result</span>.<span class="pl-en">success</span>();
+}</pre></div>
+<p><strong>Service 实现：DeptServiceImpl</strong></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">add</span>(<span class="pl-smi">Dept</span> <span class="pl-s1">dept</span>) {
+    <span class="pl-c">// 创建时间、更新时间由后端统一维护，不信任前端传值</span>
+    <span class="pl-s1">dept</span>.<span class="pl-en">setCreateTime</span>(<span class="pl-smi">LocalDateTime</span>.<span class="pl-en">now</span>());
+    <span class="pl-s1">dept</span>.<span class="pl-en">setUpdateTime</span>(<span class="pl-smi">LocalDateTime</span>.<span class="pl-en">now</span>());
+    <span class="pl-s1">deptMapper</span>.<span class="pl-en">insert</span>(<span class="pl-s1">dept</span>);
+}</pre></div>
+<p><strong>Mapper：DeptMapper</strong></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-c1">@</span><span class="pl-c1">Insert</span>(<span class="pl-s">"insert into dept(name, create_time, update_time) values(#{name}, #{createTime}, #{updateTime})"</span>)
+<span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">insert</span>(<span class="pl-smi">Dept</span> <span class="pl-s1">dept</span>);</pre></div>
+<h3>修改部门</h3>
+<h4>查询回显</h4>
+<p>路径参数：通过请求URL直接传递参数，使用{…}来标识该路径参数，需要使用 **<code class="notranslate">@PathVariable</code>**获取路径参数。</p>
+<p><strong>Controller：DeptController</strong></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-c1">@</span><span class="pl-c1">GetMapping</span>(<span class="pl-s">"/depts/{id}"</span>)
+    <span class="pl-k">public</span> <span class="pl-smi">Result</span> <span class="pl-en">getInfo</span>(<span class="pl-c1">@</span><span class="pl-c1">PathVariable</span> <span class="pl-smi">Integer</span> <span class="pl-s1">id</span>) {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"根据ID查询部门数据： "</span> + <span class="pl-s1">id</span>);
+        <span class="pl-smi">Dept</span> <span class="pl-s1">dept</span> = <span class="pl-s1">deptServiceImpl</span>.<span class="pl-en">getById</span>(<span class="pl-s1">id</span>);
+        <span class="pl-k">return</span> <span class="pl-smi">Result</span>.<span class="pl-en">success</span>(<span class="pl-s1">dept</span>);
+    }</pre></div>
+<p><strong>Service 实现：DeptServiceImpl</strong></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"> <span class="pl-k">public</span> <span class="pl-smi">Dept</span> <span class="pl-en">getById</span>(<span class="pl-smi">Integer</span> <span class="pl-s1">id</span>) {
+        <span class="pl-k">return</span> <span class="pl-s1">deptMapper</span>.<span class="pl-en">getInfo</span>(<span class="pl-s1">id</span>);
+    }</pre></div>
+<p><strong>Mapper：DeptMapper</strong></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-c1">@</span><span class="pl-c1">Select</span>(<span class="pl-s">"select * from dept where id = #{id}"</span>)
+    <span class="pl-k">public</span> <span class="pl-smi">Dept</span> <span class="pl-en">getInfo</span>(<span class="pl-smi">Integer</span> <span class="pl-s1">id</span>);</pre></div>
+<h4>修改数据</h4>
+<p><strong>Controller：DeptController</strong></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-c1">@</span><span class="pl-c1">PutMapping</span>
+    <span class="pl-k">public</span> <span class="pl-smi">Result</span> <span class="pl-en">update</span>(<span class="pl-c1">@</span><span class="pl-c1">RequestBody</span> <span class="pl-smi">Dept</span> <span class="pl-s1">dept</span>) {
+        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"修改部门： "</span> + <span class="pl-s1">dept</span>);
+        <span class="pl-s1">deptServiceImpl</span>.<span class="pl-en">update</span>(<span class="pl-s1">dept</span>);
+        <span class="pl-k">return</span> <span class="pl-smi">Result</span>.<span class="pl-en">success</span>();
+    }</pre></div>
+<p><strong>Service 实现：DeptServiceImpl</strong></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">update</span>(<span class="pl-smi">Dept</span> <span class="pl-s1">dept</span>) {
+        <span class="pl-s1">dept</span>.<span class="pl-en">setUpdateTime</span>(<span class="pl-smi">LocalDateTime</span>.<span class="pl-en">now</span>());
+        <span class="pl-s1">deptMapper</span>.<span class="pl-en">update</span>(<span class="pl-s1">dept</span>);
+    }</pre></div>
+<p><strong>Mapper：DeptMapper</strong></p>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-c1">@</span><span class="pl-c1">Update</span>(<span class="pl-s">"update dept set name = #{name}, update_time = #{updateTime} where id = #{id}"</span>)
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">update</span>(<span class="pl-smi">Dept</span> <span class="pl-s1">dept</span>);</pre></div>
+<h3>日志技术</h3>
+<p><strong>采用sout的形式</strong></p>
+<ul>
+<li>只能输出到控制台</li>
+<li>不便于扩展、维护</li>
+</ul>
+<p>程序中的<strong>日志</strong>，是用来记录应用程序的运行信息、状态信息、错误信息等</p>
+<p><strong>日志的好处</strong></p>
+<ul>
+<li>便于进行数据追踪</li>
+<li>方便进行性能优化</li>
+<li>通过所记录的错误信息进行问题排查</li>
+<li>便于进行系统监控</li>
+</ul>
+<p><strong>Logback</strong>:基于<strong>Log4j</strong>升级而来，提供了更多的功能和配置选项，性能优于<strong>Log4j</strong></p>
+<h4>LogBack快速入门</h4>
+<ul>
+<li>准备工作：引入logback的依赖**(springboot项目中该依赖已传递)**、配置文件logback.xml。</li>
+<li>记录日志：定义日志记录对象Logger，记录日志。</li>
+</ul>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">com</span>.<span class="pl-s1">cyy</span>.<span class="pl-s1">tliaswebmanagement</span>;
+
+<span class="pl-k">import</span> <span class="pl-s1">org</span>.<span class="pl-s1">junit</span>.<span class="pl-s1">jupiter</span>.<span class="pl-s1">api</span>.<span class="pl-s1">Test</span>;
+<span class="pl-k">import</span> <span class="pl-s1">org</span>.<span class="pl-s1">slf4j</span>.<span class="pl-s1">LoggerFactory</span>;
+
+<span class="pl-k">import</span> <span class="pl-s1">org</span>.<span class="pl-s1">slf4j</span>.<span class="pl-s1">Logger</span>;
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">LogTest</span> {
+    <span class="pl-k">private</span> <span class="pl-k">static</span> <span class="pl-k">final</span> <span class="pl-smi">Logger</span> <span class="pl-s1">log</span> = <span class="pl-smi">LoggerFactory</span>.<span class="pl-en">getLogger</span>(<span class="pl-smi">LogTest</span>.<span class="pl-k">class</span>);
+    <span class="pl-c1">@</span><span class="pl-c1">Test</span>
+    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">testLog</span>(){
+        <span class="pl-s1">log</span>.<span class="pl-en">debug</span>(<span class="pl-s">"开始计算..."</span>);
+        <span class="pl-smi">int</span> <span class="pl-s1">sum</span> = <span class="pl-c1">0</span>;
+        <span class="pl-smi">int</span>[] <span class="pl-s1">nums</span> = {<span class="pl-c1">1</span>, <span class="pl-c1">5</span>, <span class="pl-c1">3</span>, <span class="pl-c1">2</span>, <span class="pl-c1">1</span>, <span class="pl-c1">4</span>, <span class="pl-c1">5</span>, <span class="pl-c1">4</span>, <span class="pl-c1">6</span>, <span class="pl-c1">7</span>, <span class="pl-c1">4</span>, <span class="pl-c1">34</span>, <span class="pl-c1">2</span>, <span class="pl-c1">23</span>};
+        <span class="pl-k">for</span> (<span class="pl-smi">int</span> <span class="pl-s1">num</span> : <span class="pl-s1">nums</span>) {
+            <span class="pl-s1">sum</span> += <span class="pl-s1">num</span>;
+        }
+        <span class="pl-s1">log</span>.<span class="pl-en">info</span>(<span class="pl-s">"计算结果为: "</span>+<span class="pl-s1">sum</span>);
+        <span class="pl-s1">log</span>.<span class="pl-en">debug</span>(<span class="pl-s">"结束计算..."</span>);
+    }
+
+}</pre></div>
+<div class="highlight highlight-source-batchfile"><pre class="notranslate">2026-08-24 16:40:46.510 [main] DEBUG com.cyy.tliaswebmanagement.LogTest-开始计算...
+2026-08-24 16:40:46.512 [main] INFO  com.cyy.tliaswebmanagement.LogTest-计算结果为: <span class="pl-c1">101</span>
+2026-08-24 16:40:46.512 [main] DEBUG com.cyy.tliaswebmanagement.LogTest-结束计算...</pre></div>
+<h4>LogBack配置文件详解</h4>
+<ul>
+<li>配置文件名：logback.xml</li>
+<li>该配置文件是对Logback日志框架输出的日志进行控制的，可以来配置输出的格式、位置及日志开关等。</li>
+<li>常用的两种输出日志的位置：控制台、系统文件</li>
+</ul>
+<div class="highlight highlight-text-xml"><pre class="notranslate"><span class="pl-c"><span class="pl-c">&lt;!--</span> 控制台输出 <span class="pl-c">--&gt;</span></span>
+&lt;<span class="pl-ent">appender</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>STDOUT<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s"><span class="pl-pds">"</span>ch.qos.logback.core.ConsoleAppender<span class="pl-pds">"</span></span>&gt;...&lt;/<span class="pl-ent">appender</span>&gt;
+<span class="pl-c"><span class="pl-c">&lt;!--</span> 系统文件输出 <span class="pl-c">--&gt;</span></span>
+&lt;<span class="pl-ent">appender</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>FILE<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s"><span class="pl-pds">"</span>ch.qos.logback.core.rolling.RollingFileAppender<span class="pl-pds">"</span></span>&gt;...&lt;/<span class="pl-ent">appender</span>&gt;</pre></div>
+<ul>
+<li>
+<p>开启日志（ALL），关闭日志（OFF）</p>
+</li>
+<li>
+<div class="highlight highlight-text-xml"><pre class="notranslate">&lt;<span class="pl-ent">root</span> <span class="pl-e">level</span>=<span class="pl-s"><span class="pl-pds">"</span>ALL<span class="pl-pds">"</span></span>&gt;
+ &lt;<span class="pl-ent">appender-ref</span> <span class="pl-e">ref</span>=<span class="pl-s"><span class="pl-pds">"</span>STDOUT<span class="pl-pds">"</span></span> /&gt;
+ &lt;<span class="pl-ent">appender-ref</span> <span class="pl-e">ref</span>=<span class="pl-s"><span class="pl-pds">"</span>FILE<span class="pl-pds">"</span></span> /&gt;
+&lt;/<span class="pl-ent">root</span>&gt;</pre></div>
+</li>
+</ul>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>块</th>
+<th>标签</th>
+<th>作用</th>
+<th>常改什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Appender</td>
+<td><code class="notranslate">&lt;appender&gt;</code></td>
+<td>“日志往哪里写”（控制台、文件、网络、数据库…）</td>
+<td>输出目标、编码、滚动策略</td>
+</tr>
+<tr>
+<td>Encoder/Pattern</td>
+<td><code class="notranslate">&lt;encoder&gt;&lt;pattern&gt;</code></td>
+<td>“日志长什么样”（时间、线程、级别、类名、消息）</td>
+<td>格式字符串</td>
+</tr>
+<tr>
+<td>Logger/Root</td>
+<td><code class="notranslate">&lt;root&gt;</code> / <code class="notranslate">&lt;logger&gt;</code></td>
+<td>“哪些日志、什么级别、挂哪个 Appender”</td>
+<td>级别、additivity、引用哪个 appender</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>符号</th>
+<th>含义</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">%d{yyyy-MM-dd HH:mm:ss.SSS}</code></td>
+<td>时间（可自定义格式）</td>
+<td><code class="notranslate">2026-08-24 14:30:45.123</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">%thread</code></td>
+<td>线程名</td>
+<td><code class="notranslate">http-nio-8080-exec-1</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">%-5level</code></td>
+<td>级别左对齐 5 宽</td>
+<td><code class="notranslate">DEBUG</code>, <code class="notranslate">INFO </code>, <code class="notranslate">ERROR</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">%logger{50}</code></td>
+<td>类名，最长 50 字符（超出截断包名）</td>
+<td><code class="notranslate">c.c.t.service.impl.DeptServiceImpl</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">%msg</code> / <code class="notranslate">%message</code></td>
+<td>日志消息</td>
+<td><code class="notranslate">查询全部部门数据</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">%n</code></td>
+<td>换行符（跨平台）</td>
+<td><code class="notranslate">\n</code> 或 <code class="notranslate">\r\n</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">%file</code> / <code class="notranslate">%line</code> / <code class="notranslate">%method</code></td>
+<td>源文件/行号/方法名（性能敏感，慎用）</td>
+<td><code class="notranslate">DeptServiceImpl.java:21</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h4>LogBack日志级别</h4>
+<p>日志级别指的是日志信息的类型，日志都会分级别，常见的日志级别如下（级别由低到高）：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>日志级别</th>
+<th>说明</th>
+<th>记录方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>trace</td>
+<td>追踪，记录程序运行轨迹 【使用很少】</td>
+<td><code class="notranslate">log.trace("...")</code></td>
+</tr>
+<tr>
+<td>debug</td>
+<td>调试，记录程序调试过程中的信息，实际应用中一般将其视为最低级别 【使用较多】</td>
+<td><code class="notranslate">log.debug("...")</code></td>
+</tr>
+<tr>
+<td>info</td>
+<td>记录一般信息，描述程序运行的关键事件，如：网络连接、io操作 【使用较多】</td>
+<td><code class="notranslate">log.info("...")</code></td>
+</tr>
+<tr>
+<td>warn</td>
+<td>警告信息，记录潜在有害的情况 【使用较多】</td>
+<td><code class="notranslate">log.warn("...")</code></td>
+</tr>
+<tr>
+<td>error</td>
+<td>错误信息 【使用较多】</td>
+<td><code class="notranslate">log.error("...")</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p>可以在配置文件中，灵活的控制输出哪些类型的日志。(大于等于配置的日志级别的日志才会输出)</p>
+<h2>结果封装</h2>
+<ul>
+<li><strong>手动结果映射</strong>：通过 <code class="notranslate">@Results</code> 及 <code class="notranslate">@Result</code> 进行手动结果映射。</li>
+</ul>
+<div class="highlight highlight-source-java"><pre class="notranslate"> <span class="pl-c">// DeptMapper</span>
+ <span class="pl-c1">@</span><span class="pl-c1">Results</span>({
+  <span class="pl-c1">@</span><span class="pl-c1">Result</span>(<span class="pl-s1">column</span> = <span class="pl-s">"create_time"</span>, <span class="pl-s1">property</span> = <span class="pl-s">"createTime"</span>),
+  <span class="pl-c1">@</span><span class="pl-c1">Result</span>(<span class="pl-s1">column</span> = <span class="pl-s">"update_time"</span>, <span class="pl-s1">property</span> = <span class="pl-s">"updateTime"</span>)
+ })
+ <span class="pl-c1">@</span><span class="pl-c1">Select</span>(<span class="pl-s">"select id, name, create_time, update_time from dept order by update_time desc"</span>)
+ <span class="pl-k">public</span> <span class="pl-smi">List</span>&lt;<span class="pl-smi">Dept</span>&gt; <span class="pl-en">findAll</span>();</pre></div>
+<ul>
+<li><strong>起别名</strong>：在SQL语句中，对不一样的列名起别名，别名和实体类属性名一样。</li>
+</ul>
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-c">// DeptMapper</span>
+<span class="pl-c1">@</span><span class="pl-c1">Select</span>(<span class="pl-s">"select id, name, create_time createTime, update_time updateTime from dept ..."</span>)
+<span class="pl-k">public</span> <span class="pl-smi">List</span>&lt;<span class="pl-smi">Dept</span>&gt; <span class="pl-en">findAll</span>();</pre></div>
+<ul>
+<li><strong>开启驼峰命名开关</strong>（要求:xxx_abc  -&gt; xxxAbc）</li>
+</ul>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">map-underscore-to-camel-case</span>: <span class="pl-c1">true</span></pre></div>
+<h2>反向代理</h2>
+<p>反向代理是一种网络架构技术，通过反向代理服务器为后端服务器做代理（安全、灵活、负载均衡）</p>
+<h3>Nginx中反向代理的配置</h3>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/06961555-2eae-4488-a296-68bae856a10a"><img width="531" height="351" alt="Image" src="https://github.com/user-attachments/assets/06961555-2eae-4488-a296-68bae856a10a" style="max-width: 100%; height: auto; max-height: 351px;; aspect-ratio: 531 / 351; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<h2></h2></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://Whitegveking.github.io/Whitegve-king.github.io">Cyy的JAVA学习日记</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","Whitegveking/Whitegve-king.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>
+
+</html>

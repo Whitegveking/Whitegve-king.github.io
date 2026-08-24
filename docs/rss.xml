@@ -1,5 +1,25 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Fri, 21 Aug 2026 00:33:25 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>MyBatis</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/MyBatis.html</link><description># MyBatis
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Mon, 24 Aug 2026 09:39:46 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>Web后端-Tlias案例-部门管理</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/Web-hou-duan--Tlias-an-li---bu-men-guan-li.html</link><description># Web后端实战-Tlias案例
+
+## 准备工作
+
+### 开发规范-开发模式
+
+**前后端混合开发**
+
+- 分工不明确
+- 不便管理
+- 难以维护
+
+**前后端分离开发**
+
+- 当前最为主流的开发模式：前后端分离
+
+&lt;img width='1152' height='621' alt='Image' src='https://github.com/user-attachments/assets/b6c2d44b-d972-4ec2-8036-c6b92c049b7f' /&gt;
+
+### 开发规范-Restful风格
+
+**REST**(REpresentational State Transfer)，表述性状态转换，它是一种软件架构风格。</description><guid isPermaLink="true">https://Whitegveking.github.io/Whitegve-king.github.io/post/Web-hou-duan--Tlias-an-li---bu-men-guan-li.html</guid><pubDate>Mon, 24 Aug 2026 09:39:17 +0000</pubDate></item><item><title>MyBatis</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/MyBatis.html</link><description># MyBatis
 
 ## 概述
 
