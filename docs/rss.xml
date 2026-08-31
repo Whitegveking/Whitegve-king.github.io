@@ -1,5 +1,206 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Mon, 24 Aug 2026 09:39:46 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>Web后端-Tlias案例-部门管理</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/Web-hou-duan--Tlias-an-li---bu-men-guan-li.html</link><description># Web后端实战-Tlias案例
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Mon, 31 Aug 2026 07:14:01 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>Web后端-Tlias案例-员工管理</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/Web-hou-duan--Tlias-an-li---yuan-gong-guan-li.html</link><description># Web后端-Tlias案例-员工管理
+
+## 多表关系
+
+### 一对多（多对一）
+
+**场景**：部门与员工的关系（一个部门下有多少个员工）
+
+&lt;img width='1194' height='369' alt='Image' src='https://github.com/user-attachments/assets/d45f3f01-ef55-4f1f-bdce-92145daafdc9' /&gt;
+
+**实现**：在数据库表中多的一方，添加字段，来关联一的一方的**主键**
+
+#### 多表问题分析
+
+- **现象**:部门数据可以直接删除，然而还有部分员工归属于该部门下，此时就出现了数据的不完整、不一致问题
+- **原因**:目前上述的两张表，在数据库层面，并未建立关联，所以是无法保证数据的一致性和完整性的
+- **解决方案**：外键约束
+
+```mysql
+-- 创建表时指定
+create table 表名(
+ 字段名 数据类型,
+ ...
+ [constraint] [外键名称] foreign key (外键字段名) references 主表 (字段名)
+);
+-- 建完表后，添加外键
+alter table 表名 add constraint 外键名称 foreign key (外键字段名) references 主表(字段名);
+```
+
+
+
+#### 外键约束
+
+**物理外键**
+
+**概念**：使用`foreign key`定义外键关联另一张表
+
+**缺点**：
+
+1. 影响增、删、改的效率(需要检查外键关系)
+2. 仅用于单节点数据库，不适用与分布式、集群场景
+3. 容易引发数据库的死锁问题，消耗性能
+
+```mysql
+alter table emp add constraint fk_emo_dept_id foreign key (dept_id) references dept(id);
+```
+
+
+
+**逻辑外键**
+
+**概念**：在业务层逻辑中，解决外键关联
+
+通过逻辑外键就可以方便地解决物理外键的问题
+
+### 一对一
+
+**案例**:用户 与身份证信息的关系
+
+**关系**:一对一关系，多用于单表拆分，将一张表的基础字段放在一张表中，其他字段放在另一张表中，以提升操作效率
+
+**实现**:在任意一方加入外键，关联另外一方的主键，并且设置外键为唯一的(UNIQUE)
+
+```mysql
+create table tb_user_card(
+                             id int unsigned  primary key auto_increment comment 'ID',
+                             nationality varchar(10) not null comment '民族',
+                             birthday date not null comment '生日',
+                             idcard char(18) not null comment '身份证号',
+                             issued varchar(20) not null comment '签发机关',
+                             expire_begin date not null comment '有效期限-开始',
+                             expire_end date comment '有效期限-结束',
+                             user_id int unsigned not null unique comment '用户ID',
+                             constraint fk_user_id foreign key (user_id) references tb_user(id)
+```
+
+
+
+### 多对多
+
+**案例**:学生与课程的关系
+
+**关系**:一个学生可以选修多门课程，一门课程也可以供多个学生选择
+
+**实现**:建立第三张中间表，中间表至少包含两个外键，分别关联两方主键
+
+### 案例
+
+**需求**
+
+- 根据参考资料中提供的《Talis智能学习辅助系统》页面原型，设计员工管理模块涉及到的表结构
+
+**步骤**
+
+- 阅读页面原型及需求文档，分析各个模块涉及到的表结构，及表结构之间的关系
+- 根据页面原型及需求文档，分析各个表结构中具体的字段及约束
+
+**分析**
+
+涉及到的模块有：
+
+- **部门管理**
+
+![img](./Web%E5%90%8E%E7%AB%AF-Tlias%E6%A1%88%E4%BE%8B-%E5%91%98%E5%B7%A5%E7%AE%A1%E7%90%86.assets/1787624647353-3.png)
+
+部门管理涉及到一张部门表，这个前面我们都已经设计过了 无需再进行设计了
+
+- **员工管理**
+
+![img](./Web%E5%90%8E%E7%AB%AF-Tlias%E6%A1%88%E4%BE%8B-%E5%91%98%E5%B7%A5%E7%AE%A1%E7%90%86.assets/1787624647353-1.png)
+
+上述在员工列表查询的页面原型，当我们点击 '新增员工' 按钮时，会弹出一个新增员工的表单，表单展示形式如下：
+
+![img](./Web%E5%90%8E%E7%AB%AF-Tlias%E6%A1%88%E4%BE%8B-%E5%91%98%E5%B7%A5%E7%AE%A1%E7%90%86.assets/1787624647353-2.png)
+
+在上述的页面原型中，我们可以看到，每一个员工是归属于某一个部门的，而一个部门下可以有多个员工，所以部门与员工之间的关系是一对多的关系
+
+从页面员工中，我们可以看到，员工还有工作经历的信息而每一个员工，是可以添加多个工作经历的 所以，工作经历我们可以再设计一张表，而员工与员工的工作经历之间的关系，是一对多的关系
+
+那么，这里总共会涉及三张表，分别是：部门表、员工表、员工工作经历表
+
+```mysql
+-- 部门表
+create table dept (
+  id int unsigned PRIMARY KEY AUTO_INCREMENT COMMENT 'ID, 主键',
+  name varchar(10) NOT NULL UNIQUE COMMENT '部门名称',
+  create_time datetime COMMENT '创建时间',
+  update_time datetime COMMENT '修改时间'
+) COMMENT '部门表';
+
+-- 员工表
+create table emp(
+    id int unsigned primary key auto_increment comment 'ID,主键',
+    username varchar(20) not null unique comment '用户名',
+    password varchar(50) default '123456' comment '密码',
+    name varchar(10) not null comment '姓名',
+    gender tinyint unsigned not null comment '性别, 1:男, 2:女',
+    phone char(11) not null unique comment '手机号',
+    job tinyint unsigned comment '职位, 1 班主任, 2 讲师 , 3 学工主管, 4 教研主管, 5 咨询师',
+    salary int unsigned comment '薪资',
+    image varchar(300) comment '头像',
+    entry_date date comment '入职日期',
+    dept_id int unsigned comment '部门ID',  -- 关联的是dept部门表的ID
+    create_time datetime comment '创建时间',
+    update_time datetime comment '修改时间'
+) comment '员工表';
+
+-- 员工工作经历表
+create table emp_expr(
+    id int unsigned primary key auto_increment comment 'ID, 主键',
+    emp_id  int unsigned null comment '员工ID', -- 关联的是emp员工表的ID
+    begin  date null comment '开始时间',
+    end date null comment '结束时间',
+    company varchar(50) null comment '公司名称',
+    job varchar(50) null comment '职位'
+) comment '工作经历';
+```
+
+## 多表查询
+
+查询时从多张表中获取所需数据
+
+单表查询的SQL语句：select  字段列表  from  表名;
+
+那么要执行多表查询，只需要使用逗号分隔多张表即可，如： select   字段列表  from  表1, 表2;而这会导致表1和表2的所有字段进行组合，会出现表一记录数×表二记录数条记录，这种现象称之为**笛卡尔积**
+
+### 内连接
+
+内连接查询的是两张表交集部分的数据
+
+```mysql
+-- 1.隐式内连接
+select 字段列表from 表1，表2 where 连接条件...;
+-- 2.显式内连接
+select 字段列表from 表1 [inner] join 表2 on 连接条件...
+```
+
+&gt; [!CAUTION]
+&gt;
+&gt; 一旦为表指定了别名，就要通过别名来指定字段名，而不能再使用表名了
+
+### 左外连接
+
+```mysql
+-- 1.左外连接
+select 字段列表 from 表1 left [outer] join 表2 on 连接条件 ...;
+```
+
+左外连接相当于查询表1(左表)的所有数据，当然也包含表1和表2交集部分的数据
+
+### 右外连接
+
+```mysql
+-- 2.右外连接
+select 字段列表 from 表1 right [outer] join 表2 on 连接条件 ...;
+```
+
+右外连接相当于查询表2(右表)的所有数据，当然也包含表1和表2交集部分的数据
+
+&gt; [!CAUTION]
+&gt;
+&gt; 左外连接和右外连接是可以相互替换的，只需要调整连接查询时SQL语句中表的先后顺序就可以了。</description><guid isPermaLink="true">https://Whitegveking.github.io/Whitegve-king.github.io/post/Web-hou-duan--Tlias-an-li---yuan-gong-guan-li.html</guid><pubDate>Mon, 31 Aug 2026 07:13:34 +0000</pubDate></item><item><title>Web后端-Tlias案例-部门管理</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/Web-hou-duan--Tlias-an-li---bu-men-guan-li.html</link><description># Web后端实战-Tlias案例
 
 ## 准备工作
 
