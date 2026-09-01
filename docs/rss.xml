@@ -1,5 +1,26 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Mon, 31 Aug 2026 07:14:01 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>Web后端-Tlias案例-员工管理</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/Web-hou-duan--Tlias-an-li---yuan-gong-guan-li.html</link><description># Web后端-Tlias案例-员工管理
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Tue, 01 Sep 2026 06:43:11 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>Web后端-Tlias案例-班级学生管理</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/Web-hou-duan--Tlias-an-li---ban-ji-xue-sheng-guan-li.html</link><description># 班级管理 重点笔记（结合代码）
+
+&gt; 模块：班级管理（`ClazzController` + `ClazzServiceImpl` + `ClazzMapper`）
+&gt; 基础路径：`/clazzs`　|　统一返回：`Result`（`code=1` 成功，`code=0` 失败）
+
+## 一、接口与实现概览
+
+| 接口                | 方法       | 路径                  | 核心逻辑                          |
+| ------------------- | ---------- | --------------------- | --------------------------------- |
+| 条件分页查询（2.1） | `page`     | `GET /clazzs`         | PageHelper + 动态条件             |
+| 查询所有员工（2.2） | `listAll`  | `GET /emps/list`      | 班主任下拉                        |
+| 新增（2.3）         | `save`     | `POST /clazzs`        | 自动补 `create/update_time`       |
+| 按ID查询（2.4）     | `findById` | `GET /clazzs/{id}`    | 主键查询                          |
+| 修改（2.5）         | `update`   | `PUT /clazzs`         | 动态 `&lt;set&gt;` + 刷新 `update_time` |
+| 删除（2.6）         | `delete`   | `DELETE /clazzs/{id}` | 先校验学生再删，事务回滚          |
+| 查询所有班级（3.1） | `listAll`  | `GET /clazzs/list`    | 学员下拉                          |
+
+## 二、怎么实现 &amp; 为什么这么实现
+
+### 1. 条件分页查询（`page`）
+
+- **实现**：`PageHelper.startPage(page, pageSize)` 启动分页，紧接着调用 `clazzMapper.list(clazzQueryParam)`，拿到 `List&lt;Clazz&gt;` 后强转为 `Page&lt;Clazz&gt;`，取出 `p.getTotal()`（总条数）和 `p.getResult()`（当前页），封装为 `PageResult&lt;Clazz&gt;`（`total` + `rows`）。</description><guid isPermaLink="true">https://Whitegveking.github.io/Whitegve-king.github.io/post/Web-hou-duan--Tlias-an-li---ban-ji-xue-sheng-guan-li.html</guid><pubDate>Tue, 01 Sep 2026 06:42:40 +0000</pubDate></item><item><title>Web后端-Tlias案例-员工管理</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/Web-hou-duan--Tlias-an-li---yuan-gong-guan-li.html</link><description># Web后端-Tlias案例-员工管理
 
 ## 多表关系
 

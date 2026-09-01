@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script src='https://blog.meekdai.com/Gmeek/plugins/GmeekBSZ.js'></script>
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/165184260?v=4&size=64"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# 班级管理 重点笔记（结合代码）
+
+> 模块：班级管理（`ClazzController` + `ClazzServiceImpl` + `ClazzMapper`）
+> 基础路径：`/clazzs`　|　统一返回：`Result`（`code=1` 成功，`code=0` 失败）
+
+## 一、接口与实现概览
+
+| 接口                | 方法       | 路径                  | 核心逻辑                          |
+| ------------------- | ---------- | --------------------- | --------------------------------- |
+| 条件分页查询（2.1） | `page`     | `GET /clazzs`         | PageHelper + 动态条件             |
+| 查询所有员工（2.2） | `listAll`  | `GET /emps/list`      | 班主任下拉                        |
+| 新增（2.3）         | `save`     | `POST /clazzs`        | 自动补 `create/update_time`       |
+| 按ID查询（2.4）     | `findById` | `GET /clazzs/{id}`    | 主键查询                          |
+| 修改（2.5）         | `update`   | `PUT /clazzs`         | 动态 `<set>` + 刷新 `update_time` |
+| 删除（2.6）         | `delete`   | `DELETE /clazzs/{id}` | 先校验学生再删，事务回滚          |
+| 查询所有班级（3.1） | `listAll`  | `GET /clazzs/list`    | 学员下拉                          |
+
+## 二、怎么实现 & 为什么这么实现
+
+### 1. 条件分页查询（`page`）
+
+- **实现**：`PageHelper.startPage(page, pageSize)` 启动分页，紧接着调用 `clazzMapper.list(clazzQueryParam)`，拿到 `List<Clazz>` 后强转为 `Page<Clazz>`，取出 `p.getTotal()`（总条数）和 `p.getResult()`（当前页），封装为 `PageResult<Clazz>`（`total` + `rows`）。">
+<meta property="og:title" content="Web后端-Tlias案例-班级学生管理">
+<meta property="og:description" content="# 班级管理 重点笔记（结合代码）
+
+> 模块：班级管理（`ClazzController` + `ClazzServiceImpl` + `ClazzMapper`）
+> 基础路径：`/clazzs`　|　统一返回：`Result`（`code=1` 成功，`code=0` 失败）
+
+## 一、接口与实现概览
+
+| 接口                | 方法       | 路径                  | 核心逻辑                          |
+| ------------------- | ---------- | --------------------- | --------------------------------- |
+| 条件分页查询（2.1） | `page`     | `GET /clazzs`         | PageHelper + 动态条件             |
+| 查询所有员工（2.2） | `listAll`  | `GET /emps/list`      | 班主任下拉                        |
+| 新增（2.3）         | `save`     | `POST /clazzs`        | 自动补 `create/update_time`       |
+| 按ID查询（2.4）     | `findById` | `GET /clazzs/{id}`    | 主键查询                          |
+| 修改（2.5）         | `update`   | `PUT /clazzs`         | 动态 `<set>` + 刷新 `update_time` |
+| 删除（2.6）         | `delete`   | `DELETE /clazzs/{id}` | 先校验学生再删，事务回滚          |
+| 查询所有班级（3.1） | `listAll`  | `GET /clazzs/list`    | 学员下拉                          |
+
+## 二、怎么实现 & 为什么这么实现
+
+### 1. 条件分页查询（`page`）
+
+- **实现**：`PageHelper.startPage(page, pageSize)` 启动分页，紧接着调用 `clazzMapper.list(clazzQueryParam)`，拿到 `List<Clazz>` 后强转为 `Page<Clazz>`，取出 `p.getTotal()`（总条数）和 `p.getResult()`（当前页），封装为 `PageResult<Clazz>`（`total` + `rows`）。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://Whitegveking.github.io/Whitegve-king.github.io/post/Web-hou-duan--Tlias-an-li---ban-ji-xue-sheng-guan-li.html">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/165184260?v=4&size=64">
+<title>Web后端-Tlias案例-班级学生管理</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">Web后端-Tlias案例-班级学生管理</h1>
+<div class="title-right">
+    <a href="https://Whitegveking.github.io/Whitegve-king.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/Whitegveking/Whitegve-king.github.io/issues/19" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>班级管理 重点笔记（结合代码）</h1>
+<blockquote>
+<p>模块：班级管理（<code class="notranslate">ClazzController</code> + <code class="notranslate">ClazzServiceImpl</code> + <code class="notranslate">ClazzMapper</code>）<br>
+基础路径：<code class="notranslate">/clazzs</code>　|　统一返回：<code class="notranslate">Result</code>（<code class="notranslate">code=1</code> 成功，<code class="notranslate">code=0</code> 失败）</p>
+</blockquote>
+<h2>一、接口与实现概览</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>接口</th>
+<th>方法</th>
+<th>路径</th>
+<th>核心逻辑</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>条件分页查询（2.1）</td>
+<td><code class="notranslate">page</code></td>
+<td><code class="notranslate">GET /clazzs</code></td>
+<td>PageHelper + 动态条件</td>
+</tr>
+<tr>
+<td>查询所有员工（2.2）</td>
+<td><code class="notranslate">listAll</code></td>
+<td><code class="notranslate">GET /emps/list</code></td>
+<td>班主任下拉</td>
+</tr>
+<tr>
+<td>新增（2.3）</td>
+<td><code class="notranslate">save</code></td>
+<td><code class="notranslate">POST /clazzs</code></td>
+<td>自动补 <code class="notranslate">create/update_time</code></td>
+</tr>
+<tr>
+<td>按ID查询（2.4）</td>
+<td><code class="notranslate">findById</code></td>
+<td><code class="notranslate">GET /clazzs/{id}</code></td>
+<td>主键查询</td>
+</tr>
+<tr>
+<td>修改（2.5）</td>
+<td><code class="notranslate">update</code></td>
+<td><code class="notranslate">PUT /clazzs</code></td>
+<td>动态 <code class="notranslate">&lt;set&gt;</code> + 刷新 <code class="notranslate">update_time</code></td>
+</tr>
+<tr>
+<td>删除（2.6）</td>
+<td><code class="notranslate">delete</code></td>
+<td><code class="notranslate">DELETE /clazzs/{id}</code></td>
+<td>先校验学生再删，事务回滚</td>
+</tr>
+<tr>
+<td>查询所有班级（3.1）</td>
+<td><code class="notranslate">listAll</code></td>
+<td><code class="notranslate">GET /clazzs/list</code></td>
+<td>学员下拉</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2>二、怎么实现 &amp; 为什么这么实现</h2>
+<h3>1. 条件分页查询（<code class="notranslate">page</code>）</h3>
+<ul>
+<li><strong>实现</strong>：<code class="notranslate">PageHelper.startPage(page, pageSize)</code> 启动分页，紧接着调用 <code class="notranslate">clazzMapper.list(clazzQueryParam)</code>，拿到 <code class="notranslate">List&lt;Clazz&gt;</code> 后强转为 <code class="notranslate">Page&lt;Clazz&gt;</code>，取出 <code class="notranslate">p.getTotal()</code>（总条数）和 <code class="notranslate">p.getResult()</code>（当前页），封装为 <code class="notranslate">PageResult&lt;Clazz&gt;</code>（<code class="notranslate">total</code> + <code class="notranslate">rows</code>）。</li>
+<li><strong>为什么</strong>：直接返回 <code class="notranslate">List</code> 前端拿不到总记录数，无法渲染分页组件；PageHelper 通过拦截器改写 SQL，自动生成 <code class="notranslate">count</code> 与 <code class="notranslate">limit</code>，减少手写分页代码。</li>
+</ul>
+<h3>2. 动态条件拼接（<code class="notranslate">ClazzMapper.xml #list</code>）</h3>
+<ul>
+<li><strong>实现</strong>：<code class="notranslate">&lt;where&gt;</code> + <code class="notranslate">&lt;if&gt;</code> 动态拼接：
+<ul>
+<li><code class="notranslate">name</code> 非空 → <code class="notranslate">c.name like concat('%', #{name}, '%')</code></li>
+<li><code class="notranslate">begin</code> 非空 → <code class="notranslate">c.end_date &gt;= #{begin}</code></li>
+<li><code class="notranslate">end</code> 非空 → <code class="notranslate">c.end_date &lt;= #{end}</code></li>
+<li>其余 <code class="notranslate">order by c.update_time desc</code></li>
+</ul>
+</li>
+<li><strong>实现回显字段</strong>：<code class="notranslate">left join emp e on c.master_id = e.id</code>，取 <code class="notranslate">e.name as masterName</code>；用 <code class="notranslate">case when</code> 结合 <code class="notranslate">curdate()</code> 实时算 <code class="notranslate">status</code>（未开班/已开班/已结课）。</li>
+<li><strong>为什么</strong>：<code class="notranslate">master_id</code> 只存 ID，前端要显示姓名，必须联表；<code class="notranslate">status</code> 不是表字段，用日期动态判断节省一张状态表，且不会因时间推移过期。</li>
+</ul>
+<h3>3. 新增（<code class="notranslate">save</code>）</h3>
+<ul>
+<li><strong>实现</strong>：<code class="notranslate">clazz.setCreateTime(now)</code>、<code class="notranslate">setUpdateTime(now)</code>，再 <code class="notranslate">clazzMapper.add(clazz)</code>。</li>
+<li><strong>为什么</strong>：时间由后端统一生成，前端不用传，保证各端格式一致（<code class="notranslate">LocalDateTime</code>）。</li>
+</ul>
+<h3>4. 修改（<code class="notranslate">update</code>）</h3>
+<ul>
+<li><strong>实现</strong>：<code class="notranslate">clazz.setUpdateTime(now)</code>，走 <code class="notranslate">clazzMapper.update</code>（XML 中 <code class="notranslate">&lt;set&gt;</code> + <code class="notranslate">&lt;if&gt;</code>，仅更新非空字段），<code class="notranslate">where id = #{id}</code>。</li>
+<li><strong>为什么</strong>：修改接口只传部分字段（如只改教室），<code class="notranslate">&lt;set&gt;</code> 不会把未传字段覆盖成 null。</li>
+</ul>
+<h3>5. 删除（<code class="notranslate">deleteById</code>）— 重点</h3>
+<ul>
+<li><strong>实现</strong>：
+<ol>
+<li><code class="notranslate">studentMapper.countByClazzId(id)</code> 统计该班级学生数量；</li>
+<li>若 <code class="notranslate">&gt; 0</code> 抛 <code class="notranslate">BusinessException("该班级下有学生, 不能直接删除")</code>；</li>
+<li>否则 <code class="notranslate">clazzMapper.deleteById(id)</code>；</li>
+<li>方法加 <code class="notranslate">@Transactional(rollbackFor = Exception.class)</code>。</li>
+</ol>
+</li>
+<li><strong>为什么</strong>：<code class="notranslate">student.clazz_id</code> 外键指向班级，若不校验直接删班，学生数据会指向不存在的班级（脏数据）；加事务保证“校验+删除”要么都成功要么都回滚，异常时 <code class="notranslate">BusinessException</code> 被 <code class="notranslate">GlobalExceptionHandler</code> 捕获返回 <code class="notranslate">Result.error(...)</code>。</li>
+</ul>
+<h3>6. 查询所有班级（<code class="notranslate">listAll</code>）</h3>
+<ul>
+<li><strong>实现</strong>：<code class="notranslate">clazzMapper.listAll()</code> 返回 <code class="notranslate">List&lt;Clazz&gt;</code>，按 <code class="notranslate">update_time desc</code>。</li>
+<li><strong>为什么</strong>：给学员管理界面做下拉框，数量少、无需分页。</li>
+</ul>
+<h2>三、容易出现的报错 &amp; 解决</h2>
+<h3>1. <code class="notranslate">BusinessException：该班级下有学生，不能直接删除</code></h3>
+<ul>
+<li><strong>原因</strong>：班级下仍有学生，前端直接删班。</li>
+<li><strong>解决</strong>：删除前校验 <code class="notranslate">countByClazzId</code>，用业务异常拦截并展示“不能直接删除”。这属于数据完整性保护，属预期行为。</li>
+</ul>
+<h3>2. 时间格式报错 <code class="notranslate">Failed to convert ... LocalDate</code></h3>
+<ul>
+<li><strong>原因</strong>：前端传 <code class="notranslate">yyyy-MM-dd</code>，而字段是 <code class="notranslate">LocalDate</code>，默认无法自动转换。</li>
+<li><strong>解决</strong>：在 <code class="notranslate">beginDate</code>/<code class="notranslate">endDate</code> 上加 <code class="notranslate">@DateTimeFormat(pattern = "yyyy-MM-dd")</code>；查询参数 <code class="notranslate">begin</code>/<code class="notranslate">end</code> 同样加该注解。</li>
+</ul>
+<h3>3. 查询结果 <code class="notranslate">status</code>、<code class="notranslate">masterName</code> 为 null</h3>
+<ul>
+<li><strong>原因</strong>：<code class="notranslate">status</code>、<code class="notranslate">masterName</code> 是非表字段，<code class="notranslate">list</code> 里 <code class="notranslate">select c.*</code> 未包含它们，或 <code class="notranslate">&lt;resultType&gt;</code> 映射依赖 <code class="notranslate">map-underscore-to-camel-case</code>。</li>
+<li><strong>解决</strong>：<code class="notranslate">list</code> 中显式 <code class="notranslate">e.name as masterName</code> 与 <code class="notranslate">case ... end as status</code>；确保 <code class="notranslate">application.yml</code> 开启 <code class="notranslate">map-underscore-to-camel-case: true</code>。</li>
+</ul>
+<h3>4. 分页查询不带分页（返回全量）</h3>
+<ul>
+<li><strong>原因</strong>：<code class="notranslate">PageHelper.startPage</code> 之后又执行了别的查询，或分页参数 <code class="notranslate">page/pageSize</code> 未绑上。</li>
+<li><strong>解决</strong>：<code class="notranslate">startPage</code> 后紧跟目标查询；<code class="notranslate">ClazzQueryParam</code> 设置默认值 <code class="notranslate">page=1、pageSize=10</code>；避免在 <code class="notranslate">page</code> 方法内部先跑其它 SQL。</li>
+</ul>
+<h3>5. <code class="notranslate">update</code> 把不该清的字段置空</h3>
+<ul>
+<li><strong>原因</strong>：<code class="notranslate">&lt;set&gt;</code> 里某字段的 <code class="notranslate">&lt;if test="... != null"&gt;</code> 漏掉，或前端传了 null。</li>
+<li><strong>解决</strong>：所有可空字段都加 <code class="notranslate">&lt;if test="xx != null"&gt;</code>（字符串再加 <code class="notranslate">and xx != ''</code>），只更新非空字段。</li>
+</ul>
+<h2>四、关键 POJO 枚举说明</h2>
+<ul>
+<li><code class="notranslate">subject</code>：1:java、2:前端、3:大数据、4:Python、5:Go、6:嵌入式</li>
+<li><code class="notranslate">status</code>：未开班（<code class="notranslate">begin_date &gt; curdate()</code>）、已结课（<code class="notranslate">end_date &lt; curdate()</code>）、已开班（其它）</li>
+</ul>
+<h2>五、相关类</h2>
+<ul>
+<li>Controller：<code class="notranslate">com.cyy.tliaswebmanagement.controller.ClazzController</code></li>
+<li>Service：<code class="notranslate">com.cyy.tliaswebmanagement.service.impl.ClazzServiceImpl</code></li>
+<li>Mapper：<code class="notranslate">ClazzMapper</code> + <code class="notranslate">ClazzMapper.xml</code></li>
+<li>POJO：<code class="notranslate">Clazz</code>、<code class="notranslate">ClazzQueryParam</code>、<code class="notranslate">ClazzOption</code></li>
+</ul>
+<h1>学员管理 重点笔记（结合代码）</h1>
+<blockquote>
+<p>模块：学员管理（<code class="notranslate">StudentController</code> + <code class="notranslate">StudentServiceImpl</code> + <code class="notranslate">StudentMapper</code>）<br>
+基础路径：<code class="notranslate">/students</code>　|　统一返回：<code class="notranslate">Result</code>（<code class="notranslate">code=1</code> 成功，<code class="notranslate">code=0</code> 失败）</p>
+</blockquote>
+<h2>一、接口与实现概览</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>接口</th>
+<th>方法</th>
+<th>路径</th>
+<th>核心逻辑</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>查询所有班级（3.1）</td>
+<td><code class="notranslate">listAll</code></td>
+<td><code class="notranslate">GET /clazzs/list</code></td>
+<td>班级下拉</td>
+</tr>
+<tr>
+<td>条件分页查询（3.2）</td>
+<td><code class="notranslate">page</code></td>
+<td><code class="notranslate">GET /students</code></td>
+<td>PageHelper + 条件过滤</td>
+</tr>
+<tr>
+<td>新增（3.3）</td>
+<td><code class="notranslate">save</code></td>
+<td><code class="notranslate">POST /students</code></td>
+<td>自动补时间字段</td>
+</tr>
+<tr>
+<td>按ID查询（3.4）</td>
+<td><code class="notranslate">get</code></td>
+<td><code class="notranslate">GET /students/{id}</code></td>
+<td>主键查询</td>
+</tr>
+<tr>
+<td>修改（3.5）</td>
+<td><code class="notranslate">update</code></td>
+<td><code class="notranslate">PUT /students</code></td>
+<td>动态 <code class="notranslate">&lt;set&gt;</code></td>
+</tr>
+<tr>
+<td>批量删除（3.6）</td>
+<td><code class="notranslate">delete</code></td>
+<td><code class="notranslate">DELETE /students/{ids}</code></td>
+<td><code class="notranslate">foreach</code> in 批量</td>
+</tr>
+<tr>
+<td>违纪处理（3.7）</td>
+<td><code class="notranslate">updateViolation</code></td>
+<td><code class="notranslate">PUT /students/violation/{id}/{score}</code></td>
+<td>累加违纪次数/分数</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2>二、怎么实现 &amp; 为什么这么实现</h2>
+<h3>1. 条件分页查询（<code class="notranslate">page</code>）</h3>
+<ul>
+<li><strong>实现</strong>：<code class="notranslate">PageHelper.startPage(page, pageSize)</code> → <code class="notranslate">studentMapper.list(param)</code> → 强转 <code class="notranslate">Page&lt;Student&gt;</code> → <code class="notranslate">new PageResult&lt;&gt;(p.getTotal(), p.getResult())</code>。</li>
+<li><strong>为什么</strong>：与班级一致，返回 <code class="notranslate">total + rows</code> 供前端分页组件使用。</li>
+<li><strong>注意</strong>：<code class="notranslate">StudentQueryParam</code> 的 <code class="notranslate">name/degree/clazzId</code> 为可选；当前 <code class="notranslate">StudentMapper.xml #list</code> 是 <code class="notranslate">SELECT * FROM student</code>，<strong>尚未做条件过滤与联表</strong>，所以 <code class="notranslate">name/degree/clazzId</code>/<code class="notranslate">clazzName</code> 实际不生效，需后续完善（见问题 5）。</li>
+</ul>
+<h3>2. 新增（<code class="notranslate">save</code>）</h3>
+<ul>
+<li><strong>实现</strong>：<code class="notranslate">setCreateTime/setUpdateTime(now)</code> → <code class="notranslate">studentMapper.add(student)</code>。</li>
+<li><strong>为什么</strong>：统一后端生成时间；<code class="notranslate">clazz_id</code> 关联班级，<code class="notranslate">violation_count/violation_score</code> 默认由 DB 或前端决定。</li>
+</ul>
+<h3>3. 修改（<code class="notranslate">update</code>）</h3>
+<ul>
+<li><strong>实现</strong>：<code class="notranslate">setUpdateTime(now)</code> → <code class="notranslate">studentMapper.update(student)</code>；XML <code class="notranslate">&lt;set&gt;</code> + <code class="notranslate">&lt;if&gt;</code> 仅更新非空字段，含 <code class="notranslate">violation_count/violation_score</code>。</li>
+<li><strong>为什么</strong>：支持部分字段更新，同时违纪接口可直接复用 <code class="notranslate">update</code> 写回违纪数据。</li>
+</ul>
+<h3>4. 批量删除（<code class="notranslate">delete</code>）</h3>
+<ul>
+<li><strong>实现</strong>：<code class="notranslate">@Transactional</code> → <code class="notranslate">studentMapper.deleteById(ids)</code>；XML 用 <code class="notranslate">&lt;foreach&gt;</code> 生成 <code class="notranslate">id in (?,?,?)</code>，<code class="notranslate">collection="ids"</code>。</li>
+<li><strong>为什么</strong>：前端勾选多行删除，一次 SQL 删除，<code class="notranslate">foreach</code> 避免拼接字符串 SQL 注入；加事务避免部分删除成功、部分失败。</li>
+</ul>
+<h3>5. 违纪处理（<code class="notranslate">updateViolation</code>）— 重点</h3>
+<ul>
+<li><strong>实现</strong>：
+<ol>
+<li><code class="notranslate">getById(id)</code> 查学员；</li>
+<li><code class="notranslate">violationCount</code> 为空则当作 0，<code class="notranslate">count + 1</code>；<code class="notranslate">violationScore</code> 为空则当作 0，<code class="notranslate">scoreSum + score</code>（注意 <code class="notranslate">score</code> 是本次扣分，路径参数，可为负？按业务应为正数扣分）；</li>
+<li>写入 <code class="notranslate">violation_count</code>、<code class="notranslate">violation_score</code>，刷新 <code class="notranslate">update_time</code>；</li>
+<li><code class="notranslate">studentMapper.update(student)</code>。</li>
+</ol>
+</li>
+<li><strong>为什么</strong>：采用<strong>读-改-写</strong>而不是直接 <code class="notranslate">update set violation_count = violation_count + 1</code>，是因为需要把两次字段都作为整体更新，且走了统一 <code class="notranslate">update</code>，逻辑简单。但非原子，高并发下会丢更新（见问题 6）。</li>
+<li><strong>类型注意</strong>：<code class="notranslate">violationCount/violationScore</code> 是 <code class="notranslate">Short</code>，累加后需强转 <code class="notranslate">(short)</code>。</li>
+</ul>
+<h2>三、容易出现的报错 &amp; 解决</h2>
+<h3>1. <code class="notranslate">violation_count/violation_score</code> 报 null 指针</h3>
+<ul>
+<li><strong>原因</strong>：新增学员时未初始化，<code class="notranslate">updateViolation</code> 里直接 <code class="notranslate">student.getViolationCount()</code> 拿到 null。</li>
+<li><strong>解决</strong>：<code class="notranslate">count = student.getViolationCount() == null ? 0 : student.getViolationCount()</code>。</li>
+</ul>
+<h3>2. 类型转换错误 <code class="notranslate">int cannot be converted to Short</code></h3>
+<ul>
+<li><strong>原因</strong>：<code class="notranslate">count + 1</code> 结果是 <code class="notranslate">int</code>，字段是 <code class="notranslate">Short</code>。</li>
+<li><strong>解决</strong>：<code class="notranslate">student.setViolationCount((short) (count + 1))</code>、<code class="notranslate">setViolationScore((short)(scoreSum + score))</code>。</li>
+</ul>
+<h3>3. 批量删除 <code class="notranslate">in</code> 语法错误 / 空列表</h3>
+<ul>
+<li><strong>原因</strong>：<code class="notranslate">ids</code> 为空时 <code class="notranslate">&lt;foreach&gt;</code> 生成 <code class="notranslate">in ()</code> 报错。</li>
+<li><strong>解决</strong>：在 Service 判断 <code class="notranslate">ids</code> 非空再删除；或前端保证至少选一条。</li>
+</ul>
+<h3>4. <code class="notranslate">@PathVariable List&lt;Integer&gt; ids</code> 绑定失败</h3>
+<ul>
+<li><strong>原因</strong>：路径 <code class="notranslate">/students/1,2,3</code> 中逗号分隔，需框架自动拆分，部分环境不识别。</li>
+<li><strong>解决</strong>：保证请求路径格式如 <code class="notranslate">/students/1,2,3</code>；Spring Boot 默认支持逗号分隔转 <code class="notranslate">List</code>。若不行，改用 <code class="notranslate">@RequestParam</code> <code class="notranslate">ids=1,2,3</code>。</li>
+</ul>
+<h3>5. <code class="notranslate">name/degree/clazzId</code> 查询条件不生效、<code class="notranslate">clazzName</code> 为 null</h3>
+<ul>
+<li>
+<p><strong>原因</strong>：当前 <code class="notranslate">#list</code> 是 <code class="notranslate">SELECT * FROM student</code>，未拼接 <code class="notranslate">&lt;where&gt;</code>，也未 <code class="notranslate">left join clazz</code>。</p>
+</li>
+<li>
+<p><strong>解决</strong>：参考 <code class="notranslate">ClazzMapper.xml</code>，把 <code class="notranslate">#list</code> 改为：</p>
+<div class="highlight highlight-text-xml"><pre class="notranslate">select s.*, c.name as clazzName
+from student s left join clazz c on s.clazz_id = c.id
+&lt;<span class="pl-ent">where</span>&gt;
+  &lt;<span class="pl-ent">if</span> <span class="pl-e">test</span>=<span class="pl-s"><span class="pl-pds">"</span>name != null and name != ''<span class="pl-pds">"</span></span>&gt;and s.name like concat('%',#{name},'%')&lt;/<span class="pl-ent">if</span>&gt;
+  &lt;<span class="pl-ent">if</span> <span class="pl-e">test</span>=<span class="pl-s"><span class="pl-pds">"</span>degree != null<span class="pl-pds">"</span></span>&gt;and s.degree = #{degree}&lt;/<span class="pl-ent">if</span>&gt;
+  &lt;<span class="pl-ent">if</span> <span class="pl-e">test</span>=<span class="pl-s"><span class="pl-pds">"</span>clazzId != null<span class="pl-pds">"</span></span>&gt;and s.clazz_id = #{clazzId}&lt;/<span class="pl-ent">if</span>&gt;
+&lt;/<span class="pl-ent">where</span>&gt;
+order by s.update_time desc</pre></div>
+</li>
+</ul>
+<h3>6. 违纪累加并发丢更新（隐患）</h3>
+<ul>
+<li>
+<p><strong>原因</strong>：<code class="notranslate">updateViolation</code> 是“查出来再改回去”，两个请求同时读取相同旧值，后写覆盖前写。</p>
+</li>
+<li>
+<p><strong>解决（可选）</strong>：用 SQL 原子更新：</p>
+<div class="highlight highlight-text-xml"><pre class="notranslate">update student set violation_count = violation_count + 1,
+violation_score = violation_score + #{score}, update_time = now() where id = #{id}</pre></div>
+<p>或加乐观锁/分布式锁。</p>
+</li>
+</ul>
+<h3>7. <code class="notranslate">update</code> 误把 <code class="notranslate">clazzId</code> 或违纪字段置空</h3>
+<ul>
+<li><strong>原因</strong>：<code class="notranslate">&lt;set&gt;</code> 中字段 <code class="notranslate">&lt;if&gt;</code> 漏写，或前端传入 null。</li>
+<li><strong>解决</strong>：给所有可空字段都加 <code class="notranslate">&lt;if test="xx != null"&gt;</code>（字符串加 <code class="notranslate">and xx != ''</code>）。</li>
+</ul>
+<h2>四、关键 POJO 枚举说明</h2>
+<ul>
+<li><code class="notranslate">gender</code>：1:男、2:女</li>
+<li><code class="notranslate">degree</code>：1:初中、2:高中、3:大专、4:本科、5:硕士、6:博士</li>
+<li><code class="notranslate">isCollege</code>：1:来自院校、0:否</li>
+</ul>
+<h2>五、相关类</h2>
+<ul>
+<li>Controller：<code class="notranslate">com.cyy.tliaswebmanagement.controller.StudentController</code></li>
+<li>Service：<code class="notranslate">com.cyy.tliaswebmanagement.service.impl.StudentServiceImpl</code></li>
+<li>Mapper：<code class="notranslate">StudentMapper</code> + <code class="notranslate">StudentMapper.xml</code></li>
+<li>POJO：<code class="notranslate">Student</code>、<code class="notranslate">StudentQueryParam</code>、<code class="notranslate">StudentOption</code></li>
+</ul>
+<h1>学员/员工信息统计 重点笔记（结合代码）</h1>
+<blockquote>
+<p>模块：统计报表（<code class="notranslate">ReportController</code> + <code class="notranslate">EmpServiceImpl</code> / <code class="notranslate">StudentServiceImpl</code> / <code class="notranslate">ClazzServiceImpl</code> + 对应 Mapper）<br>
+基础路径：<code class="notranslate">/report</code>　|　统一返回：<code class="notranslate">Result</code>（<code class="notranslate">code=1</code> 成功，<code class="notranslate">code=0</code> 失败）</p>
+</blockquote>
+<h2>一、接口与实现概览</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>接口</th>
+<th>方法</th>
+<th>路径</th>
+<th>用途</th>
+<th>底层 Mapper</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>员工职位分布</td>
+<td><code class="notranslate">getEmpJobData</code></td>
+<td><code class="notranslate">GET /report/empJobData</code></td>
+<td>柱状图</td>
+<td><code class="notranslate">EmpMapper.countJob</code></td>
+</tr>
+<tr>
+<td>员工男女比例</td>
+<td><code class="notranslate">getEmpGenderData</code></td>
+<td><code class="notranslate">GET /report/empGenderData</code></td>
+<td>饼图</td>
+<td><code class="notranslate">EmpMapper.countGender</code></td>
+</tr>
+<tr>
+<td>学员学历分布</td>
+<td><code class="notranslate">getStudentDegreeData</code></td>
+<td><code class="notranslate">GET /report/studentDegreeData</code></td>
+<td>柱状图</td>
+<td><code class="notranslate">StudentMapper.countDegree</code></td>
+</tr>
+<tr>
+<td>班级人数分布</td>
+<td><code class="notranslate">getStudentCountData</code></td>
+<td><code class="notranslate">GET /report/studentCountData</code></td>
+<td>柱状图</td>
+<td><code class="notranslate">ClazzMapper.countStudent</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2>二、怎么实现 &amp; 为什么这么实现</h2>
+<h3>1. 员工职位分布（<code class="notranslate">countJob</code>）</h3>
+<ul>
+<li><strong>实现</strong>：<code class="notranslate">EmpMapper.countJob()</code> 返回每项为 <code class="notranslate">{job, count}</code> 的 <code class="notranslate">List&lt;Map&gt;</code>；在 Service 里定义 <code class="notranslate">job 编号→名称</code> 的 Map（1班主任 2讲师 3学工主管 4教研主管 5咨询师），用 <code class="notranslate">toInteger</code> 把 <code class="notranslate">job</code>、<code class="notranslate">count</code> 转成 <code class="notranslate">Integer</code>，拆成 <code class="notranslate">jobList</code> 与 <code class="notranslate">dataList</code>，封装成 <code class="notranslate">JobOption</code>。</li>
+<li><strong>为什么</strong>：数据库只存职位编号，前端图表要显示中文名称，所以在 Service 层做“编号→名称”翻译；拆成两个并列 List 便于前端直接渲染柱状图 X 轴与 Y 轴。</li>
+</ul>
+<h3>2. 员工男女比例（<code class="notranslate">countGender</code>）</h3>
+<ul>
+<li><strong>实现</strong>：<code class="notranslate">countGender()</code> 返回 <code class="notranslate">{gender, count}</code>；Service 用 <code class="notranslate">gender→名称</code> Map（1男 2女），组装成 <code class="notranslate">List&lt;Map&gt;</code>，每项 <code class="notranslate">{name, value}</code>。</li>
+<li><strong>为什么</strong>：饼图通常要 <code class="notranslate">name/value</code> 结构，因此把性别编号翻译成中文并转为标准结构。</li>
+</ul>
+<h3>3. 学员学历分布（<code class="notranslate">countDegree</code>）</h3>
+<ul>
+<li><strong>实现</strong>：<code class="notranslate">StudentMapper.countDegree()</code> 用 SQL <code class="notranslate">case degree when 1 then '初中' ... else '其他' end as name, count(*) as value ... group by degree order by degree</code>，结果直接映射到 <code class="notranslate">StudentOption</code>（含 <code class="notranslate">name</code>、<code class="notranslate">value</code>）。</li>
+<li><strong>为什么</strong>：学历编号到中文映射直接放到 SQL，更省事，且 <code class="notranslate">group by degree</code> 保证每种学历一行。</li>
+</ul>
+<h3>4. 班级人数分布（<code class="notranslate">countStudent</code>）</h3>
+<ul>
+<li><strong>实现</strong>：<code class="notranslate">ClazzMapper.countStudent()</code> 用 <code class="notranslate">left join student s on c.id = s.clazz_id</code> + <code class="notranslate">group by c.name</code>，<code class="notranslate">count(s.id)</code> 统计人数；<code class="notranslate">ClazzServiceImpl.countStudent()</code> 遍历 <code class="notranslate">List&lt;Map&gt;</code>，把 <code class="notranslate">name</code>/<code class="notranslate">count</code> 分别放入 <code class="notranslate">clazzList</code>/<code class="notranslate">dataList</code>，封装为 <code class="notranslate">ClazzOption</code>。</li>
+<li><strong>为什么</strong>：用户希望统计“每个班级有多少学生”，用 <code class="notranslate">left join</code> 保留没有学生的班级（count=0），<code class="notranslate">group by c.name</code> 按班级聚合。</li>
+</ul>
+<h2>三、统计层面共用的细节</h2>
+<ul>
+<li><strong><code class="notranslate">toInteger</code></strong>：数据库 <code class="notranslate">count</code> 常为 <code class="notranslate">Long</code> 或 <code class="notranslate">BigInteger</code>，<code class="notranslate">name</code>/<code class="notranslate">gender</code>/<code class="notranslate">job</code> 可能为数字字符串，统一转 <code class="notranslate">Integer</code>，不支持 Number 时 <code class="notranslate">parseInt</code>，失败返回 <code class="notranslate">null</code>，避免 <code class="notranslate">ClassCastException</code>。</li>
+<li><strong>封装对象</strong>：
+<ul>
+<li><code class="notranslate">JobOption</code>：<code class="notranslate">jobList</code> + <code class="notranslate">dataList</code></li>
+<li><code class="notranslate">StudentOption</code>：<code class="notranslate">name</code> + <code class="notranslate">value</code></li>
+<li><code class="notranslate">ClazzOption</code>：<code class="notranslate">clazzList</code> + <code class="notranslate">dataList</code></li>
+</ul>
+</li>
+</ul>
+<h2>四、容易出现的报错 &amp; 解决</h2>
+<h3>1. <code class="notranslate">ClassCastException</code>：<code class="notranslate">job</code>/<code class="notranslate">count</code> 类型不一致</h3>
+<ul>
+<li><strong>原因</strong>：MyBatis 对 <code class="notranslate">count(*)</code> 返回 <code class="notranslate">Long</code>，不同数据库/驱动可能返回 <code class="notranslate">BigInteger</code>，强转 <code class="notranslate">Integer</code> 会抛异常。</li>
+<li><strong>解决</strong>：统一用 <code class="notranslate">toInteger(Object)</code>：<code class="notranslate">Number</code> 则 <code class="notranslate">intValue()</code>，字符串则 <code class="notranslate">parseInt</code>，无法转换返回 <code class="notranslate">null</code>。</li>
+</ul>
+<h3>2. <code class="notranslate">Map.get("name")</code> 取到 null / 键名大小写不一致</h3>
+<ul>
+<li><strong>原因</strong>：SQL 别名 <code class="notranslate">as name</code>、<code class="notranslate">as count</code> 大小写或数据库返回大小写与代码 <code class="notranslate">get("name")</code> 不一致；或 <code class="notranslate">map-underscore-to-camel-case</code> 影响。</li>
+<li><strong>解决</strong>：SQL 别名固定小写且与代码一致；规避使用下划线别名（不要用 <code class="notranslate">as total_count</code> 再用 <code class="notranslate">get("total_count")</code>，不同驱动键名不同），最稳妥的是在 SQL 里别名与代码 key 完全一致。</li>
+</ul>
+<h3>3. <code class="notranslate">group by</code> 非聚合列报错（<code class="notranslate">ONLY_FULL_GROUP_BY</code>）</h3>
+<ul>
+<li><strong>原因</strong>：MySQL <code class="notranslate">sql_mode=ONLY_FULL_GROUP_BY</code> 下，<code class="notranslate">select</code> 的列必须都在 <code class="notranslate">group by</code> 里或用聚合函数。</li>
+<li><strong>解决</strong>：<code class="notranslate">countJob</code> 用 <code class="notranslate">group by job</code>、<code class="notranslate">countGender</code> 用 <code class="notranslate">group by gender</code>、<code class="notranslate">countDegree</code> 用 <code class="notranslate">group by degree</code>、<code class="notranslate">countStudent</code> 用 <code class="notranslate">group by c.name</code>，确保 select 的非聚合列都被 group by 覆盖。</li>
+</ul>
+<h3>4. 统计结果顺序不稳定</h3>
+<ul>
+<li><strong>原因</strong>：未加 <code class="notranslate">order by</code>，前端渲染可能乱序。</li>
+<li><strong>解决</strong>：<code class="notranslate">countDegree</code> 加 <code class="notranslate">order by degree</code>，<code class="notranslate">countStudent</code> 加 <code class="notranslate">order by count desc</code>；<code class="notranslate">countJob</code>/<code class="notranslate">countGender</code> 可自行按需排序。</li>
+</ul>
+<h3>5. 班级人数统计漏掉 0 人班级</h3>
+<ul>
+<li><strong>原因</strong>：用 <code class="notranslate">inner join</code> 或只统计有学生的班级。</li>
+<li><strong>解决</strong>：用 <code class="notranslate">left join</code>，即使某班级无学生也会出现（count=0）。</li>
+</ul>
+<h3>6. 前端图表标签为数字（如“1”“2”而非“班主任/男/本科”）</h3>
+<ul>
+<li><strong>原因</strong>：后端直接返回编号，未做翻译。</li>
+<li><strong>解决</strong>：在 Service 层翻译，或 SQL <code class="notranslate">case</code> 映射；职位、性别在 Java 层翻译，学历在 SQL 层翻译。</li>
+</ul>
+<h2>五、相关类</h2>
+<ul>
+<li>Controller：<code class="notranslate">com.cyy.tliaswebmanagement.controller.ReportController</code></li>
+<li>Service：<code class="notranslate">EmpServiceImpl</code> / <code class="notranslate">StudentServiceImpl</code> / <code class="notranslate">ClazzServiceImpl</code></li>
+<li>Mapper：<code class="notranslate">EmpMapper.xml</code> / <code class="notranslate">StudentMapper.xml</code> / <code class="notranslate">ClazzMapper.xml</code></li>
+<li>POJO：<code class="notranslate">JobOption</code>、<code class="notranslate">StudentOption</code>、<code class="notranslate">ClazzOption</code></li>
+</ul></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://Whitegveking.github.io/Whitegve-king.github.io">Cyy的JAVA学习日记</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","Whitegveking/Whitegve-king.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>
+
+</html>
