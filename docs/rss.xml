@@ -1,5 +1,45 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Tue, 01 Sep 2026 06:43:11 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>Web后端-Tlias案例-班级学生管理</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/Web-hou-duan--Tlias-an-li---ban-ji-xue-sheng-guan-li.html</link><description># 班级管理 重点笔记（结合代码）
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Cyy的JAVA学习日记</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link><description>由于突然转入JAVA（虽然感觉也还行），打算记录一下JAVA的学习历程以及碰到的问题，顺便也可以当做一本工作日志，我也不知道能坚持多久，不过希望我能每个工作日都更新！加油！</description><copyright>Cyy的JAVA学习日记</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/165184260?v=4&amp;size=64</url><title>avatar</title><link>https://Whitegveking.github.io/Whitegve-king.github.io</link></image><lastBuildDate>Mon, 07 Sep 2026 01:11:53 +0000</lastBuildDate><managingEditor>Cyy的JAVA学习日记</managingEditor><ttl>60</ttl><webMaster>Cyy的JAVA学习日记</webMaster><item><title>SpringAOP</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/SpringAOP.html</link><description># Spring AOP
+
+**AOP**：Aspect Oriented Programming(**面向切面编程、面向方面编程)**，可简单理解为就是面向特定方法编程
+
+场景：案例中部分业务方法运行较慢，定位执行耗时较长的接口，此时需要统计每一个业务方法的执行耗时
+
+优势：
+
+1. 减少重复代码
+2. 代码无侵入
+3. 提高开发效率
+4. 维护方便
+
+&gt; [!NOTE]
+&gt;
+&gt; AOP是一种思想，而在Spring框架中对这种思想进行的实现，那我们要学习的就是Spring AOP
+
+
+
+## AOP基础
+
+### AOP快速入门
+
+**统计所有控制层方法的执行耗时**
+
+```java
+package com.cyy.tliaswebmanagement.aspect;
+
+import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+
+/**
+ * 操作日志切面（AOP）
+ *
+ * &lt;p&gt;拦截所有 Controller 方法，记录方法名、请求参数、执行耗时。</description><guid isPermaLink="true">https://Whitegveking.github.io/Whitegve-king.github.io/post/SpringAOP.html</guid><pubDate>Mon, 07 Sep 2026 01:11:25 +0000</pubDate></item><item><title>Web后端-Tlias案例-班级学生管理</title><link>https://Whitegveking.github.io/Whitegve-king.github.io/post/Web-hou-duan--Tlias-an-li---ban-ji-xue-sheng-guan-li.html</link><description># 班级管理 重点笔记（结合代码）
 
 &gt; 模块：班级管理（`ClazzController` + `ClazzServiceImpl` + `ClazzMapper`）
 &gt; 基础路径：`/clazzs`　|　统一返回：`Result`（`code=1` 成功，`code=0` 失败）
