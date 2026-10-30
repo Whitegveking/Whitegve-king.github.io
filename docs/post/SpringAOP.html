@@ -277,7 +277,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="pl-s1">代理对象把</span> <span class="pl-s1">result</span> <span class="pl-s1">返回给</span> <span class="pl-s1">DispatcherServlet</span>
   │
   ▼
-<span class="pl-smi">DispatcherServlet</span> <span class="pl-s1">把</span> <span class="pl-smi">Result</span> <span class="pl-s1">序列化成</span> <span class="pl-smi">JSON</span> <span class="pl-s1">写回响应体</span>
+<span class="pl-s1">DispatcherServlet</span> <span class="pl-s1">把</span> <span class="pl-s1">Result</span> <span class="pl-s1">序列化成</span> <span class="pl-c1">JSON</span> <span class="pl-s1">写回响应体</span>
   │
   ▼
 <span class="pl-s1">浏览器收到</span> {<span class="pl-s">"code"</span>:<span class="pl-c1">1</span>,<span class="pl-s">"msg"</span>:<span class="pl-s">"success"</span>,<span class="pl-s">"data"</span>:{...}}</pre></div>
@@ -504,11 +504,11 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </blockquote>
 <p><strong>解读</strong></p>
 <p>这段讲的是 <strong><code class="notranslate">execution()</code> 切入点表达式的完整语法</strong>，核心是：</p>
-<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-s1">execution</span>(
+<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-en">execution</span>(
     <span class="pl-s1">访问修饰符</span>?      <span class="pl-c">// 可选，如 public / private / protected，不写则匹配任意</span>
     <span class="pl-smi">返回值类型</span>        <span class="pl-c">// 必填，如 void / Result / *</span>
-    <span class="pl-smi">包名</span>.<span class="pl-smi">类名</span>.?<span class="pl-smi">方法名</span>(<span class="pl-smi">参数类型列表</span>)   <span class="pl-c">// 方法定位部分，用 . 分隔，? 表示可省略</span>
-    <span class="pl-smi">throws</span> <span class="pl-s1">异常</span>?     <span class="pl-c">// 可选</span>
+    <span class="pl-smi">包名</span>.<span class="pl-smi">类名</span>.?<span class="pl-en">方法名</span>(<span class="pl-s1">参数类型列表</span>)   <span class="pl-c">// 方法定位部分，用 . 分隔，? 表示可省略</span>
+    <span class="pl-s1">throws</span> <span class="pl-s1">异常</span>?     <span class="pl-c">// 可选</span>
 )</pre></div>
 <p><strong>对你那个 <code class="notranslate">@Before</code> 例子逐段拆解</strong></p>
 <div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-en">execution</span>(<span class="pl-smi">public</span> <span class="pl-s1">void</span> <span class="pl-s1">com</span>.<span class="pl-s1">itheima</span>.<span class="pl-s1">service</span>.<span class="pl-s1">impl</span>.<span class="pl-s1">DeptServiceImpl</span>.<span class="pl-en">delete</span>(<span class="pl-s1">java</span>.<span class="pl-s1">lang</span>.<span class="pl-s1">Integer</span>))</pre></div>
