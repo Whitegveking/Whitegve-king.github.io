@@ -559,7 +559,7 @@ fuShow
 <meta property="og:url" content="https://Whitegveking.github.io/Whitegve-king.github.io/post/duo-tai.html">
 <meta property="og:image" content="https://avatars.githubusercontent.com/u/165184260?v=4&size=64">
 <title>多态</title>
-<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
 
 
 </head>
@@ -583,17 +583,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     body {padding: 8px;}
     .postTitle{font-size:24px;}
 }
-.copy-feedback {
-    display: none;
-    position: absolute;
-    top: 10px;
-    right: 50px;
-    color: var(--color-fg-on-emphasis);
-    background-color: var(--color-fg-muted);
-    border-radius: 3px;
-    padding: 5px 8px;
-    font-size: 12px;
-}
+
 </style>
 
 
@@ -639,229 +629,235 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>方法中使用父类型作为参数，可以接收父类对象+所有子类对象</li>
 <li>如果进行方法重写，利用多态调用方法，可以调用不同子类中重写的方法</li>
 </ol>
-<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-smi">Fu</span> <span class="pl-s1">f</span> = <span class="pl-k">new</span> <span class="pl-smi">Zi</span>();</pre></div>
-<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">polytests1</span>;
+<pre lang="java" class="notranslate"><code class="notranslate">Fu f = new Zi();
+</code></pre>
+<pre lang="java" class="notranslate"><code class="notranslate">package polytests1;
 
-<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Admin</span> <span class="pl-k">extends</span> <span class="pl-smi">Person</span>
+public class Admin extends Person
 {
-    <span class="pl-k">public</span> <span class="pl-smi">Admin</span>()
+    public Admin()
     {
-        <span class="pl-c">// super();</span>
+        // super();
     }
 
-    <span class="pl-k">public</span> <span class="pl-smi">Admin</span>(<span class="pl-smi">String</span> <span class="pl-s1">name</span>, <span class="pl-smi">String</span> <span class="pl-s1">username</span>, <span class="pl-smi">String</span> <span class="pl-s1">password</span>)
+    public Admin(String name, String username, String password)
     {
-        <span class="pl-en">super</span>(<span class="pl-s1">name</span>, <span class="pl-s1">username</span>, <span class="pl-s1">password</span>);
+        super(name, username, password);
     }
 
-    <span class="pl-c1">@</span><span class="pl-c1">Override</span>
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">work</span>()
+    @Override
+    public void work()
     {
-        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"管理员需要管理"</span>);
+        System.out.println("管理员需要管理");
     }
 }
-<span class="pl-k">package</span> <span class="pl-s1">polytests1</span>;
+package polytests1;
 
-<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Person</span>
+public class Person
 {
-    <span class="pl-k">private</span> <span class="pl-smi">String</span> <span class="pl-s1">name</span>;
-    <span class="pl-k">private</span> <span class="pl-smi">String</span> <span class="pl-s1">username</span>;
-    <span class="pl-k">private</span> <span class="pl-smi">String</span> <span class="pl-s1">password</span>;
+    private String name;
+    private String username;
+    private String password;
 
-    <span class="pl-k">public</span> <span class="pl-smi">Person</span>()
+    public Person()
     {
     }
 
-    <span class="pl-k">public</span> <span class="pl-smi">Person</span>(<span class="pl-smi">String</span> <span class="pl-s1">name</span>, <span class="pl-smi">String</span> <span class="pl-s1">username</span>, <span class="pl-smi">String</span> <span class="pl-s1">password</span>)
+    public Person(String name, String username, String password)
     {
-        <span class="pl-smi">this</span>.<span class="pl-s1">name</span> = <span class="pl-s1">name</span>;
-        <span class="pl-smi">this</span>.<span class="pl-s1">username</span> = <span class="pl-s1">username</span>;
-        <span class="pl-smi">this</span>.<span class="pl-s1">password</span> = <span class="pl-s1">password</span>;
+        this.name = name;
+        this.username = username;
+        this.password = password;
     }
 
-    <span class="pl-k">public</span> <span class="pl-smi">String</span> <span class="pl-en">getName</span>()
+    public String getName()
     {
-        <span class="pl-k">return</span> <span class="pl-s1">name</span>;
+        return name;
     }
 
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">setName</span>(<span class="pl-smi">String</span> <span class="pl-s1">name</span>)
+    public void setName(String name)
     {
-        <span class="pl-smi">this</span>.<span class="pl-s1">name</span> = <span class="pl-s1">name</span>;
+        this.name = name;
     }
 
-    <span class="pl-k">public</span> <span class="pl-smi">String</span> <span class="pl-en">getUsername</span>()
+    public String getUsername()
     {
-        <span class="pl-k">return</span> <span class="pl-s1">username</span>;
+        return username;
     }
 
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">setUsername</span>(<span class="pl-smi">String</span> <span class="pl-s1">username</span>)
+    public void setUsername(String username)
     {
-        <span class="pl-smi">this</span>.<span class="pl-s1">username</span> = <span class="pl-s1">username</span>;
+        this.username = username;
     }
 
-    <span class="pl-k">public</span> <span class="pl-smi">String</span> <span class="pl-en">getPassword</span>()
+    public String getPassword()
     {
-        <span class="pl-k">return</span> <span class="pl-s1">password</span>;
+        return password;
     }
 
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">setPassword</span>(<span class="pl-smi">String</span> <span class="pl-s1">password</span>)
+    public void setPassword(String password)
     {
-        <span class="pl-smi">this</span>.<span class="pl-s1">password</span> = <span class="pl-s1">password</span>;
+        this.password = password;
     }
 
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">work</span>()
+    public void work()
     {
-        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"每个人都需要工作"</span>);
+        System.out.println("每个人都需要工作");
     }
 }
-<span class="pl-k">package</span> <span class="pl-s1">polytests1</span>;
+package polytests1;
 
-<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Student</span> <span class="pl-k">extends</span> <span class="pl-smi">Person</span>
+public class Student extends Person
 {
-    <span class="pl-k">public</span> <span class="pl-smi">Student</span>()
+    public Student()
     {
     }
 
-    <span class="pl-k">public</span> <span class="pl-smi">Student</span>(<span class="pl-smi">String</span> <span class="pl-s1">name</span>, <span class="pl-smi">String</span> <span class="pl-s1">username</span>, <span class="pl-smi">String</span> <span class="pl-s1">password</span>)
+    public Student(String name, String username, String password)
     {
-        <span class="pl-en">super</span>(<span class="pl-s1">name</span>, <span class="pl-s1">username</span>, <span class="pl-s1">password</span>);
+        super(name, username, password);
     }
 
-    <span class="pl-c1">@</span><span class="pl-c1">Override</span>
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">work</span>()
+    @Override
+    public void work()
     {
-        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"学生需要学习"</span>);
+        System.out.println("学生需要学习");
     }
 }
-<span class="pl-k">package</span> <span class="pl-s1">polytests1</span>;
+package polytests1;
 
-<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">StudentManager</span>
+public class StudentManager
 {
-    <span class="pl-c">// 注册用户，利用Person参数实现多态</span>
-    <span class="pl-k">public</span> <span class="pl-smi">boolean</span> <span class="pl-en">register</span>(<span class="pl-smi">Person</span> <span class="pl-s1">per</span>)
+    // 注册用户，利用Person参数实现多态
+    public boolean register(Person per)
     {
-        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"姓名为"</span> + <span class="pl-s1">per</span>.<span class="pl-en">getName</span>() + <span class="pl-s">"的账户注册成功，账号"</span> + <span class="pl-s1">per</span>.<span class="pl-en">getUsername</span>() + <span class="pl-s">"，密码"</span> + <span class="pl-s1">per</span>.<span class="pl-en">getPassword</span>());
-        <span class="pl-s1">per</span>.<span class="pl-en">work</span>();
-        <span class="pl-k">return</span> <span class="pl-c1">true</span>;
+        System.out.println("姓名为" + per.getName() + "的账户注册成功，账号" + per.getUsername() + "，密码" + per.getPassword());
+        per.work();
+        return true;
     }
 }
-<span class="pl-k">package</span> <span class="pl-s1">polytests1</span>;
+package polytests1;
 
-<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Teacher</span> <span class="pl-k">extends</span> <span class="pl-smi">Person</span>
+public class Teacher extends Person
 {
-    <span class="pl-k">public</span> <span class="pl-smi">Teacher</span>()
+    public Teacher()
     {
     }
 
-    <span class="pl-k">public</span> <span class="pl-smi">Teacher</span>(<span class="pl-smi">String</span> <span class="pl-s1">name</span>, <span class="pl-smi">String</span> <span class="pl-s1">username</span>, <span class="pl-smi">String</span> <span class="pl-s1">password</span>)
+    public Teacher(String name, String username, String password)
     {
-        <span class="pl-en">super</span>(<span class="pl-s1">name</span>, <span class="pl-s1">username</span>, <span class="pl-s1">password</span>);
+        super(name, username, password);
     }
 
-    <span class="pl-c1">@</span><span class="pl-c1">Override</span>
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">work</span>()
+    @Override
+    public void work()
     {
-        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"老师需要教学"</span>);
+        System.out.println("老师需要教学");
     }
 }
-<span class="pl-k">package</span> <span class="pl-s1">polytests1</span>;
+package polytests1;
 
-<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Test</span>
+public class Test
 {
-    <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>()
+    static void main()
     {
-        <span class="pl-c">/*</span>
-<span class="pl-c">        学生类:</span>
-<span class="pl-c">            属性:姓名，账号，密码</span>
-<span class="pl-c">            行为:work:学生的工作是学习</span>
-<span class="pl-c">        老师类:</span>
-<span class="pl-c">            属性:姓名，账号，密码</span>
-<span class="pl-c">            行为:work:老师的工作是教书</span>
-<span class="pl-c">        管理员:</span>
-<span class="pl-c">            属性:姓名，账号，密码</span>
-<span class="pl-c">            行为:work:管理员的工作是管理网站</span>
-<span class="pl-c">        学生管理系统:</span>
-<span class="pl-c">            行为:注册register</span>
-<span class="pl-c">            要求:能注册所有的角色</span>
-<span class="pl-c">            输出:姓名为张三的同学注册成功，账号zhangsan，密码123456</span>
-<span class="pl-c">        */</span>
-        <span class="pl-smi">StudentManager</span> <span class="pl-s1">manager</span> = <span class="pl-k">new</span> <span class="pl-smi">StudentManager</span>();
+        /*
+        学生类:
+            属性:姓名，账号，密码
+            行为:work:学生的工作是学习
+        老师类:
+            属性:姓名，账号，密码
+            行为:work:老师的工作是教书
+        管理员:
+            属性:姓名，账号，密码
+            行为:work:管理员的工作是管理网站
+        学生管理系统:
+            行为:注册register
+            要求:能注册所有的角色
+            输出:姓名为张三的同学注册成功，账号zhangsan，密码123456
+        */
+        StudentManager manager = new StudentManager();
 
-        <span class="pl-smi">Student</span> <span class="pl-s1">stu</span> = <span class="pl-k">new</span> <span class="pl-smi">Student</span>(<span class="pl-s">"张三"</span>, <span class="pl-s">"zhangsan"</span>, <span class="pl-s">"123456"</span>);
+        Student stu = new Student("张三", "zhangsan", "123456");
 
-        <span class="pl-smi">Teacher</span> <span class="pl-s1">t</span> = <span class="pl-k">new</span> <span class="pl-smi">Teacher</span>(<span class="pl-s">"李四"</span>, <span class="pl-s">"lisi"</span>, <span class="pl-s">"123456"</span>);
+        Teacher t = new Teacher("李四", "lisi", "123456");
 
-        <span class="pl-smi">Admin</span> <span class="pl-s1">admin</span> = <span class="pl-k">new</span> <span class="pl-smi">Admin</span>(<span class="pl-s">"王五"</span>, <span class="pl-s">"wangwu"</span>, <span class="pl-s">"123456"</span>);
+        Admin admin = new Admin("王五", "wangwu", "123456");
 
-        <span class="pl-s1">manager</span>.<span class="pl-en">register</span>(<span class="pl-s1">stu</span>);
-        <span class="pl-s1">manager</span>.<span class="pl-en">register</span>(<span class="pl-s1">t</span>);
-        <span class="pl-s1">manager</span>.<span class="pl-en">register</span>(<span class="pl-s1">admin</span>);
+        manager.register(stu);
+        manager.register(t);
+        manager.register(admin);
 
 
     }
-}</pre></div>
+}
+
+</code></pre>
 <h2>多态调用成员的特点</h2>
 <ul>
 <li><strong>变量调用</strong>：编译看左边，运行看左边</li>
 <li><strong>方法调用</strong>：编译看左边，运行看右边</li>
 </ul>
-<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">polytests2</span>;
+<pre lang="java" class="notranslate"><code class="notranslate">package polytests2;
 
-<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Fu</span>
+public class Fu
 {
-    <span class="pl-smi">String</span> <span class="pl-s1">name</span> = <span class="pl-s">"Fu"</span>;
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">fuShow</span>()
+    String name = "Fu";
+    public void fuShow()
     {
-        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"fuShow"</span>);
+        System.out.println("fuShow");
     }
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">show</span>()
+    public void show()
     {
-        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"show"</span>);
+        System.out.println("show");
     }
 }
-<span class="pl-k">package</span> <span class="pl-s1">polytests2</span>;
+package polytests2;
 
-<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Zi</span> <span class="pl-k">extends</span> <span class="pl-smi">Fu</span>
+public class Zi extends Fu
 {
-    <span class="pl-smi">String</span> <span class="pl-s1">name</span> = <span class="pl-s">"Zi"</span>;
+    String name = "Zi";
 
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">ziShow</span>()
+    public void ziShow()
     {
-        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"ziShow"</span>);
+        System.out.println("ziShow");
     }
 
-    <span class="pl-c1">@</span><span class="pl-c1">Override</span>
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">show</span>()
+    @Override
+    public void show()
     {
-        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"show override"</span>);
+        System.out.println("show override");
     }
 }
-<span class="pl-k">package</span> <span class="pl-s1">polytests2</span>;
+package polytests2;
 
-<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Test</span>
+public class Test
 {
-    <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>()
+    static void main()
     {
-        <span class="pl-smi">Fu</span> <span class="pl-s1">f</span> = <span class="pl-k">new</span> <span class="pl-smi">Fu</span>();
-        <span class="pl-smi">Zi</span> <span class="pl-s1">z</span> = <span class="pl-k">new</span> <span class="pl-smi">Zi</span>();
-        <span class="pl-smi">Fu</span> <span class="pl-s1">fz</span> = <span class="pl-k">new</span> <span class="pl-smi">Zi</span>();
+        Fu f = new Fu();
+        Zi z = new Zi();
+        Fu fz = new Zi();
 
-        <span class="pl-s1">f</span>.<span class="pl-en">show</span>();
-        <span class="pl-s1">f</span>.<span class="pl-en">fuShow</span>();
-        <span class="pl-s1">z</span>.<span class="pl-en">show</span>();
-        <span class="pl-s1">z</span>.<span class="pl-en">ziShow</span>();
-        <span class="pl-s1">fz</span>.<span class="pl-en">show</span>();
-        <span class="pl-s1">fz</span>.<span class="pl-en">fuShow</span>();
+        f.show();
+        f.fuShow();
+        z.show();
+        z.ziShow();
+        fz.show();
+        fz.fuShow();
     }
 
-}</pre></div>
-<div class="highlight highlight-source-batchfile"><pre class="notranslate"><span class="pl-s"><span class="pl-pds">"</span>C:\JAVA tools\bin\java.exe<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=53792<span class="pl-pds">"</span></span> -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\polymorphism\out\production\polymorphism polytests2.Test
+}
+
+</code></pre>
+<pre lang="cmd" class="notranslate"><code class="notranslate">"C:\JAVA tools\bin\java.exe" "-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=53792" -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\polymorphism\out\production\polymorphism polytests2.Test
 show
 fuShow
 show override
 ziShow
 show override
-fuShow</pre></div>
+fuShow
+</code></pre>
 <h3>类型转换</h3>
 <p><strong>多态的弊端</strong>：多态下不能使用子类的独有功能</p>
 <ul>
@@ -890,111 +886,114 @@ fuShow</pre></div>
 <li>抽象类中可以有构造方法，是<code class="notranslate">new</code>关键字用于创建对象而非构造方法；构造方法用于给成员变量进行赋值</li>
 <li>抽象类的子类，要么重写抽象类中的所有抽象方法；要么子类也是抽象类</li>
 </ol>
-<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">polytests03</span>;
+<pre lang="java" class="notranslate"><code class="notranslate">package polytests03;
 
-<span class="pl-k">public</span> <span class="pl-k">abstract</span> <span class="pl-k">class</span> <span class="pl-smi">Animal</span>
+public abstract class Animal
 {
-    <span class="pl-c">/*Animal类(抽象类):属性:名字，颜色</span>
-<span class="pl-c">    行为:eat()抽象方法，喝水*/</span>
-    <span class="pl-smi">String</span> <span class="pl-s1">name</span>;
-    <span class="pl-smi">String</span> <span class="pl-s1">color</span>;
+    /*Animal类(抽象类):属性:名字，颜色
+    行为:eat()抽象方法，喝水*/
+    String name;
+    String color;
 
-    <span class="pl-k">public</span> <span class="pl-smi">Animal</span>()
+    public Animal()
     {
     }
 
-    <span class="pl-k">public</span> <span class="pl-smi">Animal</span>(<span class="pl-smi">String</span> <span class="pl-s1">name</span>, <span class="pl-smi">String</span> <span class="pl-s1">color</span>)
+    public Animal(String name, String color)
     {
-        <span class="pl-smi">this</span>.<span class="pl-s1">name</span> = <span class="pl-s1">name</span>;
-        <span class="pl-smi">this</span>.<span class="pl-s1">color</span> = <span class="pl-s1">color</span>;
+        this.name = name;
+        this.color = color;
     }
 
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">drink</span>()
+    public void drink()
     {
-        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"drink water"</span>);
+        System.out.println("drink water");
     }
 
-    <span class="pl-k">public</span> <span class="pl-k">abstract</span> <span class="pl-smi">void</span> <span class="pl-en">eat</span>();
+    public abstract void eat();
 }
-<span class="pl-k">package</span> <span class="pl-s1">polytests03</span>;
+package polytests03;
 
-<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Cat</span> <span class="pl-k">extends</span> <span class="pl-smi">Animal</span>
+public class Cat extends Animal
 {
-    <span class="pl-c">/*猫类:</span>
-<span class="pl-c">    行为:猫吃鱼，猫抓老鼠*/</span>
+    /*猫类:
+    行为:猫吃鱼，猫抓老鼠*/
 
-    <span class="pl-k">public</span> <span class="pl-smi">Cat</span>()
+    public Cat()
     {
     }
 
-    <span class="pl-k">public</span> <span class="pl-smi">Cat</span>(<span class="pl-smi">String</span> <span class="pl-s1">name</span>, <span class="pl-smi">String</span> <span class="pl-s1">color</span>)
+    public Cat(String name, String color)
     {
-        <span class="pl-en">super</span>(<span class="pl-s1">name</span>, <span class="pl-s1">color</span>);
+        super(name, color);
     }
 
-    <span class="pl-c1">@</span><span class="pl-c1">Override</span>
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">eat</span>()
+    @Override
+    public void eat()
     {
-        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"cat eat fish"</span>);
+        System.out.println("cat eat fish");
     }
 
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">catchMouse</span>()
+    public void catchMouse()
     {
-        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"catch mouse"</span>);
-    }
-}
-<span class="pl-k">package</span> <span class="pl-s1">polytests03</span>;
-
-<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Dog</span> <span class="pl-k">extends</span> <span class="pl-smi">Animal</span>
-{
-    <span class="pl-c">/*狗类:</span>
-<span class="pl-c">    行为:狗吃骨头，狗看家*/</span>
-
-    <span class="pl-k">public</span> <span class="pl-smi">Dog</span>()
-    {
-    }
-
-    <span class="pl-k">public</span> <span class="pl-smi">Dog</span>(<span class="pl-smi">String</span> <span class="pl-s1">name</span>, <span class="pl-smi">String</span> <span class="pl-s1">color</span>)
-    {
-        <span class="pl-en">super</span>(<span class="pl-s1">name</span>, <span class="pl-s1">color</span>);
-    }
-
-    <span class="pl-c1">@</span><span class="pl-c1">Override</span>
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">eat</span>()
-    {
-        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"dog eat bone"</span>);
-    }
-
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">guard</span>()
-    {
-        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"guard home"</span>);
+        System.out.println("catch mouse");
     }
 }
-<span class="pl-k">package</span> <span class="pl-s1">polytests03</span>;
+package polytests03;
 
-<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Test</span>
+public class Dog extends Animal
 {
-    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>(<span class="pl-smi">String</span>[] <span class="pl-s1">args</span>)
+    /*狗类:
+    行为:狗吃骨头，狗看家*/
+
+    public Dog()
     {
-        <span class="pl-smi">Dog</span> <span class="pl-s1">a</span> = <span class="pl-k">new</span> <span class="pl-smi">Dog</span>(<span class="pl-s">"大黄"</span>, <span class="pl-s">"黄色"</span>);
-        <span class="pl-smi">Cat</span> <span class="pl-s1">b</span> = <span class="pl-k">new</span> <span class="pl-smi">Cat</span>(<span class="pl-s">"小花"</span>, <span class="pl-s">"白色"</span>);
-
-        <span class="pl-s1">a</span>.<span class="pl-en">guard</span>();
-        <span class="pl-s1">b</span>.<span class="pl-en">catchMouse</span>();
-
-        <span class="pl-s1">a</span>.<span class="pl-en">eat</span>();
-        <span class="pl-s1">a</span>.<span class="pl-en">drink</span>();
-        <span class="pl-s1">b</span>.<span class="pl-en">eat</span>();
-        <span class="pl-s1">b</span>.<span class="pl-en">drink</span>();
     }
-}</pre></div>
-<div class="highlight highlight-source-batchfile"><pre class="notranslate"><span class="pl-s"><span class="pl-pds">"</span>C:\JAVA tools\bin\java.exe<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=64398<span class="pl-pds">"</span></span> -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\polymorphism\out\production\polymorphism polytests03.Test
+
+    public Dog(String name, String color)
+    {
+        super(name, color);
+    }
+
+    @Override
+    public void eat()
+    {
+        System.out.println("dog eat bone");
+    }
+
+    public void guard()
+    {
+        System.out.println("guard home");
+    }
+}
+package polytests03;
+
+public class Test
+{
+    public static void main(String[] args)
+    {
+        Dog a = new Dog("大黄", "黄色");
+        Cat b = new Cat("小花", "白色");
+
+        a.guard();
+        b.catchMouse();
+
+        a.eat();
+        a.drink();
+        b.eat();
+        b.drink();
+    }
+}
+
+</code></pre>
+<pre lang="cmd" class="notranslate"><code class="notranslate">"C:\JAVA tools\bin\java.exe" "-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=64398" -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\polymorphism\out\production\polymorphism polytests03.Test
 guard home
 catch mouse
 dog eat bone
 drink water
 cat eat fish
-drink water</pre></div>
+drink water
+</code></pre>
 <h3>抽象类和抽象方法的意义</h3>
 <p>给出一个统一的格式，包括函数名、形参等，强制子类必须按照这种格式进行重写，方便调用和查看格式</p>
 <h2>接口</h2>
@@ -1030,99 +1029,101 @@ drink water</pre></div>
 <li>如果有一个接口A继承了多个接口，此时相当于是把多个接口中的抽象方法全部继承下来了，之后实现类实现接口A的时候，就要把所有的抽象方法进行重写</li>
 </ul>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/2fd21215-c3c4-418d-bf93-37be6eea212d"><img width="1581" height="693" alt="Image" src="https://github.com/user-attachments/assets/2fd21215-c3c4-418d-bf93-37be6eea212d" style="max-width: 100%; height: auto; max-height: 693px;; aspect-ratio: 1581 / 693; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
-<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">polytests05</span>;
+<pre lang="java" class="notranslate"><code class="notranslate">package polytests05;
 
-<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Person</span>
+public class Person
 {
-    <span class="pl-k">private</span> <span class="pl-smi">String</span> <span class="pl-s1">name</span>;
-    <span class="pl-k">private</span> <span class="pl-smi">int</span> <span class="pl-s1">age</span>;
+    private String name;
+    private int age;
 
-    <span class="pl-k">public</span> <span class="pl-smi">Person</span>()
+    public Person()
     {
     }
 
-    <span class="pl-k">public</span> <span class="pl-smi">Person</span>(<span class="pl-smi">String</span> <span class="pl-s1">name</span>, <span class="pl-smi">int</span> <span class="pl-s1">age</span>)
+    public Person(String name, int age)
     {
-        <span class="pl-smi">this</span>.<span class="pl-s1">name</span> = <span class="pl-s1">name</span>;
-        <span class="pl-smi">this</span>.<span class="pl-s1">age</span> = <span class="pl-s1">age</span>;
+        this.name = name;
+        this.age = age;
     }
 
-    <span class="pl-k">public</span> <span class="pl-smi">String</span> <span class="pl-en">getName</span>()
+    public String getName()
     {
-        <span class="pl-k">return</span> <span class="pl-s1">name</span>;
+        return name;
     }
 
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">setName</span>(<span class="pl-smi">String</span> <span class="pl-s1">name</span>)
+    public void setName(String name)
     {
-        <span class="pl-smi">this</span>.<span class="pl-s1">name</span> = <span class="pl-s1">name</span>;
+        this.name = name;
     }
 
-    <span class="pl-k">public</span> <span class="pl-smi">int</span> <span class="pl-en">getAge</span>()
+    public int getAge()
     {
-        <span class="pl-k">return</span> <span class="pl-s1">age</span>;
+        return age;
     }
 
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">setAge</span>(<span class="pl-smi">int</span> <span class="pl-s1">age</span>)
+    public void setAge(int age)
     {
-        <span class="pl-smi">this</span>.<span class="pl-s1">age</span> = <span class="pl-s1">age</span>;
+        this.age = age;
     }
 }
 
-<span class="pl-k">package</span> <span class="pl-s1">polytests05</span>;
+package polytests05;
 
-<span class="pl-k">public</span> <span class="pl-k">abstract</span> <span class="pl-k">class</span> <span class="pl-smi">Athlete</span> <span class="pl-k">extends</span> <span class="pl-smi">Person</span>
+public abstract class Athlete extends Person
 {
-    <span class="pl-k">public</span> <span class="pl-k">abstract</span> <span class="pl-smi">void</span> <span class="pl-en">learn</span>();
+    public abstract void learn();
 }
 
-<span class="pl-k">package</span> <span class="pl-s1">polytests05</span>;
+package polytests05;
 
-<span class="pl-k">public</span> <span class="pl-k">abstract</span> <span class="pl-k">class</span> <span class="pl-smi">Coach</span> <span class="pl-k">extends</span> <span class="pl-smi">Person</span>
+public abstract class Coach extends Person
 {
-    <span class="pl-k">public</span> <span class="pl-k">abstract</span> <span class="pl-smi">void</span> <span class="pl-en">teach</span>();
+    public abstract void teach();
 }
-<span class="pl-k">package</span> <span class="pl-s1">polytests05</span>;
+package polytests05;
 
-<span class="pl-k">public</span> <span class="pl-k">interface</span> <span class="pl-smi">English</span>
+public interface English
 {
 
-    <span class="pl-smi">void</span> <span class="pl-en">speakEnglish</span>();
-}
-
-<span class="pl-k">package</span> <span class="pl-s1">polytests05</span>;
-
-<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">PpAthlete</span> <span class="pl-k">extends</span> <span class="pl-smi">Athlete</span> <span class="pl-k">implements</span> <span class="pl-smi">English</span>
-{
-
-    <span class="pl-c1">@</span><span class="pl-c1">Override</span>
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">learn</span>()
-    {
-        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"learning pingpong"</span>);
-    }
-
-    <span class="pl-c1">@</span><span class="pl-c1">Override</span>
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">speakEnglish</span>()
-    {
-        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"pingpong athlete can speak English"</span>);
-    }
+    void speakEnglish();
 }
 
-<span class="pl-k">package</span> <span class="pl-s1">polytests05</span>;
+package polytests05;
 
-<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">PpCoach</span> <span class="pl-k">extends</span> <span class="pl-smi">Coach</span> <span class="pl-k">implements</span> <span class="pl-smi">English</span>
+public class PpAthlete extends Athlete implements English
 {
-    <span class="pl-c1">@</span><span class="pl-c1">Override</span>
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">teach</span>()
+
+    @Override
+    public void learn()
     {
-        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"teaching pingpong"</span>);
+        System.out.println("learning pingpong");
     }
 
-    <span class="pl-c1">@</span><span class="pl-c1">Override</span>
-    <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">speakEnglish</span>()
+    @Override
+    public void speakEnglish()
     {
-        <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"pingpong coach can speak English"</span>);
+        System.out.println("pingpong athlete can speak English");
     }
-}</pre></div>
+}
+
+package polytests05;
+
+public class PpCoach extends Coach implements English
+{
+    @Override
+    public void teach()
+    {
+        System.out.println("teaching pingpong");
+    }
+
+    @Override
+    public void speakEnglish()
+    {
+        System.out.println("pingpong coach can speak English");
+    }
+}
+
+</code></pre>
 <h3>接口的新特性</h3>
 <ul>
 <li><strong>JDK7及以前</strong>:接口中只能定义抽象方法</li>
@@ -1140,28 +1141,30 @@ drink water</pre></div>
 <li>获取成员内部类对象的方式二:当成员内部类被非私有修饰时，直接创建对象。<code class="notranslate">Outer.Inner oi= new Outer().new Inner();</code></li>
 </ul>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/a9a00645-d980-41a0-9336-862f4c10323b"><img width="1593" height="905" alt="Image" src="https://github.com/user-attachments/assets/a9a00645-d980-41a0-9336-862f4c10323b" style="max-width: 100%; height: auto; max-height: 905px;; aspect-ratio: 1593 / 905; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
-<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">innerclassdemo01</span>;
+<pre lang="java" class="notranslate"><code class="notranslate">package innerclassdemo01;
 
-<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Outer</span>
+public class Outer
 {
-    <span class="pl-k">private</span> <span class="pl-smi">int</span> <span class="pl-s1">a</span> = <span class="pl-c1">10</span>;
-    <span class="pl-k">class</span> <span class="pl-smi">Inner</span>
+    private int a = 10;
+    class Inner
     {
-        <span class="pl-k">private</span> <span class="pl-smi">int</span> <span class="pl-s1">a</span> =<span class="pl-c1">20</span>;
-        <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">show</span>()
+        private int a =20;
+        public void show()
         {
-            <span class="pl-smi">int</span> <span class="pl-s1">a</span> = <span class="pl-c1">30</span>;
-            <span class="pl-c">// Outer.this获取了外部类对象的地址值</span>
-            <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-smi">Outer</span>.<span class="pl-smi">this</span>.<span class="pl-s1">a</span>);
-            <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-smi">this</span>.<span class="pl-s1">a</span>);
-            <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s1">a</span>);
+            int a = 30;
+            // Outer.this获取了外部类对象的地址值
+            System.out.println(Outer.this.a);
+            System.out.println(this.a);
+            System.out.println(a);
         }
     }
-}</pre></div>
-<div class="highlight highlight-source-batchfile"><pre class="notranslate"><span class="pl-s"><span class="pl-pds">"</span>C:\JAVA tools\bin\java.exe<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=58554<span class="pl-pds">"</span></span> -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\innerclass\out\production\innerclass innerclassdemo01.Test
-<span class="pl-c1">10</span>
-<span class="pl-c1">20</span>
-<span class="pl-c1">30</span></pre></div>
+}
+</code></pre>
+<pre lang="cmd" class="notranslate"><code class="notranslate">"C:\JAVA tools\bin\java.exe" "-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=58554" -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\innerclass\out\production\innerclass innerclassdemo01.Test
+10
+20
+30
+</code></pre>
 <p><strong>静态内部类</strong></p>
 <ul>
 <li>静态内部类只能访问外部类中的静态变量和静态方法</li>
@@ -1179,35 +1182,38 @@ drink water</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/ab671166-1142-4d09-9a91-f65bb23ecead"><img width="975" height="155" alt="Image" src="https://github.com/user-attachments/assets/ab671166-1142-4d09-9a91-f65bb23ecead" style="max-width: 100%; height: auto; max-height: 155px;; aspect-ratio: 975 / 155; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
 <p>匿名内部类的定义格式 = 没有名字的java类 + 继承/实现 + 重写方法 + 创建对象</p>
 <p>最终也是可以理解为是一个<strong>没有名字的java类的对象</strong></p>
-<div class="highlight highlight-source-java"><pre class="notranslate"><span class="pl-k">package</span> <span class="pl-s1">innerclassdemo02</span>;
+<pre lang="java" class="notranslate"><code class="notranslate">package innerclassdemo02;
 
-<span class="pl-k">public</span> <span class="pl-k">interface</span> <span class="pl-smi">Swim</span>
+public interface Swim
 {
-    <span class="pl-k">public</span> <span class="pl-k">abstract</span> <span class="pl-smi">void</span> <span class="pl-en">swim</span>();
+    public abstract void swim();
 }
-<span class="pl-k">package</span> <span class="pl-s1">innerclassdemo02</span>;
+package innerclassdemo02;
 
-<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-smi">Test</span>
+public class Test
 {
-    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">goSwim</span>(<span class="pl-smi">Swim</span> <span class="pl-s1">s</span>)
+    public static void goSwim(Swim s)
     {
-        <span class="pl-s1">s</span>.<span class="pl-en">swim</span>();
+        s.swim();
     }
-    <span class="pl-k">static</span> <span class="pl-smi">void</span> <span class="pl-en">main</span>()
+    static void main()
     {
-        <span class="pl-smi">Swim</span> <span class="pl-s1">s</span> = <span class="pl-k">new</span> <span class="pl-smi">Swim</span>()
+        Swim s = new Swim()
         {
-            <span class="pl-c1">@</span><span class="pl-c1">Override</span>
-            <span class="pl-k">public</span> <span class="pl-smi">void</span> <span class="pl-en">swim</span>()
+            @Override
+            public void swim()
             {
-                <span class="pl-smi">System</span>.<span class="pl-s1">out</span>.<span class="pl-en">println</span>(<span class="pl-s">"someone is swimming"</span>);
+                System.out.println("someone is swimming");
             }
         };
-        <span class="pl-en">goSwim</span>(<span class="pl-s1">s</span>);
+        goSwim(s);
     }
-}</pre></div>
-<div class="highlight highlight-source-batchfile"><pre class="notranslate"><span class="pl-s"><span class="pl-pds">"</span>C:\JAVA tools\bin\java.exe<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=49670<span class="pl-pds">"</span></span> -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\innerclass\out\production\innerclass innerclassdemo02.Test
-someone is swimming</pre></div></div>
+}
+
+</code></pre>
+<pre lang="cmd" class="notranslate"><code class="notranslate">"C:\JAVA tools\bin\java.exe" "-javaagent:C:\JAVA tools\IntelliJ IDEA 2026.2.0.1\lib\idea_rt.jar=49670" -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath C:\Users\72982\IdeaProjects\innerclass\out\production\innerclass innerclassdemo02.Test
+someone is swimming
+</code></pre></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
@@ -1232,7 +1238,7 @@ if(""!=""){
 </script></div>
 </body>
 <script>
-var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
 var utterancesLoad=0;
 
 let themeSettings={
@@ -1306,70 +1312,7 @@ function iFrameLoading(){
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const createClipboardHTML = (codeContent, additionalClasses = '') => `
-        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
-        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
-            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
-                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
-                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
-            </clipboard-copy>
-            <div class="copy-feedback">Copied!</div>
-        </div>
-    `;
 
-    const handleCodeElements = (selector = '') => {
-        document.querySelectorAll(selector).forEach(codeElement => {
-            const codeContent = codeElement.innerHTML;
-            const newStructure = document.createElement('div');
-            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
-            newStructure.innerHTML = createClipboardHTML(codeContent);
-
-            const parentElement = codeElement.parentElement;
-            if (selector.includes('highlight')) {
-                parentElement.insertBefore(newStructure, codeElement.nextSibling);
-                parentElement.removeChild(codeElement);
-            } else {
-                parentElement.parentElement.replaceChild(newStructure, parentElement);
-            }
-        });
-    };
-
-    handleCodeElements('pre.notranslate > code.notranslate');
-    handleCodeElements('div.highlight > pre.notranslate');
-
-    let currentFeedback = null;
-    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
-        copyButton.addEventListener('click', () => {
-            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
-            const tempTextArea = document.createElement('textarea');
-            tempTextArea.value = codeContent;
-            document.body.appendChild(tempTextArea);
-            tempTextArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempTextArea);
-
-            const copyIcon = copyButton.querySelector('.octicon-copy');
-            const checkIcon = copyButton.querySelector('.octicon-check');
-            const copyFeedback = copyButton.nextElementSibling;
-
-            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
-            currentFeedback = copyFeedback;
-
-            copyIcon.classList.add('d-none');
-            checkIcon.classList.remove('d-none');
-            copyFeedback.style.display = 'block';
-            copyButton.style.borderColor = 'var(--color-success-fg)';
-
-            setTimeout(() => {
-                copyIcon.classList.remove('d-none');
-                checkIcon.classList.add('d-none');
-                copyFeedback.style.display = 'none';
-                copyButton.style.borderColor = '';
-            }, 2000);
-        });
-    });
-});
 
 </script>
 <script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>
